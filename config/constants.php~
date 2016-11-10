@@ -1,0 +1,8 @@
+<?php
+namespace Infojor\Config;
+
+define('VIEWDIR', 'presentation/');
+define('TPLDIR', VIEWDIR.'template/');
+define('VIEWMODELDIR', VIEWDIR.'model/');
+define('MODELDIR', 'service/');
+define('ENTITIESDIR', MODELDIR.'entities/');

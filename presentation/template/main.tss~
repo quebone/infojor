@@ -1,0 +1,4 @@
+title {content: 'Informes JOR'}
+header {content: data(header)}
+
+main {content: data(sections)}

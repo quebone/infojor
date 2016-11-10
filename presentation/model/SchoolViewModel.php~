@@ -1,0 +1,50 @@
+<?php
+namespace Infojor\Presentation\Model;
+
+final class SchoolViewModel extends MainViewModel {
+	
+	public function __construct($model = null, $entityManager = null) {
+		if ($model == null) $model = new \Infojor\Model\SchoolService($entityManager);
+		parent::__construct($model, $entityManager);
+	}
+	
+	public function getActiveCourse()
+	{
+		$this->data->course = $this->model->getActiveCourse()->getYear(); 
+		return $this->data;
+	}
+	
+	public function getActiveTrimestre()
+	{
+		$this->data->trimestre = $this->model->getActiveTrimestre()->getNumber(); 
+		return $this->data;
+	}
+	
+	public function getPerson($id)
+	{
+		$person = $this->model->getPerson($id);
+		$this->data->name = $person->getName();
+		$this->data->surnames = $person->getSurnames();
+		return $this->data;
+	}
+	
+	public function getCurrentClassroomStudents($classroomId) {
+		$this->data->students = array();
+		$students = $this->model->getCurrentClassroomStudents($classroomId);
+		foreach ($students as $student) {
+			$id = $student->getId();
+			$completeName = $student->getSurnames() . ", " . $student->getName();
+			$this->data->students[$id] = new \stdClass; 
+			$this->data->students[$id]->name = $completeName; 
+		}
+		return $this->data;
+	}
+	
+	public function getClassroom($classroomId)
+	{
+		$data = new \stdClass;
+		$classroom = $this->model->getClassroom($classroomId);
+		$data->classroom = $classroom->getName();
+		return data;
+	}
+}

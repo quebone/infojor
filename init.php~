@@ -1,0 +1,17 @@
+<?php
+namespace Infojor;
+
+require_once 'config/constants.php';
+require_once 'Loader.php';
+require_once "bootstrap.php";
+require_once 'vendor/simi/tplengine/TplEngine.php';
+echo "hola";
+try {
+	new Loader();
+} catch (\Exception $e) {
+	echo ($e.getMessage());
+	exit(1);
+}
+
+// include 'header.php';
+

@@ -1,0 +1,9 @@
+<?php
+namespace Infojor\Service\Entities;
+
+/**
+ * @Entity @Table(name="courses")
+ **/
+class Course
+{
+}

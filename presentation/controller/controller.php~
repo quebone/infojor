@@ -1,0 +1,20 @@
+<?php
+namespace Infojor\Presentation\Controller;
+
+use Infojor\Presentation\Model\ViewModel;
+
+class Controller {
+	private $viewModel;
+
+	public function __construct(ViewModel $viewModel) {
+		$this->viewModel = $viewModel;
+	}
+	
+	public function textClicked() {
+		$this->model->data['link'] = "Text clicked";
+	}
+	
+	public function getTeacher($id) {
+		$this->model->getTeacher($id);
+	}
+}

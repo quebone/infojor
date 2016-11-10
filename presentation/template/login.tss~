@@ -1,0 +1,2 @@
+title {content: 'Login'}
+header {content: data(header)}

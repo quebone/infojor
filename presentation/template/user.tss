@@ -1,0 +1,6 @@
+h1 {content: data(title); }
+p {content: data(description); }
+#name {content: data(name); }
+#surnames {content: data(surnames); }
+a {content: "Get user data without javascript"; }
+

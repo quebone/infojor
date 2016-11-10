@@ -1,0 +1,11 @@
+@import 'header.tss';
+
+title {content: 'Informes: tutoria ', data(classroomId)}
+header {content: template("header.xml")}
+#classroomId:attr(value) {content: data(classroomId); }
+#students ul li {repeat: data(students); }
+#students ul li {content: iteration(name); }
+#students ul li:attr(id) {content: 'student-', key(); }
+#students ul li:attr(onclick) {content: 'changeStudent(this)'; }
+#students ul li:iteration[selected=true]:attr(class) {content: 'selected'; }
+#right_column {content: data(evaluation)}

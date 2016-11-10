@@ -1,0 +1,18 @@
+<?php
+class View {
+
+	private $model;
+	private $tpl;
+	private $currentPage;
+	
+	public function __construct (Model $model, \Transphporm\Builder $tpl) {
+		$this->model = $model;
+		$this->tpl = $tpl;
+		$this->currentPage = $_SERVER['PHP_SELF'];
+	}
+	
+	public function output() {
+		$data = $this->model->data;
+		return $this->tpl->output($data)->body;
+	}
+}

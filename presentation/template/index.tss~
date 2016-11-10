@@ -1,0 +1,5 @@
+@import
+
+header {content: template("header.xml")}
+#name {content: data(name); }
+#surnames {content: data(surnames); }
