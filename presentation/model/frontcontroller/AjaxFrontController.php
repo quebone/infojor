@@ -2,6 +2,9 @@
 namespace Infojor\Presentation\Model\FrontController;
 
 if (!defined('REQUIRED')) {
+	define('BASEDIR', '../../');
+// 	require_once BASEDIR.'init.php';
+	require_once BASEDIR.'config/constants.php';
 	require_once '../../service/MainService.php';
 	require_once '../../service/SchoolService.php';
 	require_once '../../service/UserService.php';
@@ -19,7 +22,7 @@ class AjaxFrontController
 
 	function __construct()
 	{
-		require '../../bootstrap.php';
+		require BASEDIR.'bootstrap.php';
 		$this->em = $entityManager;
 	}
 
@@ -85,9 +88,13 @@ class AjaxFrontController
 		$studentId = $_POST['studentId'];
 		$viewModel = new \Infojor\Presentation\Model\UserViewModel(null, $this->em);
 		$thumbnail = $viewModel->getThumbnail($studentId);
-		$path = '../../images/thumbnails/' . $thumbnail . '.jpg';
-		$type = pathinfo($path, PATHINFO_EXTENSION);
-		$data = file_get_contents($path);
+		$path = THUMBNAILDIR;
+		$fileName = $thumbnail . '.jpg';
+		$type = pathinfo($path . $fileName, PATHINFO_EXTENSION);
+		if (!file_exists($path . $fileName)) {
+			$fileName = AVATAR;
+		}
+		$data = file_get_contents($path . $fileName);
 		$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
 		return $base64;
 	}

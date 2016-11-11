@@ -1,10 +1,12 @@
 <?php
 namespace Infojor;
 
-require_once 'config/constants.php';
-require_once 'Loader.php';
-require_once "bootstrap.php";
-require_once 'vendor/simi/tplengine/TplEngine.php';
+if (!defined('BASEDIR')) define('BASEDIR', '');
+
+require_once BASEDIR.'config/constants.php';
+require_once BASEDIR.'Loader.php';
+require_once BASEDIR."bootstrap.php";
+require_once BASEDIR.'vendor/simi/tplengine/TplEngine.php';
 
 new Loader();
 
