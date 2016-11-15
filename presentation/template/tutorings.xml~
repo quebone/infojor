@@ -13,6 +13,8 @@
 <header></header>
 </div>
 <input id='classroomId' type='hidden' />
+<input id='areaId' type='hidden' />
+<input id='reinfoceId' type='hidden' />
 <main>
 	<div id="students-wrapper">
 	<div id="students">
@@ -25,7 +27,7 @@
 	<div id="right_column">
 	</div>
 </main>
-	<div id="tooltip_container"><div id="tooltip">Tooltip</div></div>
+	<div id="tooltip">Tooltip</div>
   <script src="js/scripts.js"></script>
   <script src="js/evaluate.js"></script>
   <script src="js/tooltip.js"></script>

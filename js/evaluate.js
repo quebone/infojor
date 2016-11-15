@@ -1,3 +1,6 @@
+var minClassroom = 7;
+var maxClassroom = 18;
+
 window.onload = init();
 
 function init() {
@@ -10,11 +13,14 @@ function init() {
 
 function changeStudent(student)
 {
-	var classroomId = encodeURI(document.getElementById('classroomId').value);
+	disable(document.getElementById('right_column'));
+	var classroomId = document.getElementById('classroomId').value;
+	var areaId = document.getElementById('areaId').value;
+	var reinforceId = document.getElementById('reinforceId').value;
 	var studentId = student.getAttribute('id').replace('student-','');
-	var studentId = encodeURI(studentId);
-	var dataToSend = 'studentId=' + studentId + '&classroomId=' + classroomId + '&function=getEvaluationData';
+	var dataToSend = 'studentId=' + studentId + '&classroomId=' + classroomId + '&areaId=' + areaId + '&reinforceId=' + reinforceId + '&function=getEvaluationData';
 	send(dataToSend, 'presentation/controller/AjaxController.php', showEvaluation);
+	console.log(dataToSend);	
 	unselectStudents();
 	selectStudent(student);
 	getImage(student);
@@ -26,6 +32,10 @@ function showEvaluation(evaluation) {
 	evaluation = unescape(JSON.parse(evaluation));
 	var container = document.getElementById('right_column');
 	container.innerHTML = evaluation;
+	enable(document.getElementById('right_column'));
+	if (document.getElementById('areaId').value == '' && document.getElementById('reinforceId').value == '') {
+		enableClassroomSelectors(false);
+	}
 	setDimensionTooltip();
 }
 
@@ -53,6 +63,10 @@ function findActiveStudentId() {
 	return studentId;
 }
 
+function findActiveStudent() {
+	return document.getElementsByClassName('selected')[0];
+}
+
 function getImage(student) {
 	var studentId = student.getAttribute('id').replace('student-','');
 	var studentId = encodeURI(studentId);
@@ -63,6 +77,37 @@ function getImage(student) {
 function showImage(base64) {
 	var image = document.getElementById('thumbnail');
 	image.src = base64;
+}
+
+function enableClassroomSelectors(enable = true) {
+	var newValue = enable ? 'visible' : 'hidden';
+	var classroomSelectors = document.getElementsByClassName('selector');
+	for (var i = 0; i< classroomSelectors.length; i++) {
+		classroomSelectors[i].style.visibility = newValue;
+	}
+}
+
+function nextClassroom() {
+	changeClassroom(1);
+}
+
+function prevClassroom() {
+	changeClassroom(-1);
+}
+
+function changeClassroom(offset) {
+	currentClassroom = parseInt(document.getElementById('classroomId').value) + offset;
+	if (currentClassroom <= maxClassroom && currentClassroom >= minClassroom) {
+		document.getElementById('classroomId').value = currentClassroom;
+		var dataToSend = 'classroomId=' + currentClassroom + '&page=specialities&function=setSession';
+		send(dataToSend, 'presentation/controller/AjaxController.php', redirect);
+	}
+}
+
+
+function redirect(toPage) {
+	vars = JSON.parse(toPage);
+	window.location.href = vars.page + '.php';
 }
 
 function changePE(pe) {
@@ -83,7 +128,7 @@ function changeObservation(obs) {
 	var dataToSend = 'studentId=' + findActiveStudentId() + '&observation=' + obsText + '&function=setObservation';
 	console.log(dataToSend);
 	send(dataToSend, 'presentation/controller/AjaxController.php', evaluationChanged);
-}	
+}
 
 function evaluationChanged(msg) {
 	console.log(msg);

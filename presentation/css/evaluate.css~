@@ -157,21 +157,21 @@ img#thumbnail {
 .selector {
 	display: inline-block;
 	margin: 0px 10px;
-	background-repeat: no-repeat;
 	width: 25px;
 	height: 25px;
 }
 
 .selector:hover {
 	opacity: 0.6;
-/*	cursor: pointer;*/
+	cursor: pointer;
 }
 
-.selector#left {
-/*	background-image: url('../images/previous.png');*/
+.selector[name=left] {
+	background-image: url('../images/previous.png');
 }
 
-.selector#right {
-/*	background-image: url('../images/next.png');*/
+.selector[name=right] {
+	display: inline-block;
+	background-image: url('../images/next.png');
 }
 

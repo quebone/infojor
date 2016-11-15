@@ -53,7 +53,7 @@ final class EvaluationViewModel extends ViewModel {
 		return $ge->getMark();
 	}
 	
-	public function getEvaluations($studentId, $classroomId, $includeSpecialities):array
+	public function getEvaluations($studentId, $classroomId, $areaId, $reinforceId, $includeSpecialities):array
 	{
 		$userModel = new \Infojor\Service\UserService($this->entityManager);
 		$schoolModel = new \Infojor\Service\SchoolService($this->entityManager);
@@ -64,11 +64,13 @@ final class EvaluationViewModel extends ViewModel {
 		$evaluation['peds'] = $this->getPartialEvaluationDescriptions();
 		$evaluation['geds'] = $this->getGlobalEvaluationDescriptions();
 		$evaluation['classroom'] = $schoolViewModel->getClassroom($classroomId);
+		$evaluation['area'] = $schoolViewModel->getArea($areaId);
+		$evaluation['reinforce'] = $schoolViewModel->getReinforceClassroom($reinforceId);
 		$evaluation['student']['name'] = $student->getName() . " " . $student->getSurnames();
-		$scopes = $schoolViewModel->getClassroomScopes($classroomId);
+		$scopes = $schoolViewModel->getScopes($classroomId);
 		$evaluation['scopes'] = $scopes;
 		foreach ($scopes as $scope) {
-			$areas = $schoolViewModel->getScopeAreas($scope['id'], false);
+			$areas = $schoolViewModel->getScopeAreas($scope['id'], $areaId);
 			$evaluation['scopes'][$scope['id']]['areas'] = $areas;
 			foreach ($areas as $area) {
 				$dimensions = $schoolViewModel->getAreaDimensions($area['id'], $cycle);
@@ -91,7 +93,12 @@ final class EvaluationViewModel extends ViewModel {
 				unset($evaluation['scopes'][$scope['id']]);
 			}
 		}
-		$evaluation['observation'] = $student->getCourseObservation($course);
+		if ($areaId == null || $reinforceId == null) {
+			$evaluation['observation'] = $student->getCourseObservation($course);
+		}
+		if ($reinforceId != null) {
+			// TODO
+		}
 		return $evaluation;
 	}
 	

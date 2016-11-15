@@ -3,6 +3,8 @@
 title {content: 'Informes: tutoria ', data(classroom)}
 header {content: template("header.xml")}
 #classroomId:attr(value) {content: data(classroomId); }
+#areaId:attr(value) {content: data(areaId); }
+#reinforceId:attr(value) {content: data(reinforceId); }
 #students ul li {repeat: data(students); }
 #students ul li {content: iteration(name); }
 #students ul li:attr(id) {content: 'student-', key(); }

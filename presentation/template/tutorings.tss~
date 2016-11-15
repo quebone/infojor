@@ -1,6 +1,6 @@
 @import 'header.tss';
 
-title {content: 'Informes: tutoria ', data(classroomId)}
+title {content: 'Informes: tutoria ', data(classroom)}
 header {content: template("header.xml")}
 #classroomId:attr(value) {content: data(classroomId); }
 #students ul li {repeat: data(students); }

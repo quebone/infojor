@@ -31,3 +31,14 @@ function logout() {
 function main() {
 	window.location.replace('main.php');
 }
+
+function disable(elem) {
+	elem.style.opacity = 0.4;
+	elem.style.pointerEvents = 'none';
+}
+
+function enable(elem) {
+	elem.style.opacity = 1;
+	elem.style.pointerEvents = 'auto';
+}
+

@@ -9,14 +9,13 @@ class ReinforceClassroom {
 	private $id;
 	/** @Column(type="string", length=20) **/
 	private $name;
-
 	/**
 	 * @ManyToMany(targetEntity="Teacher", mappedBy="reinforceclassrooms")
 	 */
 	private $teachers;
 	
 	public function __construct() {
-	  $this->teachers = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->teachers = new \Doctrine\Common\Collections\ArrayCollection();
 	}
 
 	public function getId() {
@@ -29,6 +28,10 @@ class ReinforceClassroom {
 	
 	public function setName($name) {
 		$this->name = $name;
+	}
+	
+	public function getTeachers() {
+		return $this->teachers;
 	}
 }
 	

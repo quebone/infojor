@@ -3,6 +3,10 @@ namespace Infojor;
 
 use Infojor\Presentation\Model\FrontController\LoginFrontController;
 
+if (session_status() != PHP_SESSION_NONE) {
+	session_unset();
+	session_destroy();
+}
 session_start();
 
 set_error_handler('\Infojor\\myErrorHandler');

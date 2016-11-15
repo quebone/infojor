@@ -25,6 +25,20 @@ function cleanError() {
 }
 
 function logout() {
-	console.log('exit');
 	window.location.replace('login.php');
 }
+
+function main() {
+	window.location.replace('main.php');
+}
+
+function disable(elem) {
+	elem.style.opacity = 0.4;
+	elem.style.pointerEvents = 'none';
+}
+
+function enable(elem) {
+	elem.style.opacity = 1;
+	elem.setAttribute('style', 'pointer-events: auto');
+}
+

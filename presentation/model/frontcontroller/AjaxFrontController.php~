@@ -40,18 +40,24 @@ class AjaxFrontController
 		foreach ($_POST as $key=>$value) {
 			$_SESSION[$key] = $value;
 		}
-		return json_encode($_POST);
+/*		reset($_POST);
+		$var = key($_POST);
+		$value = $_POST[$var];
+		$_SESSION[$var] = $value;
+*/		return json_encode($_POST);
 	}
 	
 	public function getEvaluationData()
 	{
+		if (!isset($_POST['studentId']) || !(isset($_POST['classroomId']) || isset($_POST['areaId']))) {
+			return "error";
+		}
 		$studentId = $_POST['studentId'];
 		$classroomId = $_POST['classroomId'];
 		$areaId = $_POST['areaId'];
-		$reinforceId = $_POST['reinforceId'];
 		$viewModel = new \Infojor\Presentation\Model\EvaluationViewModel(null, $this->em);
 		$tplEngine = new \Simi\TplEngine\TplEngine();
-		$evaluation = $viewModel->getEvaluations($studentId, $classroomId, $areaId, $reinforceId, false);
+		$evaluation = $viewModel->getEvaluations($studentId, $classroomId, false);
 		$data = $tplEngine->output('createEvaluations', $evaluation);
 		return json_encode($data, JSON_UNESCAPED_SLASHES);
 	}

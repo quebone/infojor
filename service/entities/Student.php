@@ -60,7 +60,7 @@ class Student extends Person
 		return null;
 	}
 	
-	public function createObservation ($text, Course $course) {
+	public function createObservation($text, Course $course) {
 		$observation = new Observation($text);
 		$observation->setStudent($this);
 		return $observation;

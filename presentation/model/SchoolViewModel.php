@@ -52,8 +52,31 @@ final class SchoolViewModel extends ViewModel {
 		return $data;
 	}
 	
-	public function getClassroomScopes($classromId):array
+	public function getArea($areaId):array
 	{
+		$data = array();
+		$area = $this->model->getArea($areaId);
+		if ($area != null) {
+			$data['id'] = $area->getId();
+			$data['name'] = $area->getName();
+		}
+		return $data;
+	}
+	
+	public function getReinforceClassroom($reinforceId):array
+	{
+		$data = array();
+		$reinforceClassroom = $this->model->getReinforceClassroom($reinforceId);
+		if ($reinforceClassroom != null) {
+			$data['id'] = $reinforceClassroom->getId();
+			$data['name'] = $reinforceClassroom->getName();
+		}
+		return $data;
+	}
+	
+	public function getScopes($classromId):array
+	{
+		$data = array();
 		$scopes = $this->model->getClassroomScopes($classromId);
 		foreach ($scopes as $scope) {
 			$id = $scope->getId();
@@ -64,16 +87,26 @@ final class SchoolViewModel extends ViewModel {
 		return $data;
 	}
 	
-	public function getScopeAreas($scopeId, $includeSpecialities):array
+	public function getScopeAreas($scopeId, $areaId = null):array
 	{
 		$data = array();
 		$areas = $this->model->getScopeAreas($scopeId);
 		if (count($areas) != null) {
-			foreach ($areas as $area) {
-				if ($includeSpecialities || !$area->isSpeciality()) {
-					$id = $area->getId();
-					$data[$id]['id'] = $id;
-					$data[$id]['name'] = $area->getName();
+			if ($areaId == null) {
+				foreach ($areas as $area) {
+					if (!$area->isSpeciality()) {
+						$id = $area->getId();
+						$data[$id]['id'] = $id;
+						$data[$id]['name'] = $area->getName();
+					}
+				}
+			} else {
+				foreach ($areas as $area) {
+					if ($area->getId() == $areaId) {
+						$id = $area->getId();
+						$data[$id]['id'] = $id;
+						$data[$id]['name'] = $area->getName();
+					}
 				}
 			}
 		}

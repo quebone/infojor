@@ -39,6 +39,11 @@ final class SchoolService extends MainService
 		return $this->entityManager->find('Infojor\\Service\\Entities\\Area', $id);
 	}
 	
+	public function getReinforceClassroom($id)
+	{
+		return $this->entityManager->find('Infojor\\Service\\Entities\\ReinforceClassroom', $id);
+	}
+	
 	public function getDimension($id)
 	{
 		return $this->entityManager->find('Infojor\\Service\\Entities\\Dimension', $id);

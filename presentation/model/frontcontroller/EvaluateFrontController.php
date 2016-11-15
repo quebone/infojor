@@ -6,21 +6,23 @@ class EvaluateFrontController extends FrontController
 	private $userId;
 	private $classroomId;
 	private $areaId;
+	private $reinforceId;
 	private $studentId;
 	private $userViewModel;
 	private $schoolViewModel;
 	private $evaluationViewModel;
 	
-	public function __construct($userId, $studentId, $classroomId, $areaId, \Doctrine\ORM\EntityManager $em)
+	public function __construct($userId, $studentId, $classroomId, $areaId, $reinforceId, \Doctrine\ORM\EntityManager $em)
 	{
 		parent::__construct($em);
 		$this->userId = $userId;
 		$this->classroomId = $classroomId;
 		$this->areaId = $areaId;
+		$this->reinforceId = $reinforceId;
 		$this->studentId = $studentId;
 		$this->createViewModels();
 		$this->getStudents();
-	}
+}
 	
 	private function createViewModels()
 	{
@@ -40,6 +42,6 @@ class EvaluateFrontController extends FrontController
 	
 	public function getEvaluationData($includeSpecialities = false): array
 	{
-		return $this->evaluationViewModel->getEvaluations($this->studentId, $this->classroomId, $includeSpecialities);
+		return $this->evaluationViewModel->getEvaluations($this->studentId, $this->classroomId, $this->areaId, $this->reinforceId, $includeSpecialities);
 	}
 }

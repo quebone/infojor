@@ -61,7 +61,7 @@ class Area {
 			foreach ($this->dimensions as $dimension) {
 				$cycles = $dimension->getCycles();
 				foreach ($cycles as $dimensionCycle) {
-					if ($cycle->getId() == $dimensionCycle->getId()) {
+					if ($cycle->getId() == $dimensionCycle->getId() && $dimension->isActive()) {
 						$filteredDimensions->add($dimension);
 					}
 				}

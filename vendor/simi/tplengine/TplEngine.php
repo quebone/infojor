@@ -35,8 +35,9 @@ class TplEngine
 	private function createEvaluations($data)
 	{
 // 		$inner = "<input id='classroomId' type='hidden' value='" . $data['classroom']['id'] . "' />\n";
-		$inner = "<div id='section'><h2>" .
-			$data['classroom']['name'] . "</h2>\n\t<h3> " . $data['student']['name'] . "</h3>\t\n</div>\n";
+		$inner = "<div id='section'><div id='section_header'><div class='selector' name='left' onclick='prevClassroom()'></div><h2>" .
+			$data['classroom']['name'] . "</h2><div class='selector' name='right' onclick='nextClassroom()'></div></div>
+					\n\t<h3> " . $data['student']['name'] . "\t\n</div>\n";
 		$inner .= "<ul>\n";
 		foreach ($data['scopes'] as $scope) {
 			$inner .= "\t<li class='scope'><h3>" . $scope['name'] . "</h3>\n";
@@ -75,8 +76,10 @@ class TplEngine
 			$inner .= "\t</ul>\n";
 			$inner .= "\t</li>\n";
 		}
-		$inner .= "\t<li class='scope'><h3>Observacions</h3>\n";
-		$inner .= "<input type='textarea' class='observation' onchange='changeObservation(this)' />" . $data['observation'] . "\n";
+		if ($data['observation'] != null) {
+			$inner .= "\t<li class='scope'><h3>Observacions</h3>\n";
+			$inner .= "<input type='textarea' class='observation' onchange='changeObservation(this)' />" . $data['observation'] . "\n";
+		}
 		$inner .= "</ul>\n";
 		return $inner;
 	}

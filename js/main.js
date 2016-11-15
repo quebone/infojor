@@ -1,7 +1,8 @@
 function load(pageName) {
 	section = pageName.substr(0, pageName.indexOf('-'));
 	id = encodeURI(pageName.substr(pageName.indexOf('-') + 1));
-	var dataToSend = 'sectionId=' + id + '&page=' + section + '&function=setSession';
+	sectionId = (section == 'tutorings' ? 'classroomId' : (section == 'specialities' ? 'areaId' : 'reinforceId'));
+	var dataToSend = sectionId +'=' + id + '&page=' + section + '&function=setSession';
 	send(dataToSend, 'presentation/controller/AjaxController.php', redirect);
 }
 
