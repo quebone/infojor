@@ -4,23 +4,28 @@ namespace Infojor\Presentation\Model;
 require_once 'vendor/fpdf181/fpdf.php';
 
 final class ReportViewModel extends ViewModel {
+	private $student;
+	private $classroom;
 	private $userModel;
 	private $schoolModel;
 	
-	public function __construct(\Doctrine\ORM\EntityManager $entityManager) {
+	public function __construct(\Doctrine\ORM\EntityManager $entityManager, $student = null, $classroom = null) {
 		parent::__construct(null, $entityManager);
 		$this->userModel = new \Infojor\Service\UserService($entityManager);
 		$this->schoolModel = new \Infojor\Service\SchoolService($entityManager);
+		$this->student = $student;
+		$this->classroom = $classroom;
 	}
 
-	
 	public function getData()
 	{
-		$studentId = 32;
-// 		$studentId = 44;
-		$classroomId = 15;
-		return  $this->getClassroomStudents($classroomId);
-		// 		return $this->getStudent($studentId);
+		$data = null;
+		if ($this->classroom != null) {
+			$data = $this->getClassroomStudents($this->classroom);
+		} else if ($this->student != null) {
+			$data[$this->student] = $this->getStudent($this->student);
+		}
+		return $data;
 	}
 	
 	public function getClassroomStudents($classroomId)

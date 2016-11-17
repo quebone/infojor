@@ -32,6 +32,28 @@ function main() {
 	window.location.replace('main.php');
 }
 
+function printClassroom() {
+	var classroom = document.getElementById("classroomId").value;
+	if (classroom != null) {
+		var dataToSend = 'classroomId=' + encodeURI(classroom) + '&function=setSession';
+		send(dataToSend, 'presentation/controller/AjaxController.php', createReport);
+	}
+}
+
+function printStudent() {
+	var student = document.getElementsByClassName('selected')[0].id;
+	var pos = student.lastIndexOf('-');
+	var studentId = student.substr(pos + 1);
+	if (student != null) {
+		var dataToSend = 'classroomId=&studentId=' + encodeURI(studentId) + '&function=setSession';
+		send(dataToSend, 'presentation/controller/AjaxController.php', createReport);
+	}
+}
+
+function createReport(msg) {
+	window.open('report.php')
+}
+
 function disable(elem) {
 	elem.style.opacity = 0.4;
 	elem.style.pointerEvents = 'none';

@@ -322,4 +322,9 @@ text, such as <a href="http://www.fpdf.org">www.fpdf.org</a>, or on an image: cl
 	$pdf->Output();
 }
 
-test11();
+//textArea
+function test12() {
+	echo "<html><body><textarea rows='4' cols='50'>Patata</textarea></body></html>";
+}
+
+test12();

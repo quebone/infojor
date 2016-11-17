@@ -5,7 +5,6 @@
 	<meta name="author" content="carles" />
 	<link rel="stylesheet" href="presentation/css/styles.css?v=1.0" />
 	<link rel="stylesheet" href="presentation/css/compact-nav.css?v=1.0" />
-	<link rel="stylesheet" href="presentation/css/tooltip.css?v=1.0" />
 	<link rel="stylesheet" href="presentation/css/evaluate.css?v=1.0" />
 </head>
 <body>
@@ -30,7 +29,6 @@
 	<div id="tooltip">Tooltip</div>
   <script src="js/scripts.js"></script>
   <script src="js/evaluate.js"></script>
-  <script src="js/tooltip.js"></script>
   <script src="js/compact-nav.js"></script>
 </body>
 </html>

@@ -127,7 +127,7 @@ function changeObservation(obs) {
 }
 
 function evaluationChanged(msg) {
-//	console.log(msg);
+	console.log(msg);
 }
 
 function changeStudentsHeight() {

@@ -35,7 +35,6 @@ function showEvaluation(evaluation) {
 	if (document.getElementById('areaId').value == '' && document.getElementById('reinforceId').value == '') {
 		enableClassroomSelectors(false);
 	}
-	setDimensionTooltip();
 }
 
 function unselectStudents() {
@@ -122,13 +121,14 @@ function changeGE(ge) {
 
 function changeObservation(obs) {
 	var obsText = encodeURI(obs.value);
+	console.log(obsText);
 	var obsReinforce = obs.name;
 	var dataToSend = 'studentId=' + findActiveStudentId() + '&observation=' + obsText + '&reinforceId=' + obsReinforce + '&function=setObservation';
 	send(dataToSend, 'presentation/controller/AjaxController.php', evaluationChanged);
 }
 
 function evaluationChanged(msg) {
-//	console.log(msg);
+	console.log(msg);
 }
 
 function changeStudentsHeight() {

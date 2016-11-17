@@ -141,9 +141,11 @@ input {
 }
 
 .observation {
-	width: 97%;
+	width: 100%;
 	min-height: 50px;
 	overflow: auto;
+	resize: vertical;
+	font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
 }
 
 img#thumbnail {

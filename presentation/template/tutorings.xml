@@ -26,7 +26,6 @@
 	<div id="right_column">
 	</div>
 </main>
-	<div id="tooltip">Tooltip</div>
   <script src="js/scripts.js"></script>
   <script src="js/evaluate.js"></script>
   <script src="js/compact-nav.js"></script>

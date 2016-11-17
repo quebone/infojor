@@ -11,5 +11,5 @@ function load(pageName) {
 function redirect(toPage) {
 	vars = JSON.parse(toPage);
 	console.log(toPage);
-//	window.location.href = vars.page + '.php';
+	window.location.href = vars.page + '.php';
 }

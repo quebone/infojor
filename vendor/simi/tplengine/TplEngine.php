@@ -78,13 +78,13 @@ class TplEngine
 		}
 		if ($data['observation'] !== null) {
 			$inner .= "\t<li class='scope'><h3>Observacions</h3>\n";
-			$inner .= "<input type='textarea' class='observation' name='" . $data['reinforcing']['id'] . 
-				"'onchange='changeObservation(this)' value=" . '"' . $data['observation'] . '"' . "/>\n";
+			$inner .= "<textarea class='observation' name='" . $data['reinforcing']['id'] . 
+				"'onchange='changeObservation(this)'>" . $data['observation'] . "</textarea>\n";
 		}
 		if ($data['reinforcing'] !== null) {
 			$inner .= "\t<li class='scope'><h3>" . $data['reinforcing']['name'] . "</h3>\n";
-			$inner .= "<input type='textarea' class='observation' name='" . $data['reinforcing']['id'] . 
-				"' onchange='changeObservation(this)' value=" . '"' . $data['reinforcing']['observation']['text'] . '"' . "/>\n";
+			$inner .= "<textarea class='observation' name='" . $data['reinforcing']['id'] . 
+				"' onchange='changeObservation(this)'>" . $data['reinforcing']['observation']['text'] . "</textarea>\n";
 		}
 		$inner .= "</ul>\n";
 		return $inner;

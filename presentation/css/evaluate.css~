@@ -141,9 +141,11 @@ input {
 }
 
 .observation {
-	width: 97%;
+	width: 100%;
 	min-height: 50px;
 	overflow: auto;
+	resize: vertical;
+	font-family: 'Arial';
 }
 
 img#thumbnail {
@@ -171,7 +173,6 @@ img#thumbnail {
 }
 
 .selector[name=right] {
-	display: inline-block;
 	background-image: url('../images/next.png');
 }
 

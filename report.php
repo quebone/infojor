@@ -11,11 +11,16 @@ require_once 'vendor/simi/tplengine/PDFEngine.php';
 if (isset($_SESSION['userid'])) {
 	$userId = $_SESSION['userid'];
 } else {
-//  	header('Location: login.php');
-	$userId = 1;
+ 	header('Location: login.php');
 }
 
-$viewModel = new \Infojor\Presentation\Model\ReportViewModel($entityManager);
+// var_dump($_SESSION);
+// exit();
+$studentId = $_SESSION['studentId'];
+// $studentId = null;
+$classroomId = $_SESSION['classroomId'];
+
+$viewModel = new \Infojor\Presentation\Model\ReportViewModel($entityManager, $studentId, $classroomId);
 $data = $viewModel->getData();
 $tplEngine = new \Simi\TplEngine\PDFEngine($data);
 $tplEngine->Output('I');
