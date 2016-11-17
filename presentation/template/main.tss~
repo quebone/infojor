@@ -1,4 +1,5 @@
-title {content: 'Informes JOR'}
-header {content: data(header)}
+@import 'header.tss';
 
+title {content: 'Informes JOR'}
+header {content: template('header.xml')}
 main {content: data(sections)}

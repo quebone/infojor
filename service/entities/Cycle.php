@@ -51,7 +51,7 @@ class Cycle {
 		$this->levels = $levels;
 	}
 	
-	public function getDegree() {
+	public function getDegree():Degree {
 		return $this->degree;
 	}
 	

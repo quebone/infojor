@@ -1,6 +1,8 @@
 <?php
 namespace Infojor\Service;
 
+use Infojor\Service\Entities\Observation;
+
 final class EvaluationService extends MainService
 {
 	public function __construct(\Doctrine\ORM\EntityManager $entityManager) {
@@ -132,34 +134,42 @@ final class EvaluationService extends MainService
 			//create new evaluation
 			$evaluation = $student->createAreaEvaluation($area, $course, $trimestre, $ed);
 			$this->entityManager->persist($evaluation);
-			$this->entityManager->flush($evaluation);
-			return "created";
 		} else {
 			if ($markId == 0) {
 				//delete evaluation
 				$this->entityManager->remove($evaluation);
-				$this->entityManager->flush($evaluation);
-				return "deleted";
 			} else {
 				//update evaluation
 				$evaluation->setGlobalEvaluationDescription($ed);
 				$this->entityManager->persist($evaluation);
-				$this->entityManager->flush($evaluation);
-				return "updated";
 			}
 		}
+		$this->entityManager->flush($evaluation);
 	}
 	
-	public function setObservation($studentId, $text)
+	public function setObservation($studentId, $text, $reinforceId = null)
 	{
 		$userModel = new UserService($this->entityManager);
 		$schoolModel = new SchoolService($this->entityManager);
 		$course = $this->getActiveCourse();
+		$trimestre = $this->getActiveTrimestre();
 		$student = $userModel->getStudent($studentId);
-		$observation = $student->getCourseObservation($course);
-		$observation->setText($text);
-		$this->entityManager->persist($observation);
+		$reinforceClassroom = $reinforceId ? $schoolModel->getReinforceClassroom($reinforceId) : null;
+		$observation = $student->getCourseObservation($course, $trimestre, $reinforceClassroom);
+		if ($observation == null) {
+			//create new observation
+			$observation = new Observation($text, $student, $course, $trimestre, $reinforceClassroom);
+			$this->entityManager->persist($observation);
+		} else {
+			if ($text == null) {
+				//delete observation
+				$this->entityManager->remove($observation);
+			} else {
+				//update observation
+				$observation->setText($text);
+				$this->entityManager->persist($observation);
+			}
+		}
 		$this->entityManager->flush($observation);
-		return "updated";
 	}
 }

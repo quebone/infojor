@@ -10,18 +10,24 @@ class School
 	private $id;
 	/** @Column(type="string", length=50) **/
 	private $name;
-
 	/**
 	 * @OneToOne(targetEntity="Course")
 	 * @JoinColumn(name="active_course", referencedColumnName="year")
 	 */
 	private $activeCourse;
-	
 	/**
 	 * @OneToOne(targetEntity="Trimestre")
 	 * @JoinColumn(name="active_trimestre", referencedColumnName="number")
 	 */
 	private $activeTrimestre;
+	/**
+	 * @OneToMany(targetEntity="ReinforceClassroom", mappedBy="school")
+	 */
+	private $reinforceClassrooms;
+	
+	public function __construct() {
+		$this->reinforceClassrooms = new \Doctrine\Common\Collections\ArrayCollection();
+	}
 	
 	public function getName()
 	{
@@ -63,5 +69,9 @@ class School
 			}
 		}
 		return $students;
+	}
+	
+	public function getReinforceClassrooms() {
+		return $this->reinforceClassrooms;
 	}
 }

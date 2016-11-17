@@ -12,24 +12,24 @@ session_start();
 require_once 'init.php';
 
 if (isset($_SESSION['userid'])) {
-	$userId = $_SESSION['userid'];
-	$areaId = $_SESSION['areaId'];
-	$classroomId = $_SESSION['classroomId'];
-	$studentId = $_SESSION['studentid'];
+	$userId = (int) $_SESSION['userid'];
+	$reinforceId = (int) $_SESSION['reinforceId'];
+	$classroomId = (int) $_SESSION['classroomId'];
+	$studentId = (int) $_SESSION['studentid'];
 } else {
 //  	header('Location: login.php');
-	$_SESSION['userid'] = 1; $_SESSION['areaId'] = 12; $_SESSION['studentid'] = 15; $_SESSION['classroomId'] = 7;
+	$_SESSION['userid'] = 1; $_SESSION['reinforceId'] = 1; $_SESSION['studentid'] = 15; $_SESSION['classroomId'] = 7;
 	$userId = $_SESSION['userid'];
-	$areaId = $_SESSION['areaId'];
+	$reinforceId = $_SESSION['reinforceId'];
 	$studentId = $_SESSION['studentid'];
 	$classroomId = $_SESSION['classroomId'];
 }
 
 if ($classroomId == null) $classroomId = 7;
 
-$frontController = new EvaluateFrontController($userId, $studentId, $classroomId, $areaId, null, $entityManager);
+$frontController = new EvaluateFrontController($userId, $studentId, $classroomId, null, $reinforceId, $entityManager);
 $data = $frontController->getData();
 $data->classroomId = $classroomId;
-$data->areaId = $areaId;
+$data->reinforceId = $reinforceId;
 $template = new \Transphporm\Builder(TPLDIR.'tutorings.xml', TPLDIR.'tutorings.tss');
 echo $template->output($data)->body;

@@ -40,14 +40,14 @@ class TplEngine
 					\n\t<h3> " . $data['student']['name'] . "\t\n</div>\n";
 		$inner .= "<ul>\n";
 		foreach ($data['scopes'] as $scope) {
-			$inner .= "\t<li class='scope'><h3>" . $scope['name'] . "</h3>\n";
+			$inner .= "\t<li class='scope' title=\"" . $scope['description'] . "\"><h3>" . $scope['name'] . "</h3>\n";
 			$inner .= "\t<ul>\n";
 			foreach ($scope['areas'] as $area) {
 				$inner .= "\t\t<li class='area'><h4>" . $area['name'] . "</h4>";
 				$inner .= "\n\t\t<table>\n";
 				foreach ($area['dimensions'] as $dimension) {
 					$checked = false;
-					$inner .= "\t\t\t<tr><td class='dimension' descr=\"" . $dimension['description'] . "\">" . $dimension['name'] . "</td><td class='input'>";
+					$inner .= "\t\t\t<tr><td class='dimension' title=\"" . $dimension['description'] . "\">" . $dimension['name'] . "</td><td class='input'>";
 					$pe = $dimension['pe'];
 					foreach ($data['peds'] as $ped) {
 						if (!strcmp($ped['mark'], $pe)) $checked = true;
@@ -76,9 +76,15 @@ class TplEngine
 			$inner .= "\t</ul>\n";
 			$inner .= "\t</li>\n";
 		}
-		if ($data['observation'] != null) {
+		if ($data['observation'] !== null) {
 			$inner .= "\t<li class='scope'><h3>Observacions</h3>\n";
-			$inner .= "<input type='textarea' class='observation' onchange='changeObservation(this)' />" . $data['observation'] . "\n";
+			$inner .= "<input type='textarea' class='observation' name='" . $data['reinforcing']['id'] . 
+				"'onchange='changeObservation(this)' value=" . '"' . $data['observation'] . '"' . "/>\n";
+		}
+		if ($data['reinforcing'] !== null) {
+			$inner .= "\t<li class='scope'><h3>" . $data['reinforcing']['name'] . "</h3>\n";
+			$inner .= "<input type='textarea' class='observation' name='" . $data['reinforcing']['id'] . 
+				"' onchange='changeObservation(this)' value=" . '"' . $data['reinforcing']['observation']['text'] . '"' . "/>\n";
 		}
 		$inner .= "</ul>\n";
 		return $inner;

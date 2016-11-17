@@ -10,7 +10,7 @@ class Teacher extends Person
 	private $email;
 	/** @Column(type="string", length=13, nullable=true) **/
 	private $phone;
-	/** @Column(type="string", length=20) **/
+	/** @Column(type="string", length=40) **/
 	private $username;
 	/** @Column(type="string", length=40) **/
 	private $password;

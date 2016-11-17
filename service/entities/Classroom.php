@@ -15,13 +15,20 @@ class Classroom
 	 * @JoinColumn(name="level_id", referencedColumnName="id")
 	 */
 	private $level;
-	
-	private $teachers;
+	/**
+	 * @OneToMany(targetEntity="Enrollment", mappedBy="classroom")
+	 */
+	private $enrollments;
+	/**
+	 * @OneToMany(targetEntity="Tutoring", mappedBy="classroom")
+	 */
+	private $tutors;
 	
 	public function __construct() {
-		$this->teachers = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->tutors = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->enrollments = new \Doctrine\Common\Collections\ArrayCollection();
 		$this->levels = new \Doctrine\Common\Collections\ArrayCollection();
-		}
+	}
 
 	public function getId() {
 		return $this->id;
@@ -39,12 +46,22 @@ class Classroom
 		return $this->level;
 	}
 	
-	public function getTeachers() {
-		return $this->teachers;
+	public function getTutors(Course $course, Trimestre $trimestre) {
+		$tutors = new \Doctrine\Common\Collections\ArrayCollection();
+		foreach ($this->tutors as $tutor) {
+			if ($tutor->getCourse() == $course && $tutor->getTrimestre() == $trimestre) {
+				$tutors->add($tutor);
+			}
+		}
+		return $tutors;
 	}
 	
 	public function getScopes() {
 		return $this->level->getScopes();
+	}
+	
+	public function getEnrollments() {
+		return $this->enrollments;
 	}
 }
 	

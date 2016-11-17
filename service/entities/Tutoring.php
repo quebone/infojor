@@ -16,7 +16,7 @@ class Tutoring
 	private $teacher;
 	
 	/**
-	 * @ManyToOne(targetEntity="Classroom")
+	 * @ManyToOne(targetEntity="Classroom", inversedBy="tutors"))
 	 * @JoinColumn(name="classroom_id", referencedColumnName="id")
 	 */
 	private $classroom;

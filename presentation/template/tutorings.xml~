@@ -14,7 +14,7 @@
 </div>
 <input id='classroomId' type='hidden' />
 <input id='areaId' type='hidden' />
-<input id='reinfoceId' type='hidden' />
+<input id='reinforceId' type='hidden' />
 <main>
 	<div id="students-wrapper">
 	<div id="students">

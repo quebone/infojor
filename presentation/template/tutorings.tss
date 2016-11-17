@@ -1,6 +1,6 @@
 @import 'header.tss';
 
-title {content: 'Informes: tutoria ', data(classroom)}
+title {content: 'Informes - valoracions'}
 header {content: template("header.xml")}
 #classroomId:attr(value) {content: data(classroomId); }
 #areaId:attr(value) {content: data(areaId); }

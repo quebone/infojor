@@ -8,25 +8,21 @@ class Enrollment
 {
 	/** @Id @Column(type="integer") @GeneratedValue **/
 	private $id;
-
 	/**
-	 * @ManyToOne(targetEntity="Student")
+	 * @ManyToOne(targetEntity="Student", inversedBy="classrooms")
 	 * @JoinColumn(name="student_id", referencedColumnName="id")
 	 */
 	private $student;
-	
 	/**
-	 * @ManyToOne(targetEntity="Classroom")
+	 * @ManyToOne(targetEntity="Classroom", inversedBy="students")
 	 * @JoinColumn(name="classroom_id", referencedColumnName="id")
 	 */
 	private $classroom;
-
 	/**
 	 * @ManyToOne(targetEntity="Course")
 	 * @JoinColumn(name="course_id", referencedColumnName="year")
 	 */
 	private $course;
-
 	/**
 	 * @ManyToOne(targetEntity="Trimestre")
 	 * @JoinColumn(name="trimestre_id", referencedColumnName="number")

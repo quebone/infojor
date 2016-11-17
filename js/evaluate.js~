@@ -20,7 +20,6 @@ function changeStudent(student)
 	var studentId = student.getAttribute('id').replace('student-','');
 	var dataToSend = 'studentId=' + studentId + '&classroomId=' + classroomId + '&areaId=' + areaId + '&reinforceId=' + reinforceId + '&function=getEvaluationData';
 	send(dataToSend, 'presentation/controller/AjaxController.php', showEvaluation);
-	console.log(dataToSend);	
 	unselectStudents();
 	selectStudent(student);
 	getImage(student);
@@ -99,11 +98,10 @@ function changeClassroom(offset) {
 	currentClassroom = parseInt(document.getElementById('classroomId').value) + offset;
 	if (currentClassroom <= maxClassroom && currentClassroom >= minClassroom) {
 		document.getElementById('classroomId').value = currentClassroom;
-		var dataToSend = 'sectionId=' + currentClassroom + '&page=specialities&function=setSession';
+		var dataToSend = 'classroomId=' + currentClassroom + '&page=specialities&function=setSession';
 		send(dataToSend, 'presentation/controller/AjaxController.php', redirect);
 	}
 }
-
 
 function redirect(toPage) {
 	vars = JSON.parse(toPage);
@@ -119,19 +117,18 @@ function changePE(pe) {
 function changeGE(ge) {
 	var areaId = encodeURI(parseInt(ge.name.substr(4)));
 	var dataToSend = 'studentId=' + findActiveStudentId() + '&areaId=' + areaId + '&markId=' + ge.value + '&function=setGlobalEvaluation';
-	console.log(dataToSend);
 	send(dataToSend, 'presentation/controller/AjaxController.php', evaluationChanged);
 }
 
 function changeObservation(obs) {
-	var obsText = JSON.stringify(obs.value);
-	var dataToSend = 'studentId=' + findActiveStudentId() + '&observation=' + obsText + '&function=setObservation';
-	console.log(dataToSend);
+	var obsText = encodeURI(obs.value);
+	var obsReinforce = obs.name;
+	var dataToSend = 'studentId=' + findActiveStudentId() + '&observation=' + obsText + '&reinforceId=' + obsReinforce + '&function=setObservation';
 	send(dataToSend, 'presentation/controller/AjaxController.php', evaluationChanged);
 }
 
 function evaluationChanged(msg) {
-	console.log(msg);
+//	console.log(msg);
 }
 
 function changeStudentsHeight() {

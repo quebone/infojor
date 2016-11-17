@@ -78,8 +78,9 @@ class AjaxFrontController
 	{
 		$studentId = $_POST['studentId'];
 		$text = $_POST['observation'];
+		$reinforceId = $_POST['reinforceId'];
 		$viewModel = new \Infojor\Presentation\Model\EvaluationViewModel(null, $this->em);
-		return $viewModel->setObservation($studentId, $observation);
+		return $viewModel->setObservation($studentId, $text, $reinforceId);
 	}
 	
 	public function getThumbnail() {

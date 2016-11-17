@@ -61,43 +61,57 @@ final class EvaluationViewModel extends ViewModel {
 		$student = $userModel->getStudent($studentId);
 		$cycle = $schoolModel->getClassroom($classroomId)->getLevel()->getCycle();
 		$course = $schoolModel->getActiveCourse();
+		$trimestre = $schoolModel->getActiveTrimestre();
 		$evaluation['peds'] = $this->getPartialEvaluationDescriptions();
 		$evaluation['geds'] = $this->getGlobalEvaluationDescriptions();
 		$evaluation['classroom'] = $schoolViewModel->getClassroom($classroomId);
 		$evaluation['area'] = $schoolViewModel->getArea($areaId);
-		$evaluation['reinforce'] = $schoolViewModel->getReinforceClassroom($reinforceId);
 		$evaluation['student']['name'] = $student->getName() . " " . $student->getSurnames();
-		$scopes = $schoolViewModel->getScopes($classroomId);
-		$evaluation['scopes'] = $scopes;
-		foreach ($scopes as $scope) {
-			$areas = $schoolViewModel->getScopeAreas($scope['id'], $areaId);
-			$evaluation['scopes'][$scope['id']]['areas'] = $areas;
-			foreach ($areas as $area) {
-				$dimensions = $schoolViewModel->getAreaDimensions($area['id'], $cycle);
-				$evaluation['scopes'][$scope['id']]['areas'][$area['id']]['dimensions'] = $dimensions;
-				if ($dimensions != null) {
-					foreach ($dimensions as $dimension) {
-						$pe = $this->getDimensionEvaluation($studentId, $dimension['id']);
-						$evaluation['scopes'][$scope['id']]['areas'][$area['id']]['dimensions'][$dimension['id']]['pe'] = $pe;
+		if ($reinforceId == null) {
+			$scopes = $schoolViewModel->getScopes($classroomId);
+			$evaluation['scopes'] = $scopes;
+			foreach ($scopes as $scope) {
+				$areas = $schoolViewModel->getScopeAreas($scope['id'], $areaId);
+				$evaluation['scopes'][$scope['id']]['areas'] = $areas;
+				foreach ($areas as $area) {
+					$dimensions = $schoolViewModel->getAreaDimensions($area['id'], $cycle);
+					$evaluation['scopes'][$scope['id']]['areas'][$area['id']]['dimensions'] = $dimensions;
+					if ($dimensions != null) {
+						foreach ($dimensions as $dimension) {
+							$pe = $this->getDimensionEvaluation($studentId, $dimension['id']);
+							$evaluation['scopes'][$scope['id']]['areas'][$area['id']]['dimensions'][$dimension['id']]['pe'] = $pe;
+						}
 					}
+					$ge = $this->getAreaEvaluation($studentId, $area['id']);
+					$evaluation['scopes'][$scope['id']]['areas'][$area['id']]['ge'] = $ge;
 				}
-				$ge = $this->getAreaEvaluation($studentId, $area['id']);
-				$evaluation['scopes'][$scope['id']]['areas'][$area['id']]['ge'] = $ge;
+				$ge = $this->getScopeEvaluation($studentId, $scope['id']);
+				$evaluation['scopes'][$scope['id']]['ge'] = $ge;
 			}
-			$ge = $this->getScopeEvaluation($studentId, $scope['id']);
-			$evaluation['scopes'][$scope['id']]['ge'] = $ge;
-		}
-		// eliminem els àmbits sense àrea
-		foreach ($evaluation['scopes'] as $scope) {
-			if (count($scope['areas']) == 0) {
-				unset($evaluation['scopes'][$scope['id']]);
+			// eliminem els àmbits sense àrea
+			foreach ($evaluation['scopes'] as $scope) {
+				if (count($scope['areas']) == 0) {
+					unset($evaluation['scopes'][$scope['id']]);
+				}
 			}
-		}
-		if ($areaId == null || $reinforceId == null) {
-			$evaluation['observation'] = $student->getCourseObservation($course);
-		}
-		if ($reinforceId != null) {
-			// TODO
+			if ($areaId == null && $reinforceId == null) {
+				$observation = $student->getCourseObservation($course, $trimestre);
+				$observationText = $observation != null ? $observation->getText() : '';
+				$evaluation['observation'] = $observationText;
+			} else {
+				$evaluation['observation'] = null;
+			}
+		} else {
+			$reinforceClassroom = $schoolModel->getReinforceClassroom($reinforceId);
+			$evaluation['reinforcing'] = $schoolViewModel->getReinforceClassroom($reinforceId);
+			$observation = $student->getCourseObservation($course, $trimestre, $reinforceClassroom);
+			if ($observation == null) {
+				$evaluation['reinforcing']['observation']['id'] = null;
+				$evaluation['reinforcing']['observation']['text'] = '';
+			} else {
+				$evaluation['reinforcing']['observation']['id'] = $observation->getId();
+				$evaluation['reinforcing']['observation']['text'] = $observation->getText();
+			}
 		}
 		return $evaluation;
 	}
@@ -112,7 +126,7 @@ final class EvaluationViewModel extends ViewModel {
 		return $this->model->setGlobalEvaluation($studentId, $evaluationId, $markId);
 	}
 	
-	public function setObservation($studentId, $observation) {
-		return $this->model->setObservation($studentId, $observation);
+	public function setObservation($studentId, $text, $reinforceId=null) {
+		return $this->model->setObservation($studentId, $text, $reinforceId);
 	}
 }

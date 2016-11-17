@@ -74,5 +74,14 @@ class Area {
 	public function isSpeciality() {
 		return $this->speciality;
 	}
+	
+	public function getGlobalEvaluation(Student $student, Course $course, Trimestre $trimestre) {
+		foreach ($this->globalEvaluations as $ge) {
+			if ($ge->getStudent() == $student && $ge->getCourse() == $course && $ge->getTrimestre() == $trimestre) {
+				return $ge;
+			}
+		}
+		return null;
+	}
 }
 	

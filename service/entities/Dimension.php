@@ -19,7 +19,7 @@ class Dimension {
 	 */
 	private $area;
 	/**
-	 * @OneToMany(targetEntity="PartialEvaluation", mappedBy="id")
+	 * @OneToMany(targetEntity="PartialEvaluation", mappedBy="dimension")
 	 */
 	private $partialEvaluations;
 	/**
@@ -63,5 +63,14 @@ class Dimension {
 	
 	public function getCycles() {
 		return $this->cycles;
+	}
+	
+	public function getPartialEvaluation(Student $student, Course $course, Trimestre $trimestre) {
+		foreach ($this->partialEvaluations as $pe) {
+			if ($pe->getStudent() == $student && $pe->getCourse() == $course && $pe->getTrimestre() == $trimestre) {
+				return $pe;
+			}
+		}
+		return null;
 	}
 }

@@ -1,2 +1,4 @@
+@import 'header.tss';
+
 title {content: 'Login'}
-header {content: data(header)}
+header {content: template('header.xml')}
