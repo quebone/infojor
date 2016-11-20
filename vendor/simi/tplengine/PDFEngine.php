@@ -4,6 +4,8 @@ namespace Simi\TplEngine;
 class PDFEngine extends \FPDF
 {
 	private $data;
+	private $pageNumber;
+	private $trHeader;	//trimestres columns' headers
 	protected $B = 0;
 	protected $I = 0;
 	protected $U = 0;
@@ -27,6 +29,18 @@ class PDFEngine extends \FPDF
 		$this->SetMargins(LEFT, TOP);
 		$this->AliasNbPages();
 		$this->SetAutoPageBreak(false);
+		$this->trHeader = array(
+				'1' => array(
+						'start' => 149,
+						'offset' => 7,
+						'headers' => array('1r t.', '2n t.', 'Final'),
+				),
+				'2' => array(
+						'start' => 142,
+						'offset' => 7,
+						'headers' => array('1r t.', '2n t.', '3r t.', 'Final'),
+				),
+		);
 	}
 	
 	private function placeHeader() {
@@ -35,7 +49,7 @@ class PDFEngine extends \FPDF
 		$this->SetFont(FONT, '', 14);
 	}
 	
-	private function placeFooter($student)
+	private function placeFooter($student, $pageNumber)
 	{
 		$this->SetLineWidth(.5);
 		$this->Line(LEFT, 276, LEFT + 170, 276);
@@ -48,14 +62,16 @@ class PDFEngine extends \FPDF
 		$this->Cell(1, 15, $this->decode($student['footer']['student'], 0, 0, 'C'));
 		$this->SetFont(FONT, '', 10);
 		$this->SetTextColor(0);
-		$this->Cell(0, 12, $this->PageNo(), 0, 0, 'R');
+		$this->Cell(0, 12, $pageNumber, 0, 0, 'R');
 	}
 	
 	private function body($student)
 	{
+		$this->pageNumber = 1;
 		$this->AddPage();
 		if (!($this->PageNo() % 2)) {
 			$this->AddPage();
+			$this->pageNumber = 1;
 		}
 		$this->placeHeader();
 		$this->SetY(TOP + 10);
@@ -76,14 +92,12 @@ class PDFEngine extends \FPDF
 		$this->SetLineWidth(1);
 		$this->Line(LEFT, TOP + 28, LEFT + 170, TOP + 28);
 		$this->SetXY(LEFT, TOP + 33);
-		$this->Write(0, 'Tutor/a: ' . $student['tutor']);
+		$this->Write(0, 'Tutor/a: ' . $this->decode($student['tutor']));
 		$y = TOP + 25;
 		foreach ($student['scopes'] as $scope) {
 			$y += 15;
-			if ($this->pageBreaksScope($scope, $y)) {
-				$this->placeFooter($student);
-				$this->AddPage();
-				$this->placeHeader();
+			if ($this->pageBreaksFirstArea($scope, $y)) {
+				$this->startNewPage($student);
 				$y = TOP + 10;
 			}
 			$this->SetFont(FONT, 'B', 11);
@@ -93,6 +107,10 @@ class PDFEngine extends \FPDF
 			$this->Line(LEFT, $y + 7.5, LEFT + 170, $y + 7.5);
 			$y += 4;
 			foreach ($scope['areas'] as $area) {
+				if ($this->pageBreaksArea($area, $y)) {
+					$this->startNewPage($student);
+					$y = TOP + 3;
+				}
 				$y += 6;
 				$this->SetFont(FONT, 'B', 11);
 				$this->SetLineWidth(.2);
@@ -100,15 +118,14 @@ class PDFEngine extends \FPDF
 				$this->Write(10, $this->decode($area['name']));
 				$this->Line(LEFT, $y + 7.5, LEFT + 170, $y + 7.5);
 				$this->SetFont(FONT, '', 6);
-				$start = 142; $offset = 7;
-				$this->SetXY(LEFT + $start, $y + 10);
-				$this->Write(0, '1r t.');
-				$this->SetX(LEFT + $start + $offset);
-				$this->Write(0, '2n t.');
-				$this->SetX(LEFT + $start + 2 * $offset);
-				$this->Write(0, '3r t.');
-				$this->SetX(LEFT + $start + 3 * $offset);
-				$this->Write(0, 'Final');
+				//place dimensions' header
+				$degreeId = $student['degree']['id'];
+				$x = $this->trHeader[$degreeId]['start'];
+				foreach ($this->trHeader[$degreeId]['headers'] as $header) {
+					$this->SetXY(LEFT + $x, $y + 10);
+					$this->Write(0, $header);
+					$x += $this->trHeader[$degreeId]['offset'];
+				}
 				$y += 10;
 				foreach ($area['dimensions'] as $dimension) {
 					$y += 6;
@@ -119,7 +136,7 @@ class PDFEngine extends \FPDF
 						$this->SetFont(FONT, 'I', 9);
 						$this->Write(0, " (" . $this->decode($dimension['description']) . ")");
 					}
-					$this->SetX(LEFT + $start + 1 - $this->GetStringWidth($dimension['mark']) / 2);
+					$this->SetX(LEFT + $this->trHeader[$degreeId]['start'] + 1 - $this->GetStringWidth($dimension['mark']) / 2);
 					$this->SetFont(FONT, 'B', 11);
 					$this->Write(0, $dimension['mark']);
 				}
@@ -127,7 +144,7 @@ class PDFEngine extends \FPDF
 				$this->SetXY(LEFT, $y);
 				$this->SetFont(FONT, '', 11);
 				$this->Write(0, $this->decode('Qualificació global'));
-				$this->SetX(LEFT + $start + 1 - $this->GetStringWidth($area['mark']) / 2);
+				$this->SetX(LEFT + $this->trHeader[$degreeId]['start'] + 1 - $this->GetStringWidth($area['mark']) / 2);
 				$this->SetFont(FONT, 'B', 11);
 				$this->Write(0, $area['mark']);
 				$this->SetLineWidth(.1);
@@ -156,7 +173,41 @@ class PDFEngine extends \FPDF
 		$this->SetFont(FONT, '', 11);
 		$this->SetXY(LEFT, $y);
 		$this->MultiCell(0, 5, $this->decode($student['reinforce']['text']));
-		$this->placeFooter($student);
+		$this->placeFooter($student, $this->pageNumber);
+	}
+
+	private function decode($inputText)
+	{
+		setlocale(LC_ALL, 'es_CA');
+		return $str = iconv('UTF-8', 'cp1252', $inputText);
+	}
+	
+	//scope and first area must stay in the same page 
+	private function pageBreaksFirstArea($scope, $y)
+	{
+		$y += 16;
+		$area = current($scope['areas']);
+		return $this->pageBreaksArea($area, $y);
+	}
+	
+	//area must stay entire in the same page
+	private function pageBreaksArea($area, $y) {
+// 		var_dump($area['dimensions']);exit;
+		$y += 38;
+		$maxY = 280;
+		foreach ((array) $area['dimensions'] as $dimension) {
+			$y += 6;
+		}
+		return $y > $maxY;
+	}
+	
+	//creates new page
+	private function startNewPage($student)
+	{
+		$this->placeFooter($student, $this->pageNumber);
+		$this->AddPage();
+		$this->pageNumber++;
+		$this->placeHeader();
 	}
 	
 	function WriteHTML($html)
@@ -237,23 +288,5 @@ class PDFEngine extends \FPDF
 		$this->Write(5,$txt,$URL);
 		$this->SetStyle('U',false);
 		$this->SetTextColor(0);
-	}
-	
-	private function decode($inputText)
-	{
-		setlocale(LC_ALL, 'es_CA');
-		return $str = iconv('UTF-8', 'cp1252', $inputText);
-	}
-	
-	private function pageBreaksScope($scope, $y)
-	{
-		$maxY = 280;
-		foreach ($scope['areas'] as $area) {
-			$y += 38;
-			foreach ($area['dimensions'] as $dimension) {
-				$y += 6;
-			}
-		}
-		return $y > $maxY;
 	}
 }

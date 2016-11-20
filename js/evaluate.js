@@ -46,7 +46,7 @@ function selectStudent(student) {
 	student.setAttribute('class', 'selected');
 }
 
-function findStudentId(offset = 0) {
+function findStudentId(offset) {
 	var markup = 'student-';
 	var pos = document.documentElement.innerHTML.indexOf(markup, offset) + markup.length;
 	var studentSize = document.documentElement.innerHTML.indexOf('"', pos) - pos;
@@ -77,7 +77,7 @@ function showImage(base64) {
 	image.src = base64;
 }
 
-function enableClassroomSelectors(enable = true) {
+function enableClassroomSelectors(enable) {
 	var newValue = enable ? 'visible' : 'hidden';
 	var classroomSelectors = document.getElementsByClassName('selector');
 	for (var i = 0; i< classroomSelectors.length; i++) {
@@ -97,14 +97,15 @@ function changeClassroom(offset) {
 	currentClassroom = parseInt(document.getElementById('classroomId').value) + offset;
 	if (currentClassroom <= maxClassroom && currentClassroom >= minClassroom) {
 		document.getElementById('classroomId').value = currentClassroom;
-		var dataToSend = 'classroomId=' + currentClassroom + '&page=specialities&function=setSession';
+		var toPage = window.location.pathname;
+		var dataToSend = 'classroomId=' + currentClassroom + '&page=' + encodeURI(toPage) + '&function=setSession';
 		send(dataToSend, 'presentation/controller/AjaxController.php', redirect);
 	}
 }
 
 function redirect(toPage) {
 	vars = JSON.parse(toPage);
-	window.location.href = vars.page + '.php';
+	window.location.href = vars.page;
 }
 
 function changePE(pe) {

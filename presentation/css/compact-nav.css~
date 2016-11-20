@@ -1,5 +1,5 @@
 nav.compact {
-	position: relative;
+	position: absolute;
 	float: right;
 	top: 35px;
 	right: 15px;
@@ -25,7 +25,7 @@ nav.compact ul {
 	right:0px;
 	top: 8px;
 	padding: 0;
-	background-color: #999;
+	background-color: darkslategrey;
 	display: none;
 }
 
@@ -44,7 +44,7 @@ nav.compact li a:hover {
 }
 
 nav.compact li.highlighted {
-	background-color: #555;
+	background-color: slategrey;
 }
 
 nav.compact ul li ul {

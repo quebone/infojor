@@ -5,10 +5,6 @@ use Infojor\Presentation\Model\FrontController\EvaluateFrontController;
 
 session_start();
 
-?>
-<!doctype html>
-<?php
-
 require_once 'init.php';
 
 if (isset($_SESSION['userid'])) {
@@ -17,13 +13,17 @@ if (isset($_SESSION['userid'])) {
 	$classroomId = $_SESSION['classroomId'];
 	$studentId = $_SESSION['studentid'];
 } else {
-//  	header('Location: login.php');
-	$_SESSION['userid'] = 1; $_SESSION['areaId'] = 12; $_SESSION['studentid'] = 15; $_SESSION['classroomId'] = 7;
-	$userId = $_SESSION['userid'];
-	$areaId = $_SESSION['areaId'];
-	$studentId = $_SESSION['studentid'];
-	$classroomId = $_SESSION['classroomId'];
+ 	header('Location: login.php');
+// 	$_SESSION['userid'] = 1; $_SESSION['areaId'] = 12; $_SESSION['studentid'] = 15; $_SESSION['classroomId'] = 7;
+// 	$userId = $_SESSION['userid'];
+// 	$areaId = $_SESSION['areaId'];
+// 	$studentId = $_SESSION['studentid'];
+// 	$classroomId = $_SESSION['classroomId'];
 }
+
+?>
+<!doctype html>
+<?php
 
 if ($classroomId == null) $classroomId = 7;
 

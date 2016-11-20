@@ -1,7 +1,7 @@
 <?php
 namespace Infojor\Presentation\Model;
 
-require_once 'vendor/fpdf181/fpdf.php';
+require_once BASEDIR.'vendor/fpdf181/fpdf.php';
 
 final class ReportViewModel extends ViewModel {
 	private $student;

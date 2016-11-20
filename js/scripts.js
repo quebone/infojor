@@ -35,8 +35,8 @@ function main() {
 function printClassroom() {
 	var classroom = document.getElementById("classroomId").value;
 	if (classroom != null) {
-		var dataToSend = 'classroomId=' + encodeURI(classroom) + '&function=setSession';
-		send(dataToSend, 'presentation/controller/AjaxController.php', createReport);
+		var dataToSend = 'classroomId=' + encodeURI(classroom) + '&function=printReport';
+		send(dataToSend, 'presentation/controller/AjaxController.php', openReport);
 	}
 }
 
@@ -45,12 +45,12 @@ function printStudent() {
 	var pos = student.lastIndexOf('-');
 	var studentId = student.substr(pos + 1);
 	if (student != null) {
-		var dataToSend = 'classroomId=&studentId=' + encodeURI(studentId) + '&function=setSession';
-		send(dataToSend, 'presentation/controller/AjaxController.php', createReport);
+		var dataToSend = 'classroomId=&studentId=' + encodeURI(studentId) + '&function=printReport';
+		send(dataToSend, 'presentation/controller/AjaxController.php', openReport);
 	}
 }
 
-function createReport(msg) {
+function openReport(msg) {
 	window.open('report.php')
 }
 

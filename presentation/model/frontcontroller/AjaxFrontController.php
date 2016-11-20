@@ -13,7 +13,9 @@ if (!defined('REQUIRED')) {
 	require_once '../../presentation/model/SchoolViewModel.php';
 	require_once '../../presentation/model/UserViewModel.php';
 	require_once '../../presentation/model/EvaluationViewModel.php';
+	require_once '../../presentation/model/ReportViewModel.php';
 	require_once '../../vendor/simi/tplengine/TplEngine.php';
+	require_once '../../vendor/simi/tplengine/PDFEngine.php';
 }
 
 class AjaxFrontController
@@ -96,5 +98,16 @@ class AjaxFrontController
 		$data = file_get_contents($path . $fileName);
 		$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
 		return $base64;
+	}
+	
+	public function printReport() {
+		$this->setSession();
+// 		$studentId = isset($_POST['studentId']) ? $_POST['studentId'] : null;
+// 		$classroomId = isset($_POST['classroomId']) ? $_POST['classroomId'] : null;
+// 		$viewModel = new \Infojor\Presentation\Model\ReportViewModel($this->em, $studentId, $classroomId);
+// 		$data = $viewModel->getData();
+// 		$pdfEngine = new \Simi\TplEngine\PDFEngine($data);
+// 		$pdfEngine->Output('I');
+// 		return $studentId . " / " . $classroomId;
 	}
 }

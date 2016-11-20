@@ -37,13 +37,13 @@ function initCompactMenu() {
 function highlightAll() {
 	var menuitems = document.getElementsByTagName("nav")[0].getElementsByTagName("li");
 	for (var i = 0; i < menuitems.length; i++) {
-		menuitems[i].onmouseover = function () {highlight(this)};
+		menuitems[i].onmouseover = function () {highlight(this, true)};
 		menuitems[i].onmouseout = function () {highlight(this, false)};
 	}
 }
 
-function highlight(elem, highlighted=true) {
-	if (highlighted) {
+function highlight(elem, highlighted) {
+	if (highlighted == true) {
 		elem.setAttribute("class", "highlighted");
 	} else {
 		elem.removeAttribute("class");
@@ -52,7 +52,7 @@ function highlight(elem, highlighted=true) {
 
 function showSubmenu(submenu) {
 	submenu.children[0].style.display = 'block';
-	highlight(submenu);
+	highlight(submenu, true);
 
 }
 

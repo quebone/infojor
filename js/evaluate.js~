@@ -97,14 +97,18 @@ function changeClassroom(offset) {
 	currentClassroom = parseInt(document.getElementById('classroomId').value) + offset;
 	if (currentClassroom <= maxClassroom && currentClassroom >= minClassroom) {
 		document.getElementById('classroomId').value = currentClassroom;
-		var dataToSend = 'classroomId=' + currentClassroom + '&page=specialities&function=setSession';
+		var toPage = window.location.pathname;
+		var dataToSend = 'classroomId=' + currentClassroom + '&page=' + encodeURI(toPage) + '&function=setSession';
+		console.log(dataToSend);
+//		return;
 		send(dataToSend, 'presentation/controller/AjaxController.php', redirect);
 	}
 }
 
 function redirect(toPage) {
+	console.log(toPage);
 	vars = JSON.parse(toPage);
-	window.location.href = vars.page + '.php';
+	window.location.href = vars.page;
 }
 
 function changePE(pe) {
@@ -121,7 +125,6 @@ function changeGE(ge) {
 
 function changeObservation(obs) {
 	var obsText = encodeURI(obs.value);
-	console.log(obsText);
 	var obsReinforce = obs.name;
 	var dataToSend = 'studentId=' + findActiveStudentId() + '&observation=' + obsText + '&reinforceId=' + obsReinforce + '&function=setObservation';
 	send(dataToSend, 'presentation/controller/AjaxController.php', evaluationChanged);

@@ -5,18 +5,18 @@ use Infojor\Presentation\Model\FrontController\MainFrontController;
 
 session_start();
 
-?>
-<!doctype html>
-<?php
-
 require_once 'init.php';
 
 if (isset($_SESSION['userid'])) {
 	$userId = $_SESSION['userid'];
 } else {
  	header('Location: login.php');
-	$userId = 1;
+// 	$userId = 1;
 }
+
+?>
+<!doctype html>
+<?php
 
 $frontController = new MainFrontController($userId, $entityManager);
 $data = $frontController->getData();

@@ -1,6 +1,6 @@
 <?php
 require_once 'init.php';
-require_once 'vendor/simi/tplengine/TplEngine.php';
+require_once 'vendor/simi/tplengine/PDFEngine.php';
 
 function createData1() {
 	$sections[0]['name'] = 'tutorings';
@@ -322,9 +322,9 @@ text, such as <a href="http://www.fpdf.org">www.fpdf.org</a>, or on an image: cl
 	$pdf->Output();
 }
 
-//textArea
 function test12() {
-	echo "<html><body><textarea rows='4' cols='50'>Patata</textarea></body></html>";
+	$controller = new \Infojor\Presentation\Model\FrontController\AjaxFrontController();
+	$controller->printReport();
 }
 
 test12();

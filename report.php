@@ -14,14 +14,10 @@ if (isset($_SESSION['userid'])) {
  	header('Location: login.php');
 }
 
-// var_dump($_SESSION);
-// exit();
 $studentId = $_SESSION['studentId'];
-// $studentId = null;
 $classroomId = $_SESSION['classroomId'];
 
 $viewModel = new \Infojor\Presentation\Model\ReportViewModel($entityManager, $studentId, $classroomId);
 $data = $viewModel->getData();
 $tplEngine = new \Simi\TplEngine\PDFEngine($data);
 $tplEngine->Output('I');
-// var_dump();
