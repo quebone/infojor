@@ -7,9 +7,9 @@ namespace Infojor\Service\Entities;
 class Dimension {
 	/** @Id @Column(type="integer") @GeneratedValue **/
 	private $id;
-	/** @Column(type="string", length=100) **/
+	/** @Column(type="string", length=256) **/
 	private $name;
-	/** @Column(type="string", length=100) **/
+	/** @Column(type="string", length=256) **/
 	private $description;
 	/** @Column(type="boolean", options={"default": true}) **/
 	private $active;

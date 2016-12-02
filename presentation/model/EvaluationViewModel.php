@@ -94,13 +94,13 @@ final class EvaluationViewModel extends ViewModel {
 					unset($evaluation['scopes'][$scope['id']]);
 				}
 			}
-			if ($areaId == null && $reinforceId == null) {
+// 			if ($areaId == null && $reinforceId == null) {
 				$observation = $student->getCourseObservation($course, $trimestre);
 				$observationText = $observation != null ? $observation->getText() : '';
 				$evaluation['observation'] = $observationText;
-			} else {
-				$evaluation['observation'] = null;
-			}
+// 			} else {
+// 				$evaluation['observation'] = null;
+// 			}
 		} else {
 			$reinforceClassroom = $schoolModel->getReinforceClassroom($reinforceId);
 			$evaluation['reinforcing'] = $schoolViewModel->getReinforceClassroom($reinforceId);

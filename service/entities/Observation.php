@@ -7,7 +7,7 @@ namespace Infojor\Service\Entities;
 class Observation {
 	/** @Id @Column(type="integer") @GeneratedValue **/
 	private $id;
-	/** @Column(type="string", length=512) **/
+	/** @Column(type="string", length=1024) **/
 	private $text;
 	/**
 	 * @ManyToOne(targetEntity="Course", inversedBy="observations")

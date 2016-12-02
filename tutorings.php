@@ -23,6 +23,7 @@ if (isset($_SESSION['userid']) && isset($_SESSION['classroomId'])) {
 <!doctype html>
 <?php
 
+$config->setAutoGenerateProxyClasses(DEVELOPMENT);
 $frontController = new EvaluateFrontController($userId, $studentId, $classroomId, null, null, $entityManager);
 $data = $frontController->getData();
 $data->classroomId = $classroomId;

@@ -17,6 +17,7 @@ if (isset($_SESSION['userid'])) {
 $studentId = $_SESSION['studentId'];
 $classroomId = $_SESSION['classroomId'];
 
+$config->setAutoGenerateProxyClasses(\Doctrine\Common\Proxy\AbstractProxyFactory::AUTOGENERATE_NEVER);
 $viewModel = new \Infojor\Presentation\Model\ReportViewModel($entityManager, $studentId, $classroomId);
 $data = $viewModel->getData();
 $tplEngine = new \Simi\TplEngine\PDFEngine($data);

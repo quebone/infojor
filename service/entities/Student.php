@@ -1,7 +1,5 @@
 <?php
 namespace Infojor\Service\Entities;
-use function foo\func;
-
 /**
  * @Entity @Table(name="students")
  **/

@@ -1,4 +1,4 @@
-var minClassroom = 7;
+var minClassroom = 1;
 var maxClassroom = 18;
 
 window.onload = init();

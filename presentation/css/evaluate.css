@@ -142,7 +142,8 @@ input {
 
 .observation {
 	width: 100%;
-	min-height: 50px;
+	min-height: 100px;
+	maxlength: 512;
 	overflow: auto;
 	resize: vertical;
 	font-family: Arial,Helvetica Neue,Helvetica,sans-serif;

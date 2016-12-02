@@ -1,6 +1,14 @@
 <?php
 namespace Simi\TplEngine;
 
+class Test extends \FPDF
+{
+	public function __construct($data)
+	{
+		parent::__construct();
+	}
+}
+
 class PDFEngine extends \FPDF
 {
 	private $data;
@@ -33,7 +41,7 @@ class PDFEngine extends \FPDF
 				'1' => array(
 						'start' => 149,
 						'offset' => 7,
-						'headers' => array('1r t.', '2n t.', 'Final'),
+						'headers' => array('1r t.', '3r t.'),
 				),
 				'2' => array(
 						'start' => 142,
@@ -127,52 +135,87 @@ class PDFEngine extends \FPDF
 					$x += $this->trHeader[$degreeId]['offset'];
 				}
 				$y += 10;
-				foreach ($area['dimensions'] as $dimension) {
-					$y += 6;
-					$this->setXY(LEFT + 3, $y);
-					$this->SetFont(FONT, '', 11);
-					$this->Write(0, $this->decode($dimension['name']));
-					if (strlen($dimension['description']) > 0) {
-						$this->SetFont(FONT, 'I', 9);
-						$this->Write(0, " (" . $this->decode($dimension['description']) . ")");
+				if (isset($area['dimensions'])) {
+					foreach ($area['dimensions'] as $dimension) {
+						$dimName = $this->decode($dimension['name']);
+						$dimDescr = $this->decode($dimension['description']);
+						$dimArr = array(
+								array(
+										'text' => $dimName,
+										'font' => FONT,
+										'style' => '',
+										'size' => 11
+								));
+						if (strlen($dimDescr) > 0) {
+							$dimArr[] = array(
+									'text' => "(" . $dimDescr . ")",
+									'font' => FONT,
+									'style' => 'I',
+									'size' => 9
+							);
+						}
+						foreach ($this->split($dimArr, 140) as $line) {
+							$y += 4.5;
+							$this->setXY(LEFT + 3, $y);
+							foreach ($line as $data) {
+								$this->SetFont($data['font'], $data['style'], $data['size']);
+								$this->Write(0, $data['text']);
+							}
+						}
+						$y += 1.5;
+						$this->SetX(LEFT + $this->trHeader[$degreeId]['start'] + 1 - $this->GetStringWidth($dimension['mark']) / 2);
+						$this->SetFont(FONT, 'B', 11);
+						$this->Write(0, $dimension['mark']);
 					}
-					$this->SetX(LEFT + $this->trHeader[$degreeId]['start'] + 1 - $this->GetStringWidth($dimension['mark']) / 2);
-					$this->SetFont(FONT, 'B', 11);
-					$this->Write(0, $dimension['mark']);
 				}
-				$y += 8;
-				$this->SetXY(LEFT, $y);
-				$this->SetFont(FONT, '', 11);
-				$this->Write(0, $this->decode('Qualificació global'));
-				$this->SetX(LEFT + $this->trHeader[$degreeId]['start'] + 1 - $this->GetStringWidth($area['mark']) / 2);
-				$this->SetFont(FONT, 'B', 11);
-				$this->Write(0, $area['mark']);
+				if (isset($area['mark'])) {
+					$y += 8;
+					$this->SetXY(LEFT, $y);
+					$this->SetFont(FONT, '', 11);
+					$this->Write(0, $this->decode('Qualificació global'));
+					$this->SetX(LEFT + $this->trHeader[$degreeId]['start'] + 1 - $this->GetStringWidth($area['mark']) / 2);
+					$this->SetFont(FONT, 'B', 11);
+					$this->Write(0, $area['mark']);
+				}
 				$this->SetLineWidth(.1);
 				$this->SetDrawColor(0x80);
 				$this->Line(LEFT, $y + 3, LEFT + 170, $y + 3);
 				$this->SetDrawColor(0);
 			}
 		}
-		$y += 10;
-		$this->SetFont(FONT, 'B', 11);
-		$this->SetLineWidth(.5);
-		$this->SetXY(LEFT, $y);
-		$this->Write(10, strtoupper($this->decode($student['observation']['title'])));
-		$this->Line(LEFT, $y + 7.5, LEFT + 170, $y + 7.5);
-		$y += 10;
-		$this->SetFont(FONT, '', 11);
-		$this->SetXY(LEFT, $y);
-		$this->MultiCell(0, 5, $this->decode($student['observation']['text']));
-		$this->SetFont(FONT, 'B', 11);
-		$this->SetLineWidth(.5);
-		$this->Ln(10);
-		$this->Cell(0, 0, $this->decode($student['reinforce']['title']));
-		$y = $this->GetY();
-		$this->Line(LEFT, $y + 3, LEFT + 170, $y + 3);
-		$y += 4;
-		$this->SetFont(FONT, '', 11);
-		$this->SetXY(LEFT, $y);
-		$this->MultiCell(0, 5, $this->decode($student['reinforce']['text']));
+		if ($student['observation']['text'] != '') {
+			$y += 10;
+			$this->SetFont(FONT, 'B', 11);
+			if ($this->pageBreaksObservation($student['observation'], $y)) {
+				$this->startNewPage($student);
+				$y = TOP + 3;
+			}
+			$this->SetLineWidth(.5);
+			$this->SetFont(FONT, 'B', 11);
+			$this->SetXY(LEFT, $y);
+			$this->Write(10, strtoupper($this->decode($student['observation']['title'])));
+			$this->Line(LEFT, $y + 7.5, LEFT + 170, $y + 7.5);
+			$y += 10;
+			$this->SetFont(FONT, '', 11);
+			$this->SetXY(LEFT, $y);
+			$this->MultiCell(0, 5, $this->decode($student['observation']['text']));
+		}
+		if ($student['reinforce']['text'] != '') {
+			if ($this->pageBreaksObservation($student['reinforce'], $y)) {
+				$this->startNewPage($student);
+				$y = TOP + 3;
+			}
+			$this->SetFont(FONT, 'B', 11);
+			$this->SetLineWidth(.5);
+			$this->Ln(10);
+			$this->Cell(0, 0, $this->decode($student['reinforce']['title']));
+			$y = $this->GetY();
+			$this->Line(LEFT, $y + 3, LEFT + 170, $y + 3);
+			$y += 4;
+			$this->SetFont(FONT, '', 11);
+			$this->SetXY(LEFT, $y);
+			$this->MultiCell(0, 5, $this->decode($student['reinforce']['text']));
+		}
 		$this->placeFooter($student, $this->pageNumber);
 	}
 
@@ -180,6 +223,39 @@ class PDFEngine extends \FPDF
 	{
 		setlocale(LC_ALL, 'es_CA');
 		return $str = iconv('UTF-8', 'cp1252', $inputText);
+	}
+	
+	//converts an array of text/font-size to a multiline array of text/font-size/size/style
+	private function split($inputs, $maxWidth):array {
+		$separator = " ";
+		$outputText = array();
+		$line = 0;
+		$index = 0;
+		$width = 0;
+		foreach ($inputs as $input) {
+			$words = explode($separator, $input['text']);
+			$fontSize = $input['size'];
+			$outputText[$line][$index]['text'] =  '';
+			$this->SetFont($input['font'], $input['style'], $input['size']);
+			foreach ($words as $word) {
+				$outputText[$line][$index]['font'] = $input['font'];
+				$outputText[$line][$index]['style'] = $input['style'];
+				$outputText[$line][$index]['size'] = $input['size'];
+				$width += $this->GetStringWidth($word . $separator);
+				if ($width > $maxWidth) {
+					$line++;
+					$index = 0;
+					$outputText[$line][$index]['font'] = $input['font'];
+					$outputText[$line][$index]['style'] = $input['style'];
+					$outputText[$line][$index]['size'] = $input['size'];
+					$outputText[$line][$index]['text'] =  '';
+					$width = 0;
+				}
+				$outputText[$line][$index]['text'] .=  $word . $separator;
+			}
+			$index++;
+		}
+		return $outputText;
 	}
 	
 	//scope and first area must stay in the same page 
@@ -192,13 +268,22 @@ class PDFEngine extends \FPDF
 	
 	//area must stay entire in the same page
 	private function pageBreaksArea($area, $y) {
-// 		var_dump($area['dimensions']);exit;
 		$y += 38;
 		$maxY = 280;
-		foreach ((array) $area['dimensions'] as $dimension) {
-			$y += 6;
+		if (isset($area['dimensions'])) {
+			foreach ((array) $area['dimensions'] as $dimension) {
+				$y += 6;
+			}
 		}
 		return $y > $maxY;
+	}
+	
+	//text from observations should not break through different pages
+	private function pageBreaksObservation($observation, $y) {
+		$y += 10;
+		$maxY = 280;
+		$height = floor($this->GetStringWidth($observation['text']) / 190);
+		return ($y + $height) > $maxY;
 	}
 	
 	//creates new page

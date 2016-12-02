@@ -52,10 +52,10 @@ class TplEngine
 					foreach ($data['peds'] as $ped) {
 						if (!strcmp($ped['mark'], $pe)) $checked = true;
 						$inner .= "<input type='radio' name='dim" . $dimension['id'] . "' value='" . $ped['id'] . 
-							"' onchange='changePE(this)'" . (!strcmp($ped['mark'], $pe) ? " checked" : "") . " />" . $ped['mark'] . "\n";
+							"' title='" . $ped['description'] . "' onchange='changePE(this)'" . (!strcmp($ped['mark'], $pe) ? " checked" : "") . " />" . $ped['mark'] . "\n";
 					}
 					$inner .= "<input type='radio' name='dim" . $dimension['id'] . 
-						"' value='0' onchange='changePE(this)' class='not_evaluated'" . 
+						"' value='0' title='No valorat' onchange='changePE(this)' class='not_evaluated'" . 
 						($checked ? "" : " checked") . " />NV\n";
 					$inner .= "</td></tr>\n";
 				}
@@ -66,10 +66,10 @@ class TplEngine
 				foreach ($data['geds'] as $ged) {
 					if (!strcmp($ged['mark'], $ge)) $checked = true;
 					$inner .= "<input type='radio' name='area" . $area['id'] . "' value='" . $ged['id'] . "'" .
-						" onchange='changeGE(this)'" . (!strcmp($ged['mark'], $ge) ? " checked" : "") . " />" . $ged['mark'] . "\n";
+						" title='" . $ged['description'] . "' onchange='changeGE(this)'" . (!strcmp($ged['mark'], $ge) ? " checked" : "") . " />" . $ged['mark'] . "\n";
 				}
 				$inner .= "<input type='radio' name='area" . $area['id'] . "' value='0' class='not_evaluated'" .
-					" onchange='changeGE(this)'" . ($checked ? "" : " checked") . " />NV\n";
+					" title='No valorat' onchange='changeGE(this)'" . ($checked ? "" : " checked") . " />NV\n";
 				$inner .= "</span></div>\n";
 				$inner .= "\t\t</li>\n";
 			}

@@ -8,7 +8,7 @@ namespace Infojor\Service\Entities;
  * @DiscriminatorMap({"person" = "Person", "teacher" = "Teacher", "student" = "Student"})
  */
 
-class Person
+abstract class Person
 {
 	/** @Id @Column(type="integer") @GeneratedValue **/
 	protected $id;

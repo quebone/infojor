@@ -95,14 +95,19 @@ final class ReportViewModel extends ViewModel {
 				}
 			}
 		}
-		$reinforceClassrooms = $this->schoolModel->getSchool()->getReinforceClassrooms();
+		
+		//observations
+		
 		$data['observation']['title'] = 'Observacions';
 		$data['observation']['text'] = '';
 		if ($student->getCourseObservation($course, $trimestre) != null) {
 			$data['observation']['text'] = $student->getCourseObservation($course, $trimestre)->getText();
 		}
+		
+		//reinforce classrooms
 		$data['reinforce']['title'] = '';
 		$data['reinforce']['text'] = '';
+		$reinforceClassrooms = $this->schoolModel->getSchool()->getReinforceClassrooms();
 		foreach ($reinforceClassrooms as $reinforceClassroom) {
 			$data['reinforce']['title'] .= strlen($data['reinforce']['title']) > 0 ? " i " : '';
 			$data['reinforce']['title'] .= $reinforceClassroom->getName();
@@ -113,10 +118,43 @@ final class ReportViewModel extends ViewModel {
 			}
 		}
 		
+		//eliminem els elements sense valoració
+		$data['scopes'] = $this->removeEmtyFields($data['scopes']);
+		
 		//footer
 		$data['footer']['caption'] = "<B>Qualificacions</B>. Parcial: <B>A</B> (Alt), <B>MA</B> (Mitjà Alt), <B>M</B> (Mitjà), <B>MB</B> (Mitjà Baix), <B>B</B> (Baix). Globals: <B>AE</B> (Assoliment Excel·lent), <B>AN</B> (Assoliment Notable), <B>AS</B> (Assoliment Satisfactori), <B>NA</B> (No Assoliment).";
 		$data['footer']['page'] = '';
 		$data['footer']['student'] = $student->getName() . " " . $student->getSurnames();
 		return $data;
+	}
+	
+	private function removeEmtyFields($data):array
+	{
+		$cleanedData = array();
+		foreach ($data as $scopeId=>$scope) {
+			foreach ($scope['areas'] as $areaId=>$area) {
+				$dataFound = false;
+				foreach ($area['dimensions'] as $dimId=>$dimension) {
+					if ($dimension['mark'] != '') {
+						$cleanedData[$scopeId]['areas'][$areaId]['dimensions'][$dimId] = $dimension;
+						$dataFound = true;
+					}
+				}
+				if ($area['mark'] != '') {
+					$cleanedData[$scopeId]['areas'][$areaId]['mark'] = $area['mark'];
+					$dataFound = true;
+				}
+				if ($dataFound) {
+					$cleanedData[$scopeId]['areas'][$areaId]['name'] = $area['name'];
+				}
+			}
+			if (isset($cleanedData[$scopeId])) {
+				$cleanedData[$scopeId]['name'] = $scope['name'];
+			}
+		}
+// 		var_dump($data);
+// 		var_dump($cleanedData);
+// 		exit;
+		return $cleanedData;
 	}
 }

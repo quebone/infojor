@@ -204,6 +204,7 @@ abstract class AbstractProxyFactory
         if ( ! class_exists($proxyClassName, false)) {
             $fileName  = $this->proxyGenerator->getProxyFileName($className);
 
+			$this->autoGenerate = self::AUTOGENERATE_EVAL;
             switch ($this->autoGenerate) {
                 case self::AUTOGENERATE_NEVER:
                     require $fileName;
