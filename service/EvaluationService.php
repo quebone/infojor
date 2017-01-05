@@ -1,34 +1,34 @@
 <?php
-namespace Infojor\Service;
+namespace tfg\service;
 
-use Infojor\Service\Entities\Observation;
+use tfg\service\Entities\Observation;
 
 final class EvaluationService extends MainService
 {
-	public function __construct(\Doctrine\ORM\EntityManager $entityManager) {
-		parent::__construct($entityManager);
+	public function __construct() {
+		parent::__construct();
 	}
 	
 	public function getPartialEvaluationDescriptions()
 	{
 		return  $this->entityManager->getRepository(
-				'Infojor\\Service\\Entities\\PartialEvaluationDescription')->findAll();
+				'tfg\\service\\Entities\\PartialEvaluationDescription')->findAll();
 	}
 	
 	public function getGlobalEvaluationDescriptions()
 	{
 		return  $this->entityManager->getRepository(
-				'Infojor\\Service\\Entities\\GlobalEvaluationDescription')->findAll();
+				'tfg\\service\\Entities\\GlobalEvaluationDescription')->findAll();
 	}
 	
 	public function getPartialEvaluationDescription($id)
 	{
-		return $this->entityManager->find('Infojor\\Service\\Entities\\PartialEvaluationDescription', $id);
+		return $this->entityManager->find('tfg\\service\\Entities\\PartialEvaluationDescription', $id);
 	}
 	
 	public function getGlobalEvaluationDescription($id)
 	{
-		return $this->entityManager->find('Infojor\\Service\\Entities\\GlobalEvaluationDescription', $id);
+		return $this->entityManager->find('tfg\\service\\Entities\\GlobalEvaluationDescription', $id);
 	}
 	
 	public function getDimensionEvaluation($studentId, $dimensionId, $courseId=null, $trimestreId=null)
@@ -102,22 +102,17 @@ final class EvaluationService extends MainService
 			//create new evaluation
 			$evaluation = $student->createDimensionEvaluation($dimension, $course, $trimestre, $ed);
 			$this->entityManager->persist($evaluation);
-			$this->entityManager->flush($evaluation);
-			return "created";
 		} else { 
 			if ($markId == 0) {
 				//delete evaluation
 				$this->entityManager->remove($evaluation);
-				$this->entityManager->flush($evaluation);
-				return "deleted";
 			} else {
 				//update evaluation
 				$evaluation->setPartialEvaluationDescription($ed);
 				$this->entityManager->persist($evaluation);
-				$this->entityManager->flush($evaluation);
-				return "updated";
 			}
 		}
+		$this->entityManager->flush($evaluation);
 	}
 
 	public function setGlobalEvaluation($studentId, $areaId, $markId)
@@ -158,10 +153,10 @@ final class EvaluationService extends MainService
 		$observation = $student->getCourseObservation($course, $trimestre, $reinforceClassroom);
 		if ($observation == null) {
 			//create new observation
-			$observation = new Observation($text, $student, $course, $trimestre, $reinforceClassroom);
+			$observation = $student->createObservation($text, $course, $trimestre, $reinforceClassroom);
 			$this->entityManager->persist($observation);
 		} else {
-			if ($text == null) {
+			if (strlen(trim($text, '"')) == 0) {
 				//delete observation
 				$this->entityManager->remove($observation);
 			} else {

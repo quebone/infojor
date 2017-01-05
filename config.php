@@ -25,7 +25,7 @@ $dbParams = unserialize(file_get_contents('config/dbparams.config'));
   <meta charset="utf-8">
 
   <title>Configuration</title>
-  <meta name="description" content="Infojor Configuration">
+  <meta name="description" content="tfg Configuration">
   <meta name="author" content="carles" >
 </head>
 

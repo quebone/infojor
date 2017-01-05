@@ -1,18 +1,18 @@
 <?php
-namespace Infojor\Presentation\Model;
+namespace tfg\presentation\model;
 
-require_once BASEDIR.'vendor/fpdf181/fpdf.php';
+require_once BASEDIR.'vendor/fpdf/fpdf.php';
 
-final class ReportViewModel extends ViewModel {
+final class ReportViewModel extends MainViewModel implements IReportViewModel {
 	private $student;
 	private $classroom;
 	private $userModel;
 	private $schoolModel;
 	
-	public function __construct(\Doctrine\ORM\EntityManager $entityManager, $student = null, $classroom = null) {
-		parent::__construct(null, $entityManager);
-		$this->userModel = new \Infojor\Service\UserService($entityManager);
-		$this->schoolModel = new \Infojor\Service\SchoolService($entityManager);
+	public function __construct($student = null, $classroom = null) {
+		parent::__construct();
+		$this->userModel = new \tfg\service\UserService();
+		$this->schoolModel = new \tfg\service\SchoolService();
 		$this->student = $student;
 		$this->classroom = $classroom;
 	}
@@ -21,24 +21,24 @@ final class ReportViewModel extends ViewModel {
 	{
 		$data = null;
 		if ($this->classroom != null) {
-			$data = $this->getClassroomStudents($this->classroom);
+			$data = $this->getClassroomReport($this->classroom);
 		} else if ($this->student != null) {
-			$data[$this->student] = $this->getStudent($this->student);
+			$data[$this->student] = $this->getStudentReport($this->student);
 		}
 		return $data;
 	}
 	
-	public function getClassroomStudents($classroomId)
+	private function getClassroomReport($classroomId)
 	{
 		$students = $this->schoolModel->getCurrentClassroomStudents($classroomId);
 		$data = array();
 		foreach ($students as $student) {
-			$data[$student->getId()] = $this->getStudent($student->getId());
+			$data[$student->getId()] = $this->getStudentReport($student->getId());
 		}
 		return $data;
 	}
 	
-	public function getStudent($studentId)
+	private function getStudentReport($studentId)
 	{
 		$data = array();
 		
@@ -101,7 +101,9 @@ final class ReportViewModel extends ViewModel {
 		$data['observation']['title'] = 'Observacions';
 		$data['observation']['text'] = '';
 		if ($student->getCourseObservation($course, $trimestre) != null) {
-			$data['observation']['text'] = $student->getCourseObservation($course, $trimestre)->getText();
+			$observationText = $student->getCourseObservation($course, $trimestre)->getText();
+			$observationText = trim(stripcslashes($observationText),'"');
+			$data['observation']['text'] = $observationText;
 		}
 		
 		//reinforce classrooms
@@ -114,21 +116,24 @@ final class ReportViewModel extends ViewModel {
 			$observation = $student->getCourseObservation($course, $trimestre, $reinforceClassroom);
 			$data['reinforce']['text'] .= strlen($data['reinforce']['text']) > 0 ? "\n" : '';
 			if ($observation != null) {
-				$data['reinforce']['text'] .= $observation->getText();
+				$data['reinforce']['text'] .= stripslashes($observation->getText());
 			}
 		}
 		
 		//eliminem els elements sense valoració
-		$data['scopes'] = $this->removeEmtyFields($data['scopes']);
+		$data['scopes'] = $this->removeEmptyFields($data['scopes']);
 		
-		//footer
-		$data['footer']['caption'] = "<B>Qualificacions</B>. Parcial: <B>A</B> (Alt), <B>MA</B> (Mitjà Alt), <B>M</B> (Mitjà), <B>MB</B> (Mitjà Baix), <B>B</B> (Baix). Globals: <B>AE</B> (Assoliment Excel·lent), <B>AN</B> (Assoliment Notable), <B>AS</B> (Assoliment Satisfactori), <B>NA</B> (No Assoliment).";
+		//footer. A educació infantil no hi incloem les valoracions globals
+		$data['footer']['caption'] = "<B>Qualificacions</B>. Parcial: <B>A</B> (Alt), <B>MA</B> (Mitjà Alt), <B>M</B> (Mitjà), <B>MB</B> (Mitjà Baix), <B>B</B> (Baix).";
+		if ($degree->getId() == 2) {	//primària
+			$data['footer']['caption'] .= " Globals: <B>AE</B> (Assoliment Excel·lent), <B>AN</B> (Assoliment Notable), <B>AS</B> (Assoliment Satisfactori), <B>NA</B> (No Assoliment).";
+		}
 		$data['footer']['page'] = '';
 		$data['footer']['student'] = $student->getName() . " " . $student->getSurnames();
 		return $data;
 	}
 	
-	private function removeEmtyFields($data):array
+	private function removeEmptyFields($data):array
 	{
 		$cleanedData = array();
 		foreach ($data as $scopeId=>$scope) {
@@ -152,9 +157,6 @@ final class ReportViewModel extends ViewModel {
 				$cleanedData[$scopeId]['name'] = $scope['name'];
 			}
 		}
-// 		var_dump($data);
-// 		var_dump($cleanedData);
-// 		exit;
 		return $cleanedData;
 	}
 }

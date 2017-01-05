@@ -1,5 +1,5 @@
 <?php
-namespace Infojor\Service\Entities;
+namespace tfg\service\Entities;
 
 /**
  * @Entity @Table(name="persons")
@@ -18,6 +18,19 @@ abstract class Person
 	protected $surnames;
 	/** @Column(type="string", length=50) **/
 	protected $thumbnail;
+	/**
+	 * @ManyToOne(targetEntity="School", inversedBy="persons")
+	 * @JoinColumn(name="school_id", referencedColumnName="id")
+	 */
+	protected $school;
+	
+	public function __construct($name, $surnames, $thumbnail = null)
+	{
+		$this->name = $name;
+		$this->surnames = $surnames;
+		if ($thumbnail == null) $thumbnail = strtolower(str_replace(" ", "-", $surnames) . "-" . str_replace(" ", "-", $name));
+		$this->thumbnail = $thumbnail;
+	}
 	
 	public function getId() {
 		return $this->id;
@@ -45,6 +58,14 @@ abstract class Person
 
 	public function setThumbnail($thumbnail) {
 		$this->thumbnail = $thumbnail;
+	}
+
+	public function getSchool() {
+		return $this->school;
+	}
+	
+	public function setSchool(School $school) {
+		$this->school = $school;
 	}
 }
 

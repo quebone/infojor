@@ -1,5 +1,5 @@
 <?php
-namespace Infojor\Service\Entities;
+namespace tfg\service\Entities;
 
 /**
  * @Entity @Table(name="dimensions")
@@ -14,7 +14,7 @@ class Dimension {
 	/** @Column(type="boolean", options={"default": true}) **/
 	private $active;
 	/**
-	 * @ManyToOne(targetEntity="Area", inversedBy="areas")
+	 * @ManyToOne(targetEntity="Area", inversedBy="dimensions")
 	 * @JoinColumn(name="area_id", referencedColumnName="id")
 	 */
 	private $area;

@@ -1,7 +1,11 @@
-var minClassroom = 7;
+var minClassroom = 1;
 var maxClassroom = 18;
 
 window.onload = init();
+
+String.prototype.stripSlashes = function(){
+	return this.replace(/\\(.)/mg, "$1");
+}
 
 function init() {
 	changeStudentsHeight();
@@ -13,28 +17,47 @@ function init() {
 
 function changeStudent(student)
 {
-	disable(document.getElementById('right_column'));
+	disable(document.getElementById('evaluations'));
 	var classroomId = document.getElementById('classroomId').value;
 	var areaId = document.getElementById('areaId').value;
 	var reinforceId = document.getElementById('reinforceId').value;
 	var studentId = student.getAttribute('id').replace('student-','');
-	var dataToSend = 'studentId=' + studentId + '&classroomId=' + classroomId + '&areaId=' + areaId + '&reinforceId=' + reinforceId + '&function=getEvaluationData';
-	send(dataToSend, 'presentation/controller/AjaxController.php', showEvaluation);
+	var dataToSend = 'studentId=' + studentId + '&classroomId=' + classroomId + '&areaId=' + areaId + '&reinforceId=' + reinforceId + '&function=getEvaluations';
+	console.log(dataToSend);
+	send(dataToSend, AJAXCONTROLLER, showEvaluation);
 	unselectStudents();
 	selectStudent(student);
 	getImage(student);
+	updateSectionStudent(student);
 }
 
 function showEvaluation(evaluation) {
-	evaluation = evaluation.replace(/\\n/g,"");
-	evaluation = evaluation.replace(/\\t/g,"");
 	evaluation = unescape(JSON.parse(evaluation));
-	var container = document.getElementById('right_column');
+	var container = document.getElementById('evaluations');
 	container.innerHTML = evaluation;
-	enable(document.getElementById('right_column'));
-	if (document.getElementById('areaId').value == '' && document.getElementById('reinforceId').value == '') {
+	parseObservations();
+	enable(document.getElementById('evaluations'));
+	var section = document.getElementById('section_name').value;
+	if (section == 'tutorings') {
 		enableClassroomSelectors(false);
 	}
+}
+
+function updateSectionStudent(student) {
+	var name = student.innerHTML;
+	var section = document.getElementById("section").getElementsByTagName("h3")[0];
+	section.innerHTML = name;
+}
+
+function parseObservations() {
+	var observations = document.getElementsByTagName("textarea");
+	for (var i = 0; i < observations.length; i++) {
+		try {
+			observations[i].innerHTML = JSON.parse(observations[i].innerHTML);
+		} catch (err) {
+			console.log(err);
+		}
+	} 
 }
 
 function unselectStudents() {
@@ -69,7 +92,7 @@ function getImage(student) {
 	var studentId = student.getAttribute('id').replace('student-','');
 	var studentId = encodeURI(studentId);
 	var dataToSend = 'studentId=' + studentId + '&function=getThumbnail';
-	send(dataToSend, 'presentation/controller/AjaxController.php', showImage);
+	send(dataToSend, AJAXCONTROLLER, showImage);
 }
 
 function showImage(base64) {
@@ -99,7 +122,7 @@ function changeClassroom(offset) {
 		document.getElementById('classroomId').value = currentClassroom;
 		var toPage = window.location.pathname;
 		var dataToSend = 'classroomId=' + currentClassroom + '&page=' + encodeURI(toPage) + '&function=setSession';
-		send(dataToSend, 'presentation/controller/AjaxController.php', redirect);
+		send(dataToSend, AJAXCONTROLLER, redirect);
 	}
 }
 
@@ -111,20 +134,21 @@ function redirect(toPage) {
 function changePE(pe) {
 	var dimensionId = encodeURI(parseInt(pe.name.substr(3)));
 	var dataToSend = 'studentId=' + findActiveStudentId() + '&dimensionId=' + dimensionId + '&markId=' + pe.value + '&function=setPartialEvaluation';
-	send(dataToSend, 'presentation/controller/AjaxController.php', evaluationChanged);
+	send(dataToSend, AJAXCONTROLLER, evaluationChanged);
 }
 
 function changeGE(ge) {
 	var areaId = encodeURI(parseInt(ge.name.substr(4)));
 	var dataToSend = 'studentId=' + findActiveStudentId() + '&areaId=' + areaId + '&markId=' + ge.value + '&function=setGlobalEvaluation';
-	send(dataToSend, 'presentation/controller/AjaxController.php', evaluationChanged);
+	send(dataToSend, AJAXCONTROLLER, evaluationChanged);
 }
 
 function changeObservation(obs) {
-	var obsText = encodeURI(obs.value);
+	var obsText = JSON.stringify(obs.value);
 	var obsReinforce = obs.name;
 	var dataToSend = 'studentId=' + findActiveStudentId() + '&observation=' + obsText + '&reinforceId=' + obsReinforce + '&function=setObservation';
-	send(dataToSend, 'presentation/controller/AjaxController.php', evaluationChanged);
+	console.log(dataToSend);
+	send(dataToSend, AJAXCONTROLLER, evaluationChanged);
 }
 
 function evaluationChanged(msg) {

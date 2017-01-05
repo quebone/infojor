@@ -1,5 +1,5 @@
 <?php
-namespace Infojor\Service\Entities;
+namespace tfg\service\Entities;
 
 /**
  * @Entity @Table(name="globalevaluations")
@@ -13,7 +13,7 @@ class GlobalEvaluation extends Evaluation
 	private $student;
 	/**
 	 * @ManyToOne(targetEntity="Course", inversedBy="globalEvaluations")
-	 * @JoinColumn(name="course_id", referencedColumnName="year")
+	 * @JoinColumn(name="course_id", referencedColumnName="id")
 	 */
 	private $course;
 	/**

@@ -1,2 +1,5 @@
 #header_center {content: data(header.school); }
 #header_right {content: data(header.user); }
+.menu-selector ul li {repeat: data(header.menus); }
+.menu-selector ul li {content: iteration(name); }
+.menu-selector ul li:attr(onclick) {content: iteration(function) , "()"; }

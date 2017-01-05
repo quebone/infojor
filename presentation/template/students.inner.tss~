@@ -1,0 +1,16 @@
+@import 'header.tss';
+
+title {content: 'Informes - alumnes'}
+header {content: template('header.xml')}
+
+tr.tdata {repeat: data(students); }
+tr.tdata #surnames:attr(value) {content: iteration(surnames); }
+tr.tdata #surnames:attr(id) {content: "surnames-",iteration(id); }
+tr.tdata #name:attr(value) {content: iteration(name); }
+tr.tdata #name:attr(id) {content: "name-",iteration(id); }
+td.delete:attr(onclick) {content: "deleteStudent(", iteration(id), ")"; }
+select.classroom:attr(id) {content: "classroom-", iteration(id); }
+
+select.classroom option {repeat: data(classrooms); }
+select.classroom option:attr(value) {content: iteration(id); }
+select.classroom option {content: iteration(name); }

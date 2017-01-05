@@ -1,0 +1,8 @@
+@import 'header.tss';
+
+title {content: 'Informes - alumnes'}
+header {content: template('header.xml')}
+
+#classroom-selector option {repeat: data(classrooms); }
+#classroom-selector option:attr(value) {content: iteration(id); }
+#classroom-selector option {content: iteration(name); }

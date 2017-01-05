@@ -1,0 +1,10 @@
+@import 'header.tss';
+
+title {content: 'Informes - usuaris'}
+header {content: template('header.xml')}
+
+#teachers tr {repeat: data(teachers); }
+#teachers tr td.teacher {content: iteration(surnames), ", ", iteration(name); }
+#teachers tr td.edit a:attr(onclick) {content: "edit(", iteration(id), ")"; }
+#teachers tr td.delete a:attr(onclick) {content: "del(", iteration(id), ")"; }
+#teachers tr td.delete a:attr(value) {content: iteration(name), " ", iteration(surnames); }

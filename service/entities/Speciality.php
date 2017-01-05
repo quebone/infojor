@@ -1,5 +1,5 @@
 <?php
-namespace Infojor\Service\Entities;
+namespace tfg\service\Entities;
 
 /**
  * @Entity @Table(name="specialities")
@@ -10,7 +10,7 @@ class Speciality
 	private $id;
 
 	/**
-	 * @ManyToOne(targetEntity="Teacher")
+	 * @ManyToOne(targetEntity="Teacher", inversedBy="specialities")
 	 * @JoinColumn(name="teacher_id", referencedColumnName="id")
 	 */
 	private $teacher;
@@ -23,7 +23,7 @@ class Speciality
 
 	/**
 	 * @ManyToOne(targetEntity="Course")
-	 * @JoinColumn(name="course_id", referencedColumnName="year")
+	 * @JoinColumn(name="course_id", referencedColumnName="id")
 	 */
 	private $course;
 

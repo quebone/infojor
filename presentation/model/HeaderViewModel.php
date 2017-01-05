@@ -1,7 +1,7 @@
 <?php
-namespace Infojor\Presentation\Model;
+namespace tfg\presentation\model;
 
-final class HeaderViewModel extends ViewModel {
+final class HeaderViewModel extends MainViewModel {
 	
 	private $logged;
 	private $teacher;
@@ -10,19 +10,15 @@ final class HeaderViewModel extends ViewModel {
 	private $classroom;
 	private $user;
 	private $school;
-	private $userViewModel;
-	private $schoolViewModel;
 	
-	public function __construct($model = null, \Doctrine\ORM\EntityManager $entityManager = null)
+	public function __construct()
 	{
-		parent::__construct($model, $entityManager);
-		$this->userViewModel = new UserViewModel(null, $entityManager);
-		$this->schoolViewModel = new SchoolViewModel(null, $entityManager);
+		parent::__construct();
 		$this->logged = false;
 		$this->teacher = null;
 		$this->trimestre = null;
 		$this->classroom = null;
-		$this->setVars();
+		$this->initHeader();
 	}
 	
 	public function output()
@@ -32,26 +28,37 @@ final class HeaderViewModel extends ViewModel {
 		{
 			$data->user = $this->teacher->name . " " . $this->teacher->surnames;
 			$data->school = "Curs: " . $this->course->course;
-			if ($this->classroom != null) $data->school .= "| Aula: " . $this->classroom->name;
+// 			if ($this->classroom != null) $data->school .= "| Aula: " . $this->classroom->name;
 			$data->school .= " | Trimestre: " . $this->trimestre->trimestre;
+			$data->menus = $this->getMenuItems();
 		}
 		return $data;
 	}
 	
-	private function getSessionVar($sessionVar)
+	private function initHeader()
 	{
-		if (isset($_SESSION[$sessionVar])) return $_SESSION[$sessionVar];
-		return false;
-	}
-
-	private function setVars()
-	{
-		$teacherId = $this->getSessionVar('userid');
+		$userModel = new UserViewModel();
+		$schoolModel = new SchoolViewModel();
+		$teacherId = $this->getSessionVar(USER_ID);
 		$this->logged = $teacherId != false;
-		if ($teacherId) $this->teacher = $this->userViewModel->getTeacher($teacherId);
-		$classroomId = $this->getSessionVar('classroom');
-		if ($classroomId) $this->classroom = $this->schoolViewModel->getClassroom($classroomId);
-		$this->course = $this->schoolViewModel->getActiveCourse();
-		$this->trimestre = $this->schoolViewModel->getActiveTrimestre();
+		if ($this->logged) $this->teacher = $userModel->getTeacher($teacherId);
+		$classroomId = $this->getSessionVar(CLASSROOM_ID);
+		if ($classroomId) $this->classroom = $schoolModel->getClassroom($classroomId);
+		$this->course = $schoolModel->getActiveCourse();
+		$this->trimestre = $schoolModel->getActiveTrimestre();
+	}
+	
+	private function getMenuItems():array
+	{
+		$arrMenus = array();
+		if ($this->logged) {
+			$teacherId = $this->getSessionVar(USER_ID);
+			$model = new \tfg\service\UserService();
+			$menus = $model->getMenuItems($teacherId);
+			foreach ($menus as $name=>$function) {
+				array_push($arrMenus, array("name"=>$name, "function"=>$function));
+			}
+		}
+		return $arrMenus;
 	}
 }

@@ -1,0 +1,40 @@
+<html lang="ca">
+<head>
+	<meta charset="utf-8" />
+	<title>Titol</title>
+	<meta name="author" content="carles" />
+	<link rel="stylesheet" href="presentation/css/styles.css?v=1.0" />
+	<link rel="stylesheet" href="presentation/css/compact-nav.css?v=1.0" />
+	<link rel="stylesheet" href="presentation/css/reinforcings.css?v=1.0" />
+</head>
+<body>
+<div id='header-wrap'>
+<header></header>
+</div>
+<main>
+	<table id="reinforcings">
+		<tr>
+			<td>Area 1</td><td>Teacher 1</td><td class="delete"><a href="#">eliminar</a></td>
+		</tr>
+		<tr>
+			<td></td><td>Teacher 2</td><td class="delete"><a href="#">eliminar</a></td>
+		</tr>
+		<tr>
+			<td>Area 2</td><td>Teacher 3</td><td class="delete"><a href="#">eliminar</a></td>
+		</tr>
+	</table>
+	<div class="wrapper">
+		<select id="classroom">
+			<option>Area 1</option>
+		</select>
+		<select id="teacher">
+			<option>Teacher 1</option>
+		</select>
+		<span class="add"><a href="#">afegir</a></span>
+	<div id="error" class="error"></div>
+</main>
+  <script src="js/scripts.js"></script>
+  <script src="js/reinforcings.js"></script>
+  <script src="js/compact-nav.js"></script>
+</body>
+</html>

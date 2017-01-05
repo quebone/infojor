@@ -1,5 +1,5 @@
 <?php
-namespace Infojor\Service\Entities;
+namespace tfg\service\Entities;
 /**
  * @Entity @Table(name="students")
  **/
@@ -22,11 +22,24 @@ class Student extends Person
 	 */
 	private $enrollments;
 	
-	public function __construct() {
+	public function __construct($name, $surnames, $thumbnail = null) {
+		parent::__construct($name, $surnames, $thumbnail);
 		$this->globalEvaluations = new \Doctrine\Common\Collections\ArrayCollection();
 		$this->partialEvaluations = new \Doctrine\Common\Collections\ArrayCollection();
 		$this->observations = new \Doctrine\Common\Collections\ArrayCollection();
 		$this->enrollments = new \Doctrine\Common\Collections\ArrayCollection();
+	}
+	
+	public function getEnrollments() {
+		return $this->enrollments;
+	}
+	
+	public function getEnrollment(Course $course, Trimestre $trimestre) {
+		foreach ($this->enrollments as $enrollment) {
+			if ($enrollment->getCourse() == $course && $enrollment->getTrimestre() == $trimestre)
+				return $enrollment;
+		}
+		return null;
 	}
 	
 	public function getClassrooms() {
@@ -83,10 +96,11 @@ class Student extends Person
 		return null;
 	}
 	
-	public function createObservation($text, Course $course) {
-		$observation = new Observation($text);
-		$observation->setStudent($this);
-		return $observation;
+	public function createObservation($text,
+			Course $course,
+			Trimestre $trimestre,
+			ReinforceClassroom $reinforceClassroom = null):Observation {
+		return new Observation($this, $course, $trimestre, $text, $reinforceClassroom);
 	}
 	
 	public function createDimensionEvaluation(
@@ -103,5 +117,31 @@ class Student extends Person
 			Trimestre $trimestre,
 			GlobalEvaluationDescription $ged):GlobalEvaluation {
 				return new GlobalEvaluation($this, $course, $trimestre, $area, $ged);
+	}
+	
+	public function addEnrollment(Enrollment $enrollment) {
+		$this->enrollments->add($enrollment);
+	}
+	
+	public function removeEnrollment(Enrollment $enrollment) {
+		return $this->enrollments->removeElement($enrollment);
+	}
+	
+	public function getNumEvaluations(Course $course = null, Trimestre $trimestre = null) {
+		if ($course == null || $trimestre == null) {
+			return count($this->globalEvaluations) + count($this->partialEvaluations) + count($this->observations);
+		} else {
+			$num = 0;
+			foreach ($this->globalEvaluations as $ge) {
+				if ($ge->getCourse() == $course && $ge->getTrimestre() == $trimestre) $num++;
+			}
+			foreach ($this->partialEvaluations as $pe) {
+				if ($pe->getCourse() == $course && $pe->getTrimestre() == $trimestre) $num++;
+			}
+			foreach ($this->observations as $obs) {
+				if ($obs->getCourse() == $course && $obs->getTrimestre() == $trimestre) $num++;
+			}
+			return $num;
+		}
 	}
 }

@@ -1,5 +1,5 @@
 <?php
-namespace Infojor;
+namespace tfg;
 
 session_start();
 

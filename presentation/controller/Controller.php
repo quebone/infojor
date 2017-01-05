@@ -1,20 +1,23 @@
 <?php
-namespace Infojor\Presentation\Controller;
-
-use Infojor\Presentation\Model\UserViewModel;
+namespace tfg\presentation\controller;
 
 class Controller {
-	private $viewModel;
-
-	public function __construct(UserViewModel $viewModel) {
-		$this->viewModel = $viewModel;
+	function __construct() {
 	}
 	
-	public function textClicked() {
-		$this->viewModel->data['link'] = "Text clicked";
+	public function setSession()
+	{
+		$model = new \tfg\presentation\model\MainViewModel();
+		$model->setSession();
+		return json_encode($_POST);
 	}
 	
-	public function getTeacher($id) {
-		$this->viewModel->getTeacher($id);
+	public function printReport() {
+		$this->setSession();
+	}
+	
+	public function isAdmin() {
+		$model = new \tfg\service\UserService();
+		return $model->isAdmin($_SESSION[USER_ID]);
 	}
 }

@@ -1,0 +1,26 @@
+main {
+	padding: 20px;
+}
+
+table {
+	padding: 10px;
+	border-spacing: 0px;
+	margin-bottom: 20px;
+	border: 1px solid #ddd;
+	border-bottom: 2px solid #ddd;
+}
+
+table td {
+	padding: 1px 5px;
+	text-align: center;
+}
+
+.delete, .add {
+	font-size: small;
+	cursor: pointer; cursor: hand;
+	padding-right: 10px;
+}
+
+select {
+	margin-right: 10px;
+}

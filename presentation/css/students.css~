@@ -1,0 +1,49 @@
+main {
+	padding: 20px;
+}
+
+div.wrapper {
+	margin-bottom: 20px;
+}
+
+.delete, .add {
+	font-size: small;
+	cursor: pointer; cursor: hand;
+	padding-right: 10px;
+}
+
+table {
+	padding: 10px;
+	border-spacing: 0px;
+	margin-bottom: 20px;
+}
+
+table#students {
+	margin-bottom: 30px;
+	border: 1px solid #ddd;
+	border-bottom: 2px solid #ddd;
+}
+
+table td {
+	padding: 1px 5px;
+	text-align: center;
+}
+
+.form-input {
+	display: inline-block;
+	width: 250px;
+	margin-right: 10px;
+}
+
+.form-buttons {
+	margin-top: 20px;
+	padding: 10px;
+	width: 200px;
+	margin: auto;
+}
+
+.form-button {
+	display: inline-block;
+	margin-right: 20px; 
+}
+

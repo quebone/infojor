@@ -6,14 +6,14 @@ function init() {
 
 // sends form data through AJAX
 function sendUserData() {
-	var user = encodeURI(document.getElementById('user').value);
+	var user = encodeURI(document.getElementById('username').value);
 	var password = encodeURI(document.getElementById('password').value);
 	if (user.length <= 0 || password.length <= 0) {
-		showError("El nom d'usuari i el password no poden estar en blanc");
+		showError("El nom d'usuari i la contrasenya no poden estar en blanc");
 		return;
 	}
 	var dataToSend = 'user=' + user + '&password=' + password + '&function=login';
-	send(dataToSend, 'presentation/controller/AjaxController.php', login);
+	send(dataToSend, AJAXCONTROLLER, login);
 }
 
 // given a user id, decides what to do

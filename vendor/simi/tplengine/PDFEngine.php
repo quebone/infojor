@@ -1,7 +1,7 @@
 <?php
-namespace Simi\TplEngine;
+namespace simi\tplengine;
 
-class Test extends \FPDF
+class Test extends \fpdf
 {
 	public function __construct($data)
 	{
@@ -9,7 +9,7 @@ class Test extends \FPDF
 	}
 }
 
-class PDFEngine extends \FPDF
+class PDFEngine extends \fpdf
 {
 	private $data;
 	private $pageNumber;

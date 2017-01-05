@@ -1,28 +1,27 @@
 <?php
-namespace Infojor\Presentation\Controller;
+namespace tfg\presentation\controller;
 
-define('AJAX', true);
+define("BASEDIR", "../../");
+require BASEDIR."init.php";
 
-if (!defined('REQUIRED')) {
-	require_once '../../presentation/model/frontcontroller/AjaxFrontController.php';
-}
-
-if (isset($_POST['function'])) {
-	$ac = new AjaxController();
+if (isset($_POST['function']) && isset($_POST['caller'])) {
+	$controller = $_POST['caller'] . "Controller";
+	$ac = new AjaxController($controller);
 	$ac->loadFunction($_POST['function']);
 }
 
 class AjaxController
 {
-	private $frontController;
+	private $controller;
 
-	function __construct() {
-		$this->frontController = new \Infojor\Presentation\Model\FrontController\AjaxFrontController();
+	function __construct($controller) {
+		$controller = __NAMESPACE__ . "\\" . $controller;
+		$this->controller = new $controller();
 	}
 
 	// loads a function from a class
 	public function loadFunction($fName)
 	{
-		echo $this->frontController->{$fName}();
+		echo $this->controller->{$fName}();
 	}
 }

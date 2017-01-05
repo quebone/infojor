@@ -1,0 +1,69 @@
+<html lang="ca">
+<head>
+	<meta charset="utf-8" />
+	<title>Titol</title>
+	<meta name="author" content="carles" />
+	<link rel="stylesheet" href="presentation/css/styles.css?v=1.0" />
+	<link rel="stylesheet" href="presentation/css/compact-nav.css?v=1.0" />
+	<link rel="stylesheet" href="presentation/css/dimensions.css?v=1.0" />
+</head>
+<body>
+<div id='header-wrap'>
+<header></header>
+</div>
+<main>
+	<div class="wrapper">
+		<label for="degree-selector" class="form-label">Etapa:</label>
+		<select id="degree-selector">
+			<option>Educació infantil</option>
+		</select>
+	</div>
+	<div id="dimensions">
+		<h2>Àmbit 1</h2>
+		<h3>Àrea 1</h3>
+		<table class="dimensio">
+			<tr>
+				<td>Títol</td><td><textarea>Títol 1</textarea></td>
+				<td>Descripció</td><td><textarea>Descripció 1</textarea></td>
+				<td class="delete"><a href="#">eliminar</td>
+			</tr>
+			<tr>
+				<td>Títol</td><td><textarea>Títol 2</textarea></td>
+				<td>Descripció</td><td><textarea>Descripció 2</textarea></td>
+				<td class="delete"><a href="#">eliminar</td>
+			</tr>
+		</table>
+		<h2>Àmbit 1</h2>
+		<h3>Àrea 1</h3>
+		<table class="dimensio">
+			<tr>
+				<td>Títol</td><td><textarea>Títol 1</textarea></td>
+				<td>Descripció</td><td><textarea>Descripció 1</textarea></td>
+				<td class="delete"><a href="#">eliminar</td>
+			</tr>
+			<tr>
+				<td>Títol</td><td><textarea>Títol 2</textarea></td>
+				<td>Descripció</td><td><textarea>Descripció 2</textarea></td>
+				<td class="delete"><a href="#">eliminar</td>
+			</tr>
+		</table>
+		<table>
+			<tr>
+				<td>Títol</td><td><textarea value="Títol 1"/></textarea></td>
+				<td>Descripció</td><td><textarea value="Descripció 2"/></textarea></td>
+				<td>
+					<select>
+						<option>Àrea 1</option>
+					</select>
+				</td>
+				<td class="add"><a href="#">afegir</a></td>
+			</tr>
+		</table>
+	</div>
+	<div id="error" class="error"></div>
+</main>
+  <script src="js/scripts.js"></script>
+  <script src="js/dimensions.js"></script>
+  <script src="js/compact-nav.js"></script>
+</body>
+</html>

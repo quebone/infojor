@@ -1,0 +1,27 @@
+<html lang="ca">
+<head>
+	<meta charset="utf-8" />
+	<title>Titol</title>
+	<meta name="author" content="carles" />
+	<link rel="stylesheet" href="presentation/css/styles.css?v=1.0" />
+	<link rel="stylesheet" href="presentation/css/compact-nav.css?v=1.0" />
+	<link rel="stylesheet" href="presentation/css/sendmessage.css?v=1.0" />
+</head>
+<body>
+<div id='header-wrap'>
+<header></header>
+</div>
+<main>
+	<input id="userId" value="1" type="hidden">
+	<form>
+		<label for="message">Escriu un missatge per enviar als administradors:</label>
+		<textarea id="message"></textarea>
+		<div class="form-buttons"><button enabled="false" id="sendButton" type="button" class="form-button" onclick="sendNewMessage()">Enviar</button></div>
+	</form>
+	<div id="error" class="error"></div>
+</main>
+  <script src="js/scripts.js"></script>
+  <script src="js/compact-nav.js"></script>
+  <script src="js/sendmessage.js"></script>
+</body>
+</html>

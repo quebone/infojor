@@ -1,5 +1,5 @@
 <?php
-namespace Infojor\Service\Entities;
+namespace tfg\service\Entities;
 
 /**
  * @Entity @Table(name="classrooms")
@@ -23,6 +23,11 @@ class Classroom
 	 * @OneToMany(targetEntity="Tutoring", mappedBy="classroom")
 	 */
 	private $tutors;
+	/**
+	 * @ManyToOne(targetEntity="School", inversedBy="classrooms")
+	 * @JoinColumn(name="school_id", referencedColumnName="id")
+	 */
+	private $school;
 	
 	public function __construct() {
 		$this->tutors = new \Doctrine\Common\Collections\ArrayCollection();

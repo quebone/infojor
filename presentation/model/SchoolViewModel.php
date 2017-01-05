@@ -1,13 +1,13 @@
 <?php
-namespace Infojor\Presentation\Model;
+namespace tfg\presentation\model;
 
-use Infojor\Service\Entities\Cycle;
+use tfg\service\Entities\Cycle;
 
-final class SchoolViewModel extends ViewModel {
+final class SchoolViewModel extends MainViewModel implements ISchoolViewModel {
 	
-	public function __construct($model = null, \Doctrine\ORM\EntityManager $entityManager = null) {
-		if ($model == null) $model = new \Infojor\Service\SchoolService($entityManager);
-		parent::__construct($model, $entityManager);
+	public function __construct() {
+		parent::__construct();
+		$this->model = new \tfg\service\SchoolService();
 	}
 	
 	public function getActiveCourse()
@@ -22,26 +22,19 @@ final class SchoolViewModel extends ViewModel {
 		return $this->data;
 	}
 	
-	public function getPerson($id)
-	{
-		$person = $this->model->getPerson($id);
-		$this->data->name = $person->getName();
-		$this->data->surnames = $person->getSurnames();
-		return $this->data;
-	}
-	
-	public function getCurrentClassroomStudents($classroomId) {
+	public function getCurrentClassroomStudents($classroomId):array {
 		$this->data->students = array();
 		$students = $this->model->getCurrentClassroomStudents($classroomId);
 		foreach ($students as $student) {
 			$id = $student->getId();
-			$completeName = $student->getSurnames() . ", " . $student->getName();
-			$this->data->students[$id] = new \stdClass; 
-			$this->data->students[$id]->name = $completeName; 
-		}
+			$this->data->students[$id] = new \stdClass;
+			$this->data->students[$id]->id = $student->getId();
+			$this->data->students[$id]->name = $student->getName(); 
+			$this->data->students[$id]->surnames = $student->getSurnames();
+			}
 		$firstStudent = reset($this->data->students);
 		$firstStudent->selected = true;
-		return $this->data;
+		return $this->data->students;
 	}
 	
 	public function getClassroom($classroomId):array
@@ -49,6 +42,16 @@ final class SchoolViewModel extends ViewModel {
 		$classroom = $this->model->getClassroom($classroomId);
 		$data['id'] = $classroom->getId();
 		$data['name'] = $classroom->getName();
+		return $data;
+	}
+	
+	public function getClassrooms():array
+	{
+		$data = array();
+		$classrooms = $this->model->getClassrooms();
+		foreach ($classrooms as $classroom) {
+			array_push($data, $this->getClassroom($classroom->getId()));
+		}
 		return $data;
 	}
 	
@@ -126,5 +129,34 @@ final class SchoolViewModel extends ViewModel {
 			}
 		}
 		return $data;
+	}
+	
+	public function listAllCourses()
+	{
+		$coursesData = array();
+		$courses = $this->model->getCourses();
+		$ac = $this->model->getActiveCourse();
+		foreach ($courses as $course) {
+			array_push($coursesData, array(
+					"id" => $course->getId(),
+					"year" => $course->getYear(),
+					"active" => ($course == $ac ? true : false)));
+		}
+		return $coursesData;
+	}
+	
+	public function listAllTutorings()
+	{
+		//TODO
+	}
+
+	public function listAllSpecialities()
+	{
+		//TODO
+	}
+
+	public function listAllReinforcings()
+	{
+		//TODO
 	}
 }

@@ -1,0 +1,34 @@
+<html lang="ca">
+<head>
+	<meta charset="utf-8" />
+	<title>Titol</title>
+	<meta name="author" content="carles" />
+	<link rel="stylesheet" href="presentation/css/styles.css?v=1.0" />
+	<link rel="stylesheet" href="presentation/css/compact-nav.css?v=1.0" />
+	<link rel="stylesheet" href="presentation/css/courses.css?v=1.0" />
+</head>
+<body>
+<div id='header-wrap'>
+<header></header>
+</div>
+<main>
+	<form method="POST">
+	<table>
+		<tr><th>Curs</th><th>Actiu</th><th>Eliminar</th></tr>
+		<tr class="courses"><td><input type="text" class="form-input" value="2016-2017"/></td><td><input class="active-course" type="radio" name="active"></td><td><a class="delete">x</a></td></tr>
+	</table>
+	<div class="form-element"><input id="new-course" type="text" class="form-input"/><button type="button" class="form-button" onclick="createCourse()">Crear curs</button></div>
+	<div><span class="form-label">Selecciona el trimestre actiu: </span>
+		<select id="active-trimestre" onchange="changeTrimestre(this)">
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
+		</select>
+	</div>
+	<div id="error" class="error"></div>
+</main>
+  <script src="js/scripts.js"></script>
+  <script src="js/courses.js"></script>
+  <script src="js/compact-nav.js"></script>
+</body>
+</html>

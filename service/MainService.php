@@ -1,17 +1,19 @@
 <?php
-namespace Infojor\Service;
+namespace tfg\service;
+
+use tfg\service\Entities\School;
 
 abstract class MainService
 {
 	protected $entityManager;
 	
-	public function __construct(\Doctrine\ORM\EntityManager $entityManager) {
-		$this->entityManager = $entityManager;
+	public function __construct() {
+		$this->entityManager = \tfg\utils\Utils::getEm();
 	}
 	
-	public function getSchool()
+	public function getSchool():School
 	{
-		$school = $this->entityManager->find('Infojor\\Service\\Entities\\School', 1);
+		$school = $this->entityManager->find('tfg\\service\\Entities\\School', 1);
 		return $school;
 	}
 
@@ -27,11 +29,11 @@ abstract class MainService
 	
 	public function getCourse($courseId)
 	{
-		return $this->entityManager->find('Infojor\\Service\\Entities\\Course', $courseId);
+		return $this->entityManager->find('tfg\\service\\Entities\\Course', $courseId);
 	}
 	
 	public function getTrimestre($trimestreId)
 	{
-		return $this->entityManager->find('Infojor\\Service\\Entities\\Trimestre', $trimestreId);
+		return $this->entityManager->find('tfg\\service\\Entities\\Trimestre', $trimestreId);
 	}
 }

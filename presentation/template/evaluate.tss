@@ -1,0 +1,14 @@
+@import 'header.tss';
+
+title {content: 'Informes - valoracions'}
+header {content: template("header.xml")}
+#classroomId:attr(value) {content: data(classroom.id); }
+#areaId:attr(value) {content: data(areaId); }
+#reinforceId:attr(value) {content: data(reinforceId); }
+#section_name:attr(value) {content: data(section); }
+#students ul li {repeat: data(students); }
+#students ul li {content: iteration(surnames), ", ", iteration(name); }
+#students ul li:attr(id) {content: 'student-', key(); }
+#students ul li:attr(onclick) {content: 'changeStudent(this)'; }
+#students ul li:iteration[selected=true]:attr(class) {content: 'selected'; }
+#section_header h2 {content: data(classroom.name)}

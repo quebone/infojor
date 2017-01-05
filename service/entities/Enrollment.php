@@ -1,5 +1,5 @@
 <?php
-namespace Infojor\Service\Entities;
+namespace tfg\service\Entities;
 
 /**
  * @Entity @Table(name="enrollments")
@@ -9,18 +9,18 @@ class Enrollment
 	/** @Id @Column(type="integer") @GeneratedValue **/
 	private $id;
 	/**
-	 * @ManyToOne(targetEntity="Student", inversedBy="classrooms")
-	 * @JoinColumn(name="student_id", referencedColumnName="id")
+	 * @ManyToOne(targetEntity="Student", inversedBy="enrollments")
+	 * @JoinColumn(name="student_id", referencedColumnName="id", onDelete="CASCADE")
 	 */
 	private $student;
 	/**
-	 * @ManyToOne(targetEntity="Classroom", inversedBy="students")
+	 * @ManyToOne(targetEntity="Classroom", inversedBy="enrollments")
 	 * @JoinColumn(name="classroom_id", referencedColumnName="id")
 	 */
 	private $classroom;
 	/**
 	 * @ManyToOne(targetEntity="Course")
-	 * @JoinColumn(name="course_id", referencedColumnName="year")
+	 * @JoinColumn(name="course_id", referencedColumnName="id")
 	 */
 	private $course;
 	/**
@@ -28,6 +28,13 @@ class Enrollment
 	 * @JoinColumn(name="trimestre_id", referencedColumnName="number")
 	 */
 	private $trimestre;
+	
+	public function __construct(Student $student, Classroom $classroom, Course $course, Trimestre $trimestre) {
+		$this->student = $student;
+		$this->classroom = $classroom;
+		$this->course = $course;
+		$this->trimestre = $trimestre;
+	}
 	
 	public function getStudent()
 	{

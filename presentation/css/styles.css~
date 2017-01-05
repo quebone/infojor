@@ -37,7 +37,6 @@ header {
 
 header a:hover {
 	text-decoration: none;
-	cursor: default;
 }
 
 header:after {
@@ -90,6 +89,7 @@ main {
 }
 
 .error {
+	margin-top: 50px;
 	color: red;
 	font-size: 100%;
 }

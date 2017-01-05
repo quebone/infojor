@@ -1,26 +1,25 @@
 <?php
-namespace Infojor;
-
-use Infojor\Presentation\Model\FrontController\MainFrontController;
+namespace tfg;
 
 session_start();
 
 require_once 'init.php';
 
-if (isset($_SESSION['userid'])) {
-	$userId = $_SESSION['userid'];
+if (isset($_SESSION[USER_ID])) {
+	$userId = $_SESSION[USER_ID];
 } else {
  	header('Location: login.php');
-// 	$userId = 1;
 }
 
 ?>
 <!doctype html>
 <?php
 
-$frontController = new MainFrontController($userId, $entityManager);
-$data = $frontController->getData();
+$header = new \tfg\presentation\model\HeaderViewModel();
+$data['header'] = $header->output();
+
+$controller = new \tfg\presentation\controller\MainController();
 $tplEngine = new \Simi\TplEngine\TplEngine();
-$data->sections = $tplEngine->output('createSections', $frontController->getSectionData());
+$data['sections'] = $tplEngine->output('createSections', $controller->getSectionData($userId));
 $template = new \Transphporm\Builder(TPLDIR.'main.xml', TPLDIR.'main.tss');
 echo $template->output($data)->body;

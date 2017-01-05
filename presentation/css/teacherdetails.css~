@@ -1,0 +1,41 @@
+main {
+	padding: 20px;
+}
+
+.form-element {
+	margin-bottom: 10px;
+}
+
+.form-label {
+	display: inline-block;
+	width: 150px;
+}
+
+.form-input {
+	display: inline-block;
+	width: 250px;
+}
+
+.form-buttons {
+	display: inline;
+	margin-top: 20px;
+	margin-left: 150px;
+	width: 5%;
+}
+
+.form-button {
+}
+
+.other-information {
+	margin: 30px 0px 40px 150px;
+}
+
+#rstpasswd {
+}
+
+input[type=checkbox] {
+}
+
+input[type=hidden] {
+	display: none;
+}

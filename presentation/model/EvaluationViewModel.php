@@ -1,16 +1,16 @@
 <?php
-namespace Infojor\Presentation\Model;
+namespace tfg\presentation\model;
 
-final class EvaluationViewModel extends ViewModel {
+final class EvaluationViewModel extends MainViewModel implements IEvaluationViewModel {
 	
-	public function __construct($model = null, \Doctrine\ORM\EntityManager $entityManager = null) {
-		if ($model == null) $model = new \Infojor\Service\EvaluationService($entityManager);
-		parent::__construct($model, $entityManager);
+	public function __construct() {
+		parent::__construct();
 	}
 
 	private function getPartialEvaluationDescriptions():array
 	{
-		$peds = $this->model->getPartialEvaluationDescriptions();
+		$model = new \tfg\service\EvaluationService();
+		$peds = $model->getPartialEvaluationDescriptions();
 		foreach ($peds as $ped) {
 			$id = $ped->getId();
 			$data[$id]['id'] = $ped->getId();
@@ -22,7 +22,8 @@ final class EvaluationViewModel extends ViewModel {
 
 	private function getGlobalEvaluationDescriptions():array
 	{
-		$geds = $this->model->getGlobalEvaluationDescriptions();
+		$model = new \tfg\service\EvaluationService();
+		$geds = $model->getGlobalEvaluationDescriptions();
 		foreach ($geds as $ged) {
 			$id = $ged->getId();
 			$data[$id]['id'] = $ged->getId();
@@ -34,41 +35,44 @@ final class EvaluationViewModel extends ViewModel {
 
 	private function getDimensionEvaluation($studentId, $dimensionId)
 	{
-		$pe = $this->model->getDimensionEvaluation($studentId, $dimensionId);
+		$model = new \tfg\service\EvaluationService();
+		$pe = $model->getDimensionEvaluation($studentId, $dimensionId);
 		if ($pe == null) return null;
 		return $pe->getMark();
 	}
 	
 	private function getAreaEvaluation($studentId, $areaId)
 	{
-		$ge = $this->model->getAreaEvaluation($studentId, $areaId);
+		$model = new \tfg\service\EvaluationService();
+		$ge = $model->getAreaEvaluation($studentId, $areaId);
 		if ($ge == null) return null;
 		return $ge->getMark();
 	}
 	
 	private function getScopeEvaluation($studentId, $scopeId)
 	{
-		$ge = $this->model->getScopeEvaluation($studentId, $scopeId);
+		$model = new \tfg\service\EvaluationService();
+		$ge = $model->getScopeEvaluation($studentId, $scopeId);
 		if ($ge == null) return null;
 		return $ge->getMark();
 	}
 	
-	public function getEvaluations($studentId, $classroomId, $areaId, $reinforceId, $includeSpecialities):array
+	public function getEvaluations($studentId, $areaId, $reinforceId, $includeSpecialities):array
 	{
-		$userModel = new \Infojor\Service\UserService($this->entityManager);
-		$schoolModel = new \Infojor\Service\SchoolService($this->entityManager);
+		$userModel = new \tfg\service\UserService($this->entityManager);
+		$schoolModel = new \tfg\service\SchoolService($this->entityManager);
 		$schoolViewModel = new SchoolViewModel(null, $this->entityManager);
-		$student = $userModel->getStudent($studentId);
-		$cycle = $schoolModel->getClassroom($classroomId)->getLevel()->getCycle();
 		$course = $schoolModel->getActiveCourse();
 		$trimestre = $schoolModel->getActiveTrimestre();
+		$student = $userModel->getStudent($studentId);
+		$classroom = $student->getClassroom($course, $trimestre);
+		$cycle = $classroom->getLevel()->getCycle();
 		$evaluation['peds'] = $this->getPartialEvaluationDescriptions();
 		$evaluation['geds'] = $this->getGlobalEvaluationDescriptions();
-		$evaluation['classroom'] = $schoolViewModel->getClassroom($classroomId);
-		$evaluation['area'] = $schoolViewModel->getArea($areaId);
+		$evaluation['classroom'] = $schoolViewModel->getClassroom($classroom->getId());
 		$evaluation['student']['name'] = $student->getName() . " " . $student->getSurnames();
 		if ($reinforceId == null) {
-			$scopes = $schoolViewModel->getScopes($classroomId);
+			$scopes = $schoolViewModel->getScopes($classroom->getId());
 			$evaluation['scopes'] = $scopes;
 			foreach ($scopes as $scope) {
 				$areas = $schoolViewModel->getScopeAreas($scope['id'], $areaId);
@@ -94,13 +98,9 @@ final class EvaluationViewModel extends ViewModel {
 					unset($evaluation['scopes'][$scope['id']]);
 				}
 			}
-// 			if ($areaId == null && $reinforceId == null) {
-				$observation = $student->getCourseObservation($course, $trimestre);
-				$observationText = $observation != null ? $observation->getText() : '';
-				$evaluation['observation'] = $observationText;
-// 			} else {
-// 				$evaluation['observation'] = null;
-// 			}
+			$observation = $student->getCourseObservation($course, $trimestre);
+			$observationText = $observation != null ? $observation->getText() : '';
+			$evaluation['observation'] = $observationText;
 		} else {
 			$reinforceClassroom = $schoolModel->getReinforceClassroom($reinforceId);
 			$evaluation['reinforcing'] = $schoolViewModel->getReinforceClassroom($reinforceId);
@@ -114,19 +114,5 @@ final class EvaluationViewModel extends ViewModel {
 			}
 		}
 		return $evaluation;
-	}
-	
-	public function setPartialEvaluation($studentId, $evaluationId, $markId)
-	{
-		return $this->model->setPartialEvaluation($studentId, $evaluationId, $markId);
-	}
-
-	public function setGlobalEvaluation($studentId, $evaluationId, $markId)
-	{
-		return $this->model->setGlobalEvaluation($studentId, $evaluationId, $markId);
-	}
-	
-	public function setObservation($studentId, $text, $reinforceId=null) {
-		return $this->model->setObservation($studentId, $text, $reinforceId);
 	}
 }

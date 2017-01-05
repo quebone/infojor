@@ -1,0 +1,44 @@
+<html lang="ca">
+<head>
+	<meta charset="utf-8" />
+	<title>Titol</title>
+	<meta name="author" content="carles" />
+	<link rel="stylesheet" href="presentation/css/styles.css?v=1.0" />
+	<link rel="stylesheet" href="presentation/css/compact-nav.css?v=1.0" />
+	<link rel="stylesheet" href="presentation/css/evaluate.css?v=1.0" />
+</head>
+<body>
+<div id='header-wrap'>
+<header></header>
+</div>
+<input id='classroomId' type='hidden' />
+<input id='areaId' type='hidden' />
+<input id='reinforceId' type='hidden' />
+<input id='section_name' type='hidden' />
+<main>
+	<div id="students-wrapper">
+	<div id="students">
+		<ul>
+			<li>Alumne</li>
+		</ul>	
+	</div>
+	<img id="thumbnail" src="" alt=""></img>
+	</div>
+	<div id="right_column">
+		<div id="section">
+			<div id="section_header">
+				<div class="selector" name="left" onclick="prevClassroom()"></div>
+				<h2>Classroom</h2>
+				<div class="selector" name="right" onclick="nextClassroom()"></div>
+				<h3>Alumne</h3>
+			</div>
+		</div>
+		<div id="evaluations">
+		</div>
+	</div>
+</main>
+  <script src="js/scripts.js"></script>
+  <script src="js/evaluate.js"></script>
+  <script src="js/compact-nav.js"></script>
+</body>
+</html>

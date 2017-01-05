@@ -1,0 +1,4 @@
+@import 'header.tss';
+
+title {content: 'Informes - aules de reforç'}
+header {content: template('header.xml')}

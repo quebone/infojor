@@ -1,7 +1,5 @@
 <?php
-namespace Infojor;
-
-use Infojor\Presentation\Model\FrontController\LoginFrontController;
+namespace tfg;
 
 if (session_status() != PHP_SESSION_NONE) {
 	session_unset();
@@ -9,8 +7,8 @@ if (session_status() != PHP_SESSION_NONE) {
 }
 session_start();
 
-set_error_handler('\Infojor\\myErrorHandler');
-register_shutdown_function("\Infojor\\fatal_handler");
+set_error_handler("\\tfg\\myErrorHandler");
+register_shutdown_function("\\tfg\\fatal_handler");
 
 function myErrorHandler($code, $message, $file, $line) {
 	echo "$code: $message ($file line $line)\n";
@@ -28,14 +26,14 @@ function fatal_handler() {
 ?>
 <!doctype html>
 <?php
-if (isset($_SESSION['userid'])) {
-	unset($_SESSION['userid']);
-}
-
 require_once 'init.php';
 
-$frontController = new LoginFrontController($entityManager);
-$data = $frontController->getData();
+if (isset($_SESSION[USER_ID])) {
+	unset($_SESSION[USER_ID]);
+}
+
+$header = new \tfg\presentation\model\HeaderViewModel();
+$data['header'] = $header->output();
 
 $template = new \Transphporm\Builder(TPLDIR.'login.xml', TPLDIR.'login.tss');
 

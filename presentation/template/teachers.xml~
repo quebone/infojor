@@ -1,0 +1,25 @@
+<html lang="ca">
+<head>
+	<meta charset="utf-8" />
+	<title>Titol</title>
+	<meta name="author" content="carles" />
+	<link rel="stylesheet" href="presentation/css/styles.css?v=1.0" />
+	<link rel="stylesheet" href="presentation/css/compact-nav.css?v=1.0" />
+	<link rel="stylesheet" href="presentation/css/teachers.css?v=1.0" />
+</head>
+<body>
+<div id='header-wrap'>
+<header></header>
+</div>
+<main>
+	<table id="teachers">
+	<tr>
+		<td class="teacher">Nom mestre</td><td class="edit"><a>editar</a></td><td class="delete"><a>eliminar</a></td>
+	</tr>
+	</table>
+</main>
+  <script src="js/scripts.js"></script>
+  <script src="js/compact-nav.js"></script>
+  <script src="js/teachers.js"></script>
+</body>
+</html>

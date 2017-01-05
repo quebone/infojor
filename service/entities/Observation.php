@@ -1,5 +1,5 @@
 <?php
-namespace Infojor\Service\Entities;
+namespace tfg\service\Entities;
 
 /**
  * @Entity @Table(name="observations")
@@ -7,11 +7,11 @@ namespace Infojor\Service\Entities;
 class Observation {
 	/** @Id @Column(type="integer") @GeneratedValue **/
 	private $id;
-	/** @Column(type="string", length=1024) **/
+	/** @Column(type="string", length=4000) **/
 	private $text;
 	/**
 	 * @ManyToOne(targetEntity="Course", inversedBy="observations")
-	 * @JoinColumn(name="course_id", referencedColumnName="year")
+	 * @JoinColumn(name="course_id", referencedColumnName="id")
 	 */
 	private $course;
 	/**
@@ -30,7 +30,7 @@ class Observation {
 	 */
 	private $student;
 	
-	public function __construct($text, $student, $course, $trimestre, $reinforceClassroom = null) {
+	public function __construct($student, $course, $trimestre, $text, $reinforceClassroom = null) {
 		$this->text = $text;
 		$this->student = $student;
 		$this->course = $course;

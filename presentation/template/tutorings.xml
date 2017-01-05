@@ -5,29 +5,36 @@
 	<meta name="author" content="carles" />
 	<link rel="stylesheet" href="presentation/css/styles.css?v=1.0" />
 	<link rel="stylesheet" href="presentation/css/compact-nav.css?v=1.0" />
-	<link rel="stylesheet" href="presentation/css/evaluate.css?v=1.0" />
+	<link rel="stylesheet" href="presentation/css/tutorings.css?v=1.0" />
 </head>
 <body>
 <div id='header-wrap'>
 <header></header>
 </div>
-<input id='classroomId' type='hidden' />
-<input id='areaId' type='hidden' />
-<input id='reinforceId' type='hidden' />
 <main>
-	<div id="students-wrapper">
-	<div id="students">
-		<ul>
-			<li>Alumne</li>
-		</ul>	
-	</div>
-	<img id="thumbnail" src="" alt=""></img>
-	</div>
-	<div id="right_column">
-	</div>
+	<table id="tutorings">
+		<tr>
+			<td>Classroom 1</td><td>Teacher 1</td><td class="delete"><a href="#">eliminar</a></td>
+		</tr>
+		<tr>
+			<td></td><td>Teacher 2</td><td class="delete"><a href="#">eliminar</a></td>
+		</tr>
+		<tr>
+			<td>Classroom 2</td><td>Teacher 3</td><td class="delete"><a href="#">eliminar</a></td>
+		</tr>
+	</table>
+	<div class="wrapper">
+		<select id="classroom">
+			<option>Classroom 1</option>
+		</select>
+		<select id="teacher">
+			<option>Teacher 1</option>
+		</select>
+		<span class="add"><a href="#">afegir</a></span>
+	<div id="error" class="error"></div>
 </main>
   <script src="js/scripts.js"></script>
-  <script src="js/evaluate.js"></script>
+  <script src="js/tutorings.js"></script>
   <script src="js/compact-nav.js"></script>
 </body>
 </html>

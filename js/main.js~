@@ -1,15 +1,14 @@
 function load(pageName) {
-	section = pageName.substr(0, pageName.indexOf('-'));
-	id = pageName.substr(pageName.indexOf('-') + 1);
-	sectionId = (section == 'tutorings' ? 'classroomId' : (section == 'specialities' ? 'areaId' : 'reinforceId'));
-	var dataToSend = sectionId +'=' + encodeURI(id) + '&page=' + encodeURI(section) + '&function=setSession';
-	console.log(pageName);
-	console.log(dataToSend);
-	send(dataToSend, 'presentation/controller/AjaxController.php', redirect);
+	var section = pageName.substr(0, pageName.indexOf('-'));
+	var id = pageName.substr(pageName.indexOf('-') + 1);
+	var sectionId = (section == 'tutorings' ? 'classroomId' : (section == 'specialities' ? 'areaId' : 'reinforceId'));
+	var dataToSend = sectionId +'=' + id + '&page=' + section + '&section=' + section + '&function=setSession';
+//	console.log(dataToSend);
+	send(dataToSend, AJAXCONTROLLER2, redirect);
 }
 
 function redirect(toPage) {
-	vars = JSON.parse(toPage);
+	var vars = JSON.parse(toPage);
 	console.log(toPage);
-	window.location.href = vars.page + '.php';
+	window.location.href = 'evaluate.php';
 }

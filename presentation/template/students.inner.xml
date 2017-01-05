@@ -1,0 +1,11 @@
+<tr class="theader"><th>Cognoms</th><th>Nom</th><th>Classe</th></tr>
+<tr class="tdata">
+	<td><input type="text" class="form-input" id="surnames" onchange="updateStudent(this)" value="Cognoms 1"/></td>
+	<td><input type="text" class="form-input" id="name" onchange="updateStudent(this)" value="Nom 1"/></td>
+	<td>
+		<select class="classroom" onchange="updateStudent(this)">
+			<option value="1">1rA</option>
+		</select>
+	</td>
+	<td class="delete"><a onclick="deleteStudent()">eliminar</td>
+</tr>

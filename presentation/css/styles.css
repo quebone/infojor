@@ -89,6 +89,7 @@ main {
 }
 
 .error {
+	margin-top: 30px;
 	color: red;
 	font-size: 100%;
 }

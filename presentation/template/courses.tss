@@ -1,0 +1,15 @@
+@import 'header.tss';
+
+title {content: 'Informes - valoracions'}
+header {content: template("header.xml")}
+
+tr.courses {repeat: data(courses); }
+tr.courses td input.form-input:attr(value) {content: iteration(year); }
+tr.courses td input.form-input:attr(id) {content: "course-", iteration(id); }
+tr.courses td input.form-input:attr(onchange) {content: "edit(", iteration(id), ")" }
+tr.courses td input.active-course:attr(id) {content: "active-", iteration(id) }
+tr.courses td input.active-course:attr(onchange) {content: "edit(", iteration(id), ")" }
+tr.courses td input.active-course:iteration[active=true]:attr(checked) {content: iteration(active) }
+tr.courses td a:attr(onclick) {content: "del(", iteration(id), ")" }
+
+#active-trimestre:attr(value) {content: data(activeTrimestre); }

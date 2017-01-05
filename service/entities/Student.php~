@@ -1,8 +1,0 @@
-<?php
-namespace Infojor\Entities;
-/**
- * @Entity @Table(name="students")
- **/
-class Student extends Person
-{
-}

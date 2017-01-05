@@ -2,7 +2,7 @@
 function sendData() {
 	console.log('sending data');
 	var dataToSend = 'function=getTeacher';
-	send(dataToSend, 'presentation/controller/AjaxController.php', getTeacher);
+	send(dataToSend, AJAXCONTROLLER, getTeacher);
 }
 
 // given a user id, decides what to do

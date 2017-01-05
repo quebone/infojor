@@ -1,0 +1,11 @@
+@import 'header.tss';
+
+title {content: "Informes - detalls d'usuari"}
+header {content: template('header.xml')}
+
+#userId:attr(value) {content: data(teacher.id); }
+#name:attr(value){content: data(teacher.name); }
+#surnames:attr(value){content: data(teacher.surnames); }
+#email:attr(value){content: data(teacher.email); }
+#phone:attr(value){content: data(teacher.phone); }
+#username:attr(value){content: data(teacher.username); }

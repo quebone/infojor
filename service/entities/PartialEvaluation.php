@@ -1,5 +1,5 @@
 <?php
-namespace Infojor\Service\Entities;
+namespace tfg\service\Entities;
 
 /**
  * @Entity @Table(name="partialevaluations")
@@ -14,7 +14,7 @@ class PartialEvaluation extends Evaluation
 
 	/**
 	 * @ManyToOne(targetEntity="Course", inversedBy="partialEvaluations")
-	 * @JoinColumn(name="course_id", referencedColumnName="year")
+	 * @JoinColumn(name="course_id", referencedColumnName="id")
 	 */
 	private $course;
 

@@ -1,5 +1,5 @@
 <?php
-namespace Infojor\Service\Entities;
+namespace tfg\service\Entities;
 
 /**
  * @Entity @Table(name="school")
@@ -12,7 +12,7 @@ class School
 	private $name;
 	/**
 	 * @OneToOne(targetEntity="Course")
-	 * @JoinColumn(name="active_course", referencedColumnName="year")
+	 * @JoinColumn(name="active_course", referencedColumnName="id")
 	 */
 	private $activeCourse;
 	/**
@@ -21,12 +21,24 @@ class School
 	 */
 	private $activeTrimestre;
 	/**
+	 * @OneToMany(targetEntity="Classroom", mappedBy="school")
+	 */
+	private $classrooms;
+	/**
 	 * @OneToMany(targetEntity="ReinforceClassroom", mappedBy="school")
 	 */
 	private $reinforceClassrooms;
+	/**
+	 * @OneToMany(targetEntity="Person", mappedBy="school")
+	 * @OrderBy({"surnames" = "ASC"})
+	 */
+	private $persons;
 	
 	public function __construct() {
+		$this->classrooms = new \Doctrine\Common\Collections\ArrayCollection();
 		$this->reinforceClassrooms = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->persons = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->logs = new \Doctrine\Common\Collections\ArrayCollection();
 	}
 	
 	public function getName()
@@ -57,15 +69,16 @@ class School
 		$this->activeTrimestre = $activeTrimestre;
 	}
 	
-	public function getClassroomStudents(\Doctrine\ORM\EntityManager $em, $classroom, $course, $trimestre) {
-		$enrollments = $em->getRepository('Infojor\\Service\\Entities\\Enrollment')->findBy(array(
-				'course'=>$course,
-				'trimestre'=>$trimestre,
-			));
+	public function getClassroomStudents(Classroom $classroom, Course $course, Trimestre $trimestre)
+	{
 		$students = array();
-		foreach ($enrollments as $enrollment) {
-			if ($enrollment->getClassroom()->getId() == $classroom->getId()) {
-				$students[] = $enrollment->getStudent();
+		foreach ($this->persons as $person) {
+			if ($person instanceof Student) {
+				foreach ($person->getEnrollments($course) as $enrollment) {
+					if ($enrollment->getClassroom() == $classroom && $enrollment->getCourse() == $course && $enrollment->getTrimestre() == $trimestre) {
+						array_push($students, $person);
+					}
+				}
 			}
 		}
 		return $students;
@@ -73,5 +86,17 @@ class School
 	
 	public function getReinforceClassrooms() {
 		return $this->reinforceClassrooms;
+	}
+
+	public function getClassrooms() {
+		return $this->classrooms;
+	}
+	
+	public function addStudent(Student $student) {
+		$this->persons->add($student);
+	}
+	
+	public function removePerson(Person $person) {
+		return $this->persons->removeElement($person);
 	}
 }

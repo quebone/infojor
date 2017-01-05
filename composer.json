@@ -6,8 +6,8 @@
     },
     "autoload": {
         "psr-4": {
-        	"Infojor\\": "",
-        	"Infojor\\Service\\Entities\\": "service/entities/"
+        	"tfg\\": "",
+        	"tfg\\service\\Entities\\": "service/entities/"
         }
     }
 }

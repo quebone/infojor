@@ -1,3 +1,0 @@
-ul li {repeat: data(items)}
-ul li a {content: iteration(name)}
-ul li a:attr(onclick) {content: "load(", data(name), iteration(link), ")"}

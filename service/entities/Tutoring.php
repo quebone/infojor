@@ -1,5 +1,5 @@
 <?php
-namespace Infojor\Service\Entities;
+namespace tfg\service\Entities;
 
 /**
  * @Entity @Table(name="tutorings")
@@ -8,25 +8,21 @@ class Tutoring
 {
 	/** @Id @Column(type="integer") @GeneratedValue **/
 	private $id;
-
 	/**
-	 * @ManyToOne(targetEntity="Teacher")
+	 * @ManyToOne(targetEntity="Teacher", inversedBy="tutorings")
 	 * @JoinColumn(name="teacher_id", referencedColumnName="id")
 	 */
 	private $teacher;
-	
 	/**
 	 * @ManyToOne(targetEntity="Classroom", inversedBy="tutors"))
 	 * @JoinColumn(name="classroom_id", referencedColumnName="id")
 	 */
 	private $classroom;
-
 	/**
 	 * @ManyToOne(targetEntity="Course")
-	 * @JoinColumn(name="course_id", referencedColumnName="year")
+	 * @JoinColumn(name="course_id", referencedColumnName="id")
 	 */
 	private $course;
-
 	/**
 	 * @ManyToOne(targetEntity="Trimestre")
 	 * @JoinColumn(name="trimestre_id", referencedColumnName="number")

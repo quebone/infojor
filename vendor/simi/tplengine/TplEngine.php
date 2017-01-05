@@ -1,6 +1,6 @@
 <?php
 /**
- * Custom template engine for Infojor
+ * Custom template engine for tfg
  */
 namespace Simi\TplEngine;
 
@@ -34,11 +34,7 @@ class TplEngine
 	
 	private function createEvaluations($data)
 	{
-// 		$inner = "<input id='classroomId' type='hidden' value='" . $data['classroom']['id'] . "' />\n";
-		$inner = "<div id='section'><div id='section_header'><div class='selector' name='left' onclick='prevClassroom()'></div><h2>" .
-			$data['classroom']['name'] . "</h2><div class='selector' name='right' onclick='nextClassroom()'></div></div>
-					\n\t<h3> " . $data['student']['name'] . "\t\n</div>\n";
-		$inner .= "<ul>\n";
+		$inner = "<div id='evaluations'><ul>\n";
 		foreach ($data['scopes'] as $scope) {
 			$inner .= "\t<li class='scope' title=\"" . $scope['description'] . "\"><h3>" . $scope['name'] . "</h3>\n";
 			$inner .= "\t<ul>\n";
@@ -86,7 +82,7 @@ class TplEngine
 			$inner .= "<textarea class='observation' name='" . $data['reinforcing']['id'] . 
 				"' onchange='changeObservation(this)'>" . $data['reinforcing']['observation']['text'] . "</textarea>\n";
 		}
-		$inner .= "</ul>\n";
+		$inner .= "</ul></div>\n";
 		return $inner;
 	}
 }

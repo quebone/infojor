@@ -1,35 +1,31 @@
 <?php
-namespace Infojor;
-
-use Infojor\Presentation\Model\FrontController\EvaluateFrontController;
+namespace tfg;
 
 session_start();
 
 require_once 'init.php';
 
-if (isset($_SESSION['userid'])) {
-	$userId = $_SESSION['userid'];
-	$areaId = $_SESSION['areaId'];
-	$classroomId = $_SESSION['classroomId'];
-	$studentId = $_SESSION['studentid'];
+if (isset($_SESSION[USER_ID])) {
+	$userId = $_SESSION[USER_ID];
 } else {
- 	header('Location: login.php');
-// 	$_SESSION['userid'] = 1; $_SESSION['areaId'] = 12; $_SESSION['studentid'] = 15; $_SESSION['classroomId'] = 7;
-// 	$userId = $_SESSION['userid'];
-// 	$areaId = $_SESSION['areaId'];
-// 	$studentId = $_SESSION['studentid'];
-// 	$classroomId = $_SESSION['classroomId'];
+	header('Location: login.php');
 }
 
 ?>
 <!doctype html>
 <?php
 
-if ($classroomId == null) $classroomId = 7;
+$controller = new \tfg\presentation\controller\SpecialitiesController();
+if (!$controller->isAdmin()) {
+	echo "Pàgina visible només pels administradors";
+	exit();
+}
 
-$frontController = new EvaluateFrontController($userId, $studentId, $classroomId, $areaId, null, $entityManager);
-$data = $frontController->getData();
-$data->classroomId = $classroomId;
-$data->areaId = $areaId;
-$template = new \Transphporm\Builder(TPLDIR.'tutorings.xml', TPLDIR.'tutorings.tss');
+$header = new \tfg\presentation\model\HeaderViewModel();
+$data['header'] = $header->output();
+
+// $data['teacher'] = $controller->getUserData();
+
+$template = new \Transphporm\Builder(TPLDIR.'specialities.xml', TPLDIR.'specialities.tss');
+
 echo $template->output($data)->body;
