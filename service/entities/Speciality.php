@@ -33,6 +33,14 @@ class Speciality
 	 */
 	private $trimestre;
 	
+	public function __construct($teacher, $area, $course, $trimestre)
+	{
+		$this->teacher = $teacher;
+		$this->area = $area;
+		$this->course = $course;
+		$this->trimestre = $trimestre;
+	}
+	
 	public function getTeacher()
 	{
 		return $this->teacher;

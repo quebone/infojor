@@ -1,3 +1,4 @@
+// envia les dades al controlador perquè actualitzi un usuari
 function sendUserData() {
 	var userId = document.getElementById("userId").value;
 	var name = encodeURI(document.getElementById("name").value);
@@ -18,10 +19,12 @@ function sendUserData() {
 	}
 }
 
+// en cas de cancel·lar, carreguem la pàgina principal
 function cancel() {
 	window.location.replace('main.php');
 }
 
+// retorn d'usuari actualitzat
 function userUpdated(input) {
 	window.location.replace('main.php');
 }

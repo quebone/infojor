@@ -10,7 +10,7 @@ function sendUserData() {
 	if (name.length == 0 || surnames.length == 0 || email.length == 0 || username.length == 0 || password.length == 0) {
 		showError("Alguns camps no són correctes");
 	} else if (password != password_repeat) {
-		showError("Les 2 contrasenyes no són iguals");
+		showError("Les 2 contrasenyes són diferents");
 	} else {
 		var dataToSend = "userId=" + userId + "&name=" + name + "&surnames=" + surnames + "&email=" + email + "&phone=" + phone +
 			"&username=" + username + "&password=" + password + "&function=updatePersonalData";

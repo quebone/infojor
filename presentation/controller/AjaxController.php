@@ -1,9 +1,15 @@
 <?php
 namespace tfg\presentation\controller;
 
+/**
+ * Canvia la definició del directori base, ja que la classe està en un subdirectori
+ */
 define("BASEDIR", "../../");
 require BASEDIR."init.php";
 
+/**
+ * Crida el la funció del controalador segons les variables POST obtingudes
+ */
 if (isset($_POST['function']) && isset($_POST['caller'])) {
 	$controller = $_POST['caller'] . "Controller";
 	$ac = new AjaxController($controller);

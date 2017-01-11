@@ -6,8 +6,6 @@ namespace tfg\service\Entities;
  **/
 class GlobalEvaluationDescription extends EvaluationDescription
 {
-	/** @Column(type="string", length=2) **/
-	private $mark;
 	/**
 	 * @OneToMany(targetEntity="GlobalEvaluation", mappedBy="id")
 	 */
@@ -17,15 +15,7 @@ class GlobalEvaluationDescription extends EvaluationDescription
 		$this->globalEvaluations = new \Doctrine\Common\Collections\ArrayCollection();
 	}
 	
-	public function getMark() {
-		return $this->mark;
-	}
-	
-	public function setMark($mark) {
-		$this->mark = $mark;
-	}
-	
-	public function getGlobalEvaluations() {
+	public function getEvaluations() {
 		return $this->globalEvaluations;
 	}
 }

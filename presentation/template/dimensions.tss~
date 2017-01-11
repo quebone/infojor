@@ -1,4 +1,9 @@
 @import 'header.tss';
 
-title {content: 'Informes - alumnes'}
+title {content: 'Informes - dimensions'}
 header {content: template('header.xml')}
+
+#degree-selector option {repeat: data(degrees); }
+#degree-selector option:attr(value) {content: iteration(id); }
+#degree-selector option {content: iteration(name); }
+

@@ -13,19 +13,14 @@
 </div>
 <main>
 	<table id="reinforcings">
-		<tr>
-			<td>Area 1</td><td>Teacher 1</td><td class="delete"><a href="#">eliminar</a></td>
-		</tr>
-		<tr>
-			<td></td><td>Teacher 2</td><td class="delete"><a href="#">eliminar</a></td>
-		</tr>
-		<tr>
-			<td>Area 2</td><td>Teacher 3</td><td class="delete"><a href="#">eliminar</a></td>
+		<tr class="theader"><th>Àrea</th><th>Mestre</th><th></th></tr>
+		<tr class="tdata">
+			<td class="classroom">Reinforce Classroom 1</td><td class="teacher">Teacher 1</td><td class="delete"><a>eliminar</a></td>
 		</tr>
 	</table>
 	<div class="wrapper">
 		<select id="classroom">
-			<option>Area 1</option>
+			<option>Educació especial</option>
 		</select>
 		<select id="teacher">
 			<option>Teacher 1</option>

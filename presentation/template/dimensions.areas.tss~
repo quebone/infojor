@@ -1,0 +1,3 @@
+.area-wrapper {repeat: data(); }
+.area-wrapper h3 {content: iteration(name); }
+.area-wrapper .dimensions-wrapper {content: iteration(html); }

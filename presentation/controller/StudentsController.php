@@ -13,6 +13,9 @@ class StudentsController extends Controller
 		return $model->getClassrooms();
 	}
 	
+	/**
+	 * Obté els alumnes d'una classe i els formata en HTML
+	 */
 	public function getClassroomStudents()
 	{
 		$data = array();

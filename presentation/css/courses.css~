@@ -32,3 +32,10 @@ tr:nth-child(even) {background: #f7f7f7}
 #active-trimestre {
 	margin-top: 20px;
 }
+
+.delete, .edit {
+	font-size: small;
+	cursor: pointer; cursor: hand;
+	padding-right: 10px;
+}
+

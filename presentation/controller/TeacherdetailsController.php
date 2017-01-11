@@ -27,7 +27,8 @@ class TeacherdetailsController extends Controller
 		$phone = $_POST[PHONE];
 		$username = $_POST[USERNAME];
 		$isAdmin = !strcmp($_POST[ISADMIN], "true");
+		$isActive = !strcmp($_POST[ISACTIVE], "true");
 		$model = new UserService();
-		return $model->updateTeacher($teacherId, $name, $surnames, $email, $phone, $username, $isAdmin);
+		return $model->updateTeacher($teacherId, $name, $surnames, $email, $phone, $username, $isAdmin, $isActive);
 	}
 }

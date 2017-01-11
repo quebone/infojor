@@ -1,0 +1,3 @@
+.wrapper-scopes {repeat: data(); }
+.wrapper-scopes h2 {content: iteration(name); }
+.wrapper-scopes .wrapper-areas {content: iteration(name); }

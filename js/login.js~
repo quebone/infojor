@@ -12,7 +12,7 @@ function sendUserData() {
 		showError("El nom d'usuari i la contrasenya no poden estar en blanc");
 		return;
 	}
-	var dataToSend = 'user=' + user + '&password=' + password + '&function=login';
+	var dataToSend = 'username=' + user + '&password=' + password + '&function=login';
 	send(dataToSend, AJAXCONTROLLER, login);
 }
 

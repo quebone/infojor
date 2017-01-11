@@ -14,9 +14,10 @@
 <main>
 	<table id="teachers">
 	<tr>
-		<td class="teacher">Nom mestre</td><td class="edit"><a>editar</a></td><td class="delete"><a>eliminar</a></td>
+		<td class="teacher">Nom mestre</td><td><input class="active" type="checkbox"><label>Actiu</label></td><td class="edit"><a>editar</a></td><td class="delete"><a>eliminar</a></td>
 	</tr>
 	</table>
+	<div class="form-buttons"><button type="button" class="form-button" onclick="add()">Afegir un nou usuari</button></div>
 </main>
   <script src="js/scripts.js"></script>
   <script src="js/compact-nav.js"></script>

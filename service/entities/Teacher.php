@@ -16,6 +16,8 @@ class Teacher extends Person
 	private $username;
 	/** @Column(type="string", length=40) **/
 	private $password;
+	/** @Column(type="boolean") options={"default": true} **/
+	private $active;
 	/**
 	 * @OneToMany(targetEntity="Tutoring", mappedBy="teacher")
 	 */
@@ -80,6 +82,14 @@ class Teacher extends Person
 	
 	public function setPassword($password) {
 		$this->password = $password;
+	}
+	
+	public function getActive() {
+		return $this->active;
+	}
+	
+	public function setActive($active) {
+		$this->active = $active;
 	}
 	
 	public function getCompleteName():string

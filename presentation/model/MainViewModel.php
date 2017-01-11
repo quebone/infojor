@@ -1,7 +1,7 @@
 <?php
 namespace tfg\presentation\model;
 
-class MainViewModel implements IViewModel
+class MainViewModel
 {
 	protected $model;
 	protected $data;
@@ -34,6 +34,9 @@ class MainViewModel implements IViewModel
 		return $this->data;
 	}
 	
+	/**
+	 * Converteix les variables obtingudes per POST a variables de sessió 
+	 */
 	public function setSession()
 	{
 		if (session_status() == PHP_SESSION_NONE) {
@@ -44,6 +47,9 @@ class MainViewModel implements IViewModel
 		}
 	}
 
+	/**
+	 * Retorna el valor d'una variable de sessió
+	 */
 	protected function getSessionVar($sessionVar)
 	{
 		if (isset($_SESSION[$sessionVar])) return $_SESSION[$sessionVar];

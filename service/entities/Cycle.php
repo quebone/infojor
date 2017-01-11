@@ -29,7 +29,7 @@ class Cycle {
 	public function __construct() {
 		$this->levels = new \Doctrine\Common\Collections\ArrayCollection();
 		$this->dimensions = new \Doctrine\Common\Collections\ArrayCollection();
-		}
+	}
 
 	public function getId() {
 		return $this->id;
@@ -57,6 +57,22 @@ class Cycle {
 	
 	public function getScopes() {
 		return $this->degree->getScopes();
+	}
+	
+	public function getDimensions() {
+		return $this->dimensions;
+	}
+	
+	public function addDimension(Dimension $dimension) {
+		if ($this->dimensions->contains($dimension)) return;
+		$this->dimensions->add($dimension);
+		$dimension->addCycle($this);
+	}
+	
+	public function removeDimension(Dimension $dimension) {
+		if (!$this->dimensions->contains($dimension)) return;
+		$this->dimensions->removeElement($dimension);
+		$dimension->removeCycle($this);
 	}
 }
 

@@ -10,3 +10,4 @@ header {content: template('header.xml')}
 #phone:attr(value){content: data(teacher.phone); }
 #username:attr(value){content: data(teacher.username); }
 #isAdmin:attr(checked):data[teacher.isAdmin=1] {content: "true"; }
+#isActive:attr(checked):data[teacher.isActive=1] {content: "true"; }

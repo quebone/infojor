@@ -107,16 +107,16 @@ class Student extends Person
 			Dimension $dimension,
 			Course $course,
 			Trimestre $trimestre,
-			PartialEvaluationDescription $ped):PartialEvaluation {
-		return new PartialEvaluation($this, $course, $trimestre, $dimension, $ped);
+			EvaluationDescription $ed):Evaluation {
+		return new PartialEvaluation($this, $course, $trimestre, $dimension, $ed);
 	}
 
 	public function createAreaEvaluation(
 			Area $area,
 			Course $course,
 			Trimestre $trimestre,
-			GlobalEvaluationDescription $ged):GlobalEvaluation {
-				return new GlobalEvaluation($this, $course, $trimestre, $area, $ged);
+			EvaluationDescription $ed):Evaluation {
+				return new GlobalEvaluation($this, $course, $trimestre, $area, $ed);
 	}
 	
 	public function addEnrollment(Enrollment $enrollment) {

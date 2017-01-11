@@ -1,3 +1,4 @@
+// envia el text del missatge al controlador perquè enviï un correu als administradors
 function sendNewMessage() {
 	var msg = document.getElementById('message'); 
 	var txt = msg.value;
@@ -13,5 +14,6 @@ function sendNewMessage() {
 	}
 }
 
+// retorn d'enviament
 function messageSent(msg) {
 }

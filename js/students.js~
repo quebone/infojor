@@ -42,6 +42,7 @@ function updateStudent(elem) {
 	var surnames = document.getElementById("surnames-" + studentId).value;
 	var classroomId = document.getElementById("classroom-" + studentId).value;
 	var dataToSend = "studentId=" + studentId + "&name=" + encodeURI(name) + "&surnames=" + encodeURI(surnames) + "&classroomId=" + classroomId + "&function=updateStudent";
+	console.log(dataToSend);
 	send(dataToSend, AJAXCONTROLLER, studentUpdated);
 }
 

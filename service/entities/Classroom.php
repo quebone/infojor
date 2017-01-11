@@ -61,6 +61,16 @@ class Classroom
 		return $tutors;
 	}
 	
+	public function getStudents(Course $course, Trimestre $trimestre) {
+		$students = new \Doctrine\Common\Collections\ArrayCollection();
+		foreach ($this->enrollments as $enrollment) {
+			if ($enrollment->getCourse() == $course && $enrollment->getTrimestre() == $trimestre) {
+				$students->add($enrollment->getStudent());
+			}
+		}
+		return $students;
+	}
+	
 	public function getScopes() {
 		return $this->level->getScopes();
 	}

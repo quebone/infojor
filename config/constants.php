@@ -39,3 +39,7 @@ define('COURSE_ID', 'courseId');
 define('YEAR', 'year');
 define('ISACTIVE', 'isActive');
 define('TRIMESTRE_ID', 'trimestreId');
+define('DEGREE_ID', 'degreeId');
+define('CYCLE_ID', 'cycleId');
+define('CYCLES', 'cycles');
+define('DESCRIPTION', 'description');

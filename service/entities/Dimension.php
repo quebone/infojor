@@ -28,7 +28,10 @@ class Dimension {
 	private $cycles;
 	
 	
-	public function __construct() {
+	public function __construct($name, $description, $active=true) {
+		$this->name = $name;
+		$this->description = $description;
+		$this->active = $active;
 		$this->partialEvaluations = new \Doctrine\Common\Collections\ArrayCollection();
 		$this->cycles = new \Doctrine\Common\Collections\ArrayCollection();
 	}
@@ -61,8 +64,41 @@ class Dimension {
 		return $this->active;
 	}
 	
+	public function setActive($active) {
+		$this->active = $active;
+	}
+	
+	public function getArea() {
+		return $this->area;
+	}
+	
+	public function setArea(Area $area) {
+		$this->area = $area;
+	}
+	
 	public function getCycles() {
 		return $this->cycles;
+	}
+	
+	public function setCycles($cycles) {
+		foreach ($cycles as $cycle)
+			$this->cycles->add($cycle);
+	}
+	
+	public function addCycle(Cycle $cycle) {
+		if ($this->cycles->contains($cycle)) return;
+		$this->cycles->add($cycle);
+		$cycle->addDimension($this);
+	}
+	
+	public function removeCycle(Cycle $cycle) {
+		if (!$this->cycles->contains($cycle)) return;
+		$this->cycles->removeElement($cycle);
+		$cycle->removeDimension($this);
+	}
+	
+	public function getPartialEvaluations() {
+		return $this->partialEvaluations;
 	}
 	
 	public function getPartialEvaluation(Student $student, Course $course, Trimestre $trimestre) {

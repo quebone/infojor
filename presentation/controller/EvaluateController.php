@@ -5,6 +5,7 @@ use tfg\presentation\model\SchoolViewModel;
 use tfg\presentation\model\UserViewModel;
 use tfg\presentation\model\EvaluationViewModel;
 use tfg\service\EvaluationService;
+use tfg\presentation\view\TplEngine;
 
 class EvaluateController extends Controller
 {
@@ -32,6 +33,10 @@ class EvaluateController extends Controller
 		return $model->getStudent($studentId);
 	}
 	
+	/**
+	 * Llegeix les variables de POST i de sessió i les passa a EvaluationViewModel
+	 * El resultat l'envia a un generador d'HTML (tplEngine) i retorna el resultat
+	 */
 	public function getEvaluations()
 	{
 		if (session_status() != PHP_SESSION_ACTIVE) session_start();
@@ -43,7 +48,7 @@ class EvaluateController extends Controller
 		if (strcmp($section, 'reinforcings') != 0) $reinforceId = null;
 		$model = new EvaluationViewModel();
 		$evaluation = $model->getEvaluations($studentId, $areaId, $reinforceId, true);
-		$tplEngine = new \Simi\TplEngine\TplEngine();
+		$tplEngine = new TplEngine();
 		$data = $tplEngine->output('createEvaluations', $evaluation);
 		return json_encode($data, JSON_UNESCAPED_SLASHES);
 	}

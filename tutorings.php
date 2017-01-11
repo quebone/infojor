@@ -1,6 +1,8 @@
 <?php
 namespace tfg;
 
+use tfg\presentation\controller\TutoringsController;
+
 session_start();
 
 require_once 'init.php';
@@ -15,7 +17,7 @@ if (isset($_SESSION[USER_ID])) {
 <!doctype html>
 <?php
 
-$controller = new \tfg\presentation\controller\TutoringsController();
+$controller = new TutoringsController();
 if (!$controller->isAdmin()) {
 	echo "Pàgina visible només pels administradors";
 	exit();
@@ -24,7 +26,9 @@ if (!$controller->isAdmin()) {
 $header = new \tfg\presentation\model\HeaderViewModel();
 $data['header'] = $header->output();
 
-// $data['teacher'] = $controller->getUserData();
+$data['tutorings'] = $controller->listAllTutorings();
+$data['classrooms'] = $controller->getClassrooms();
+$data['teachers'] = $controller->getTeachers();
 
 $template = new \Transphporm\Builder(TPLDIR.'tutorings.xml', TPLDIR.'tutorings.tss');
 

@@ -4,8 +4,11 @@ namespace tfg\presentation\model;
 use tfg\service\Entities\Teacher;
 use tfg\service\UserService;
 
-final class UserViewModel extends MainViewModel implements IUserViewModel {
+final class UserViewModel extends MainViewModel {
 
+	/**
+	 * Variable que conté informació de les 3 seccions on pot estar assignat un mestre
+	 */
 	private $sections = array(
 		array(
 			'name'=>'Tutorings',
@@ -29,9 +32,12 @@ final class UserViewModel extends MainViewModel implements IUserViewModel {
 		parent::__construct($model);
 	}
 	
+	/**
+	 * Retorna l'id d'usuari si aquest existeix, 0 en cas contrari
+	 */
 	public function login($username, $password) {
 		$teacher = $this->model->login($username, $password);
-		if ($teacher != null) {
+		if ($teacher != null && $teacher->getActive() == true) {
 			$id = $teacher->getId();
 			session_write_close();
 			session_start();
@@ -43,20 +49,22 @@ final class UserViewModel extends MainViewModel implements IUserViewModel {
 	
 	public function getTeacher($id)
 	{
+		$data = array();
 		if ($id == null) {
 			$teacher = new Teacher("", "");
 		} else {
 			$teacher = $this->model->getTeacher($id);
 		}
-		$this->data->id = $id;
-		$this->data->name = $teacher->getName();
-		$this->data->surnames = $teacher->getSurnames();
-		$this->data->email = $teacher->getEmail();
-		$this->data->phone = $teacher->getPhone();
-		$this->data->username = $teacher->getUsername();
-		$this->data->password = $teacher->getPassword();
-		$this->data->isAdmin = $teacher->isAdmin();
-		return $this->data;
+		$data['id'] = $id;
+		$data['name'] = $teacher->getName();
+		$data['surnames'] = $teacher->getSurnames();
+		$data['email'] = $teacher->getEmail();
+		$data['phone'] = $teacher->getPhone();
+		$data['username'] = $teacher->getUsername();
+		$data['password'] = $teacher->getPassword();
+		$data['isAdmin'] = $teacher->isAdmin();
+		$data['isActive'] = $teacher->getActive();
+		return $data;
 	}
 	
 	public function getStudent($id)
@@ -68,6 +76,9 @@ final class UserViewModel extends MainViewModel implements IUserViewModel {
 		return $this->data;
 	}
 	
+	/**
+	 * Omple cadascuna de les seccions amb les dades corresponents
+	 */
 	private function getCurrentSection($teacherId, $main, $mapped)
 	{
 		$mainFunction = "getCurrent" . $main;
@@ -83,6 +94,9 @@ final class UserViewModel extends MainViewModel implements IUserViewModel {
 		return $data;
 	}
 	
+	/**
+	 * Crea l'estructura d'una secció
+	 */
 	private function createSection($teacherId, $section)
 	{
 		$section = array(
@@ -91,7 +105,10 @@ final class UserViewModel extends MainViewModel implements IUserViewModel {
 			'items'=>$this->getCurrentSection($teacherId, $section['name'], $section['contents']));
 		return $section;
 	}
-		
+	
+	/**
+	 * Retorna les dades de les seccions assignades a un mestre, en cas que existeixin 
+	 */
 	public function getCurrentSections($teacherId)
 	{
 		foreach ($this->sections as $section) {
@@ -103,6 +120,9 @@ final class UserViewModel extends MainViewModel implements IUserViewModel {
 		return $sections;
 	}
 	
+	/**
+	 * Retorna una imatge assignada a una persona. Si no en té, retorna la imatge per defecte
+	 */
 	public function getThumbnail($personId)
 	{
 		$model = new \tfg\service\UserService();
@@ -118,19 +138,32 @@ final class UserViewModel extends MainViewModel implements IUserViewModel {
 		return $base64;
 	}
 	
+	/**
+	 * Retorna tots els usuaris registrats al sistema 
+	 */
 	public function listAllTeachers():array
 	{
-		$teachersData = array();
-		$model = new \tfg\service\UserService();
+		$data = array();
+		$model = new UserService();
 		$teachers = $model->getAllTeachers();
 		foreach ($teachers as $teacher) {
-			array_push($teachersData, array(
-				"id"=>$teacher->getId(),
-				"name"=>$teacher->getName(),
-				"surnames"=>$teacher->getSurnames(),
-			));
+			array_push($data, $this->getTeacher($teacher->getId()));
 		}
-		return $teachersData;
+		return $data;
+	}
+	
+	/**
+	 * Elimina un mestre de la llista
+	 */
+	public function removeTeacher($teachers, $teacherId):array
+	{
+		for ($i=0; $i<count($teachers); $i++ ) {
+			if ($teachers[$i]['id'] == $teacherId) {
+				unset($teachers[$i]);
+				return $teachers;
+			}
+		}
+		return $teachers;
 	}
 	
 	public function importStudentsFromFile() {

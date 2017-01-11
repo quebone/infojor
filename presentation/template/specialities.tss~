@@ -1,4 +1,17 @@
 @import 'header.tss';
 
-title {content: 'Informes - aules de reforç'}
+title {content: 'Informes - tutories'}
 header {content: template('header.xml')}
+
+table#specialities tr.tdata {repeat: data(specialities); }
+table#specialities td.area {content: iteration(area); }
+table#specialities td.teacher {content: iteration(surnames), ", ", iteration(name); }
+table#specialities td.delete a:attr(onclick) {content: "del(", iteration(areaId), ",", iteration(id), ")"; }
+
+select#area option {repeat: data(areas); }
+select#area option:attr(value) {content: iteration(id); }
+select#area option {content: iteration(name); }
+
+select#teacher option {repeat: data(teachers); }
+select#teacher option:attr(value) {content: iteration(id); }
+select#teacher option {content: iteration(surnames), ", ", iteration(name); }

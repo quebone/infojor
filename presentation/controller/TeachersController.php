@@ -9,7 +9,9 @@ class TeachersController extends Controller
 	public function getTeachers()
 	{
 		$model = new UserViewModel();
-		return $model->listAllTeachers();
+		$data = $model->listAllTeachers();
+		$userId = $_SESSION[USER_ID];
+		return $model->removeTeacher($data, $userId);
 	}
 	
 	public function editUser()

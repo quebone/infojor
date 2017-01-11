@@ -14,9 +14,9 @@ class ReinforceClassroom {
 	 */
 	private $observations;
 	/**
-	 * @ManyToMany(targetEntity="Teacher", mappedBy="reinforceclassrooms")
+	 * @OneToMany(targetEntity="Reinforcing", mappedBy="reinforceClassroom")
 	 */
-	private $teachers;
+	private $reinforcers;
 	/**
 	 * @ManyToOne(targetEntity="School", inversedBy="reinforceclassrooms")
 	 * @JoinColumn(name="school_id", referencedColumnName="id")
@@ -24,7 +24,7 @@ class ReinforceClassroom {
 	private $school;
 	
 	public function __construct() {
-		$this->teachers = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->reinforcers = new \Doctrine\Common\Collections\ArrayCollection();
 		$this->observations = new \Doctrine\Common\Collections\ArrayCollection();
 	}
 
@@ -44,8 +44,14 @@ class ReinforceClassroom {
 		return $this->observations;
 	}
 	
-	public function getTeachers() {
-		return $this->teachers;
+	public function getReinforcers(Course $course, Trimestre $trimestre) {
+		$teachers = new \Doctrine\Common\Collections\ArrayCollection();
+		foreach ($this->reinforcers as $reinforcer) {
+			if ($reinforcer->getCourse() == $course && $reinforcer->getTrimestre() == $trimestre) {
+				$teachers->add($reinforcer);
+			}
+		}
+		return $teachers;
 	}
 }
 	

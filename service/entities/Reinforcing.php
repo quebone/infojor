@@ -33,6 +33,14 @@ class Reinforcing
 	 */
 	private $trimestre;
 	
+	public function __construct(Teacher $teacher, ReinforceClassroom $classroom, Course $course, Trimestre $trimestre)
+	{
+		$this->teacher = $teacher;
+		$this->reinforceClassroom = $classroom;
+		$this->course = $course;
+		$this->trimestre = $trimestre;
+	}
+	
 	public function getTeacher()
 	{
 		return $this->teacher;

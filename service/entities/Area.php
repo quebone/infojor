@@ -12,9 +12,9 @@ class Area {
 	/** @Column(type="boolean") options={"default": false} **/
 	private $speciality;
 	/**
-	 * @ManyToMany(targetEntity="Teacher", mappedBy="areas")
+	 * @OneToMany(targetEntity="Speciality", mappedBy="area")
 	 */
-	private $teachers;
+	private $specialists;
 	/**
 	 * @ManyToOne(targetEntity="Scope", inversedBy="areas")
 	 * @JoinColumn(name="scope_id", referencedColumnName="id")
@@ -30,7 +30,7 @@ class Area {
 	private $globalEvaluations;
 	
 	public function __construct() {
-		$this->teachers = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->specialists = new \Doctrine\Common\Collections\ArrayCollection();
 		$this->dimensions = new \Doctrine\Common\Collections\ArrayCollection();
 		$this->globalEvaluations = new \Doctrine\Common\Collections\ArrayCollection();
 	}
@@ -55,13 +55,14 @@ class Area {
 		return $this->scope;
 	}
 	
-	public function getDimensions(Cycle $cycle = null) {
+	public function getDimensions(Cycle $cycle = null, bool $onlyActive = true) {
 		if ($cycle != null) {
 			$filteredDimensions = new \Doctrine\Common\Collections\ArrayCollection();
 			foreach ($this->dimensions as $dimension) {
 				$cycles = $dimension->getCycles();
 				foreach ($cycles as $dimensionCycle) {
-					if ($cycle->getId() == $dimensionCycle->getId() && $dimension->isActive()) {
+					$active = $onlyActive ? $dimension->isActive() : true;
+					if ($cycle->getId() == $dimensionCycle->getId() && $active) {
 						$filteredDimensions->add($dimension);
 					}
 				}
@@ -82,6 +83,16 @@ class Area {
 			}
 		}
 		return null;
+	}
+
+	public function getSpecialists(Course $course, Trimestre $trimestre) {
+		$teachers = new \Doctrine\Common\Collections\ArrayCollection();
+		foreach ($this->specialists as $specialist) {
+			if ($specialist->getCourse() == $course && $specialist->getTrimestre() == $trimestre) {
+				$teachers->add($specialist);
+			}
+		}
+		return $teachers;
 	}
 }
 	

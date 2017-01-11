@@ -21,12 +21,15 @@ final class HeaderViewModel extends MainViewModel {
 		$this->initHeader();
 	}
 	
+	/**
+	 * Assigna les dades corresponents a la capçalera
+	 */
 	public function output()
 	{
 		$data = new \stdClass;
 		if ($this->logged)
 		{
-			$data->user = $this->teacher->name . " " . $this->teacher->surnames;
+			$data->user = $this->teacher['name'] . " " . $this->teacher['surnames'];
 			$data->school = "Curs: " . $this->course->course;
 // 			if ($this->classroom != null) $data->school .= "| Aula: " . $this->classroom->name;
 			$data->school .= " | Trimestre: " . $this->trimestre->trimestre;
@@ -35,6 +38,9 @@ final class HeaderViewModel extends MainViewModel {
 		return $data;
 	}
 	
+	/**
+	 * Recupera les dades necessàries per la capçalera
+	 */
 	private function initHeader()
 	{
 		$userModel = new UserViewModel();

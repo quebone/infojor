@@ -1,7 +1,7 @@
 <?php
 namespace tfg\presentation\model;
 
-final class EvaluationViewModel extends MainViewModel implements IEvaluationViewModel {
+final class EvaluationViewModel extends MainViewModel {
 	
 	public function __construct() {
 		parent::__construct();
@@ -57,6 +57,46 @@ final class EvaluationViewModel extends MainViewModel implements IEvaluationView
 		return $ge->getMark();
 	}
 	
+	/**
+	 * Munta tota l'estructura dels àmbits
+	 * També es crida per crear les dades dels informes
+	 */
+	public function getScopesData($studentId, $classroom, $areaId)
+	{
+		$cycle = $classroom->getLevel()->getCycle();
+		$schoolViewModel = new SchoolViewModel();
+		$scopes = $schoolViewModel->getScopes($cycle->getDegree()->getId());
+		$data = $scopes;
+		foreach ($scopes as $scope) {
+			$areas = $schoolViewModel->getScopeAreas($scope['id'], $areaId);
+			$data[$scope['id']]['areas'] = $areas;
+			foreach ($areas as $area) {
+				$dimensions = $schoolViewModel->getAreaDimensions($area['id'], $cycle);
+				$data[$scope['id']]['areas'][$area['id']]['dimensions'] = $dimensions;
+				if ($dimensions != null) {
+					foreach ($dimensions as $dimension) {
+						$pe = $this->getDimensionEvaluation($studentId, $dimension['id']);
+						$data[$scope['id']]['areas'][$area['id']]['dimensions'][$dimension['id']]['mark'] = $pe;
+					}
+				}
+				$ge = $this->getAreaEvaluation($studentId, $area['id']);
+				$data[$scope['id']]['areas'][$area['id']]['mark'] = $ge;
+			}
+			// 				$ge = $this->getScopeEvaluation($studentId, $scope['id']);
+			// 				$evaluation['scopes'][$scope['id']]['ge'] = $ge;
+		}
+		// eliminem els àmbits sense àrea
+		foreach ($data as $scope) {
+			if (count($scope['areas']) == 0) {
+				unset($data[$scope['id']]);
+			}
+		}
+		return $data;
+	}
+	
+	/**
+	 * Recupera totes les qualificacions actuals d'un alumne
+	 */
 	public function getEvaluations($studentId, $areaId, $reinforceId, $includeSpecialities):array
 	{
 		$userModel = new \tfg\service\UserService($this->entityManager);
@@ -66,51 +106,30 @@ final class EvaluationViewModel extends MainViewModel implements IEvaluationView
 		$trimestre = $schoolModel->getActiveTrimestre();
 		$student = $userModel->getStudent($studentId);
 		$classroom = $student->getClassroom($course, $trimestre);
-		$cycle = $classroom->getLevel()->getCycle();
+		$degree = $classroom->getLevel()->getCycle()->getDegree();
 		$evaluation['peds'] = $this->getPartialEvaluationDescriptions();
 		$evaluation['geds'] = $this->getGlobalEvaluationDescriptions();
 		$evaluation['classroom'] = $schoolViewModel->getClassroom($classroom->getId());
 		$evaluation['student']['name'] = $student->getName() . " " . $student->getSurnames();
+		
+		//les qualificacions de reforç no han de sortir al formulari general d'entrada
 		if ($reinforceId == null) {
-			$scopes = $schoolViewModel->getScopes($classroom->getId());
-			$evaluation['scopes'] = $scopes;
-			foreach ($scopes as $scope) {
-				$areas = $schoolViewModel->getScopeAreas($scope['id'], $areaId);
-				$evaluation['scopes'][$scope['id']]['areas'] = $areas;
-				foreach ($areas as $area) {
-					$dimensions = $schoolViewModel->getAreaDimensions($area['id'], $cycle);
-					$evaluation['scopes'][$scope['id']]['areas'][$area['id']]['dimensions'] = $dimensions;
-					if ($dimensions != null) {
-						foreach ($dimensions as $dimension) {
-							$pe = $this->getDimensionEvaluation($studentId, $dimension['id']);
-							$evaluation['scopes'][$scope['id']]['areas'][$area['id']]['dimensions'][$dimension['id']]['pe'] = $pe;
-						}
-					}
-					$ge = $this->getAreaEvaluation($studentId, $area['id']);
-					$evaluation['scopes'][$scope['id']]['areas'][$area['id']]['ge'] = $ge;
-				}
-				$ge = $this->getScopeEvaluation($studentId, $scope['id']);
-				$evaluation['scopes'][$scope['id']]['ge'] = $ge;
-			}
-			// eliminem els àmbits sense àrea
-			foreach ($evaluation['scopes'] as $scope) {
-				if (count($scope['areas']) == 0) {
-					unset($evaluation['scopes'][$scope['id']]);
-				}
-			}
+			$evaluation['scopes'] = $this->getScopesData($studentId, $classroom, $areaId);
 			$observation = $student->getCourseObservation($course, $trimestre);
 			$observationText = $observation != null ? $observation->getText() : '';
-			$evaluation['observation'] = $observationText;
+			$evaluation['observation'] = trim(stripcslashes($observationText),'"');
+
+		//les qualificacions de reforç surten a part de les generals
 		} else {
 			$reinforceClassroom = $schoolModel->getReinforceClassroom($reinforceId);
-			$evaluation['reinforcing'] = $schoolViewModel->getReinforceClassroom($reinforceId);
+			$evaluation['reinforce'] = $schoolViewModel->getReinforceClassroom($reinforceId);
 			$observation = $student->getCourseObservation($course, $trimestre, $reinforceClassroom);
 			if ($observation == null) {
-				$evaluation['reinforcing']['observation']['id'] = null;
-				$evaluation['reinforcing']['observation']['text'] = '';
+				$evaluation['reinforce']['observation']['id'] = null;
+				$evaluation['reinforce']['observation']['text'] = '';
 			} else {
-				$evaluation['reinforcing']['observation']['id'] = $observation->getId();
-				$evaluation['reinforcing']['observation']['text'] = $observation->getText();
+				$evaluation['reinforce']['observation']['id'] = $observation->getId();
+				$evaluation['reinforce']['observation']['text'] = $observation->getText();
 			}
 		}
 		return $evaluation;

@@ -1,0 +1,9 @@
+.tdata {repeat: data(); }
+.tdata:attr(id) {content: "dim-", iteration(id); }
+.tdata .titol {content: iteration(name); }
+.tdata .titol:attr(onchange) {content: "updateDimension(", iteration(id), ")"; }
+.tdata .descripcio {content: iteration(description); }
+.tdata .descripcio:attr(onchange) {content: "updateDimension(", iteration(id), ")"; }
+.tdata .isActive input:attr(onchange) {content: "updateDimension(", iteration(id), ")"; }
+.tdata .isActive input:attr(checked):iteration[active=true] {content: "true"; }
+.tdata .delete a:attr(onclick) {content: "deleteDimension(", iteration(id), ")"; }

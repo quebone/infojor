@@ -1,13 +1,16 @@
 <?php
 namespace tfg\presentation\controller;
 
+use tfg\presentation\model\MainViewModel;
+use tfg\service\UserService;
+
 class Controller {
 	function __construct() {
 	}
 	
 	public function setSession()
 	{
-		$model = new \tfg\presentation\model\MainViewModel();
+		$model = new MainViewModel();
 		$model->setSession();
 		return json_encode($_POST);
 	}
@@ -17,7 +20,7 @@ class Controller {
 	}
 	
 	public function isAdmin() {
-		$model = new \tfg\service\UserService();
+		$model = new UserService();
 		return $model->isAdmin($_SESSION[USER_ID]);
 	}
 }

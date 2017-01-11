@@ -6,8 +6,6 @@ namespace tfg\service\Entities;
  **/
 class PartialEvaluationDescription extends EvaluationDescription
 {
-	/** @Column(type="string", length=2) **/
-	private $mark;
 	/**
 	 * @OneToMany(targetEntity="PartialEvaluation", mappedBy="id")
 	 */
@@ -17,15 +15,7 @@ class PartialEvaluationDescription extends EvaluationDescription
 		$this->partialEvaluations = new \Doctrine\Common\Collections\ArrayCollection();
 	}
 	
-	public function getMark() {
-		return $this->mark;
-	}
-
-	public function setMark($mark) {
-		$this->mark = $mark;
-	}
-	
-	public function getPartialEvaluations() {
+	public function getEvaluations() {
 		return $this->partialEvaluations;
 	}
 }

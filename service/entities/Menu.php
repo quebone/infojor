@@ -50,7 +50,7 @@ class Menu
 		return $this->items;
 	}
 
-	public function getRoless()
+	public function getRoles()
 	{
 		return $this->roles;
 	}

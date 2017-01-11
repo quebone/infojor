@@ -6,6 +6,10 @@ main {
 	padding-right: 30px;
 }
 
+.inactive {
+	color: grey;
+}
+
 .delete, .edit {
 	font-size: small;
 	cursor: pointer; cursor: hand;

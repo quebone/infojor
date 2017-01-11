@@ -14,38 +14,32 @@
 <main>
 	<div class="wrapper">
 		<label for="degree-selector" class="form-label">Etapa:</label>
-		<select id="degree-selector">
-			<option>Educació infantil</option>
+		<select id="degree-selector" onchange="changeDegree(this)">
+			<option value="1">Educaci� infantil</option>
+		</select>
+		<label for="cycle-selector" class="form-label">Cicle:</label>
+		<select id="cycle-selector" onchange="changeCycle(this)">
+			<option value="1">1</option>
 		</select>
 	</div>
 	<div id="dimensions">
-		<h2>Àmbit 1</h2>
-		<h3>Àrea 1</h3>
-		<table class="dimensio">
-			<tr>
-				<td>Títol</td><td><textarea>Títol 1</textarea></td>
-				<td>Descripció</td><td><textarea>Descripció 1</textarea></td>
-				<td class="delete"><a href="#">eliminar</td>
-			</tr>
-			<tr>
-				<td>Títol</td><td><textarea>Títol 2</textarea></td>
-				<td>Descripció</td><td><textarea>Descripció 2</textarea></td>
-				<td class="delete"><a href="#">eliminar</td>
-			</tr>
-		</table>
-		<table>
-			<tr>
-				<td>Títol</td><td><textarea value="Títol 1"/></textarea></td>
-				<td>Descripció</td><td><textarea value="Descripció 2"/></textarea></td>
-				<td>
-					<select>
-						<option>Àrea 1</option>
-					</select>
-				</td>
-				<td class="add"><a href="#">afegir</a></td>
-			</tr>
-		</table>
+		<h2>�mbit 1</h2>
+		<div "wrapper-areas">
+		</div>
 	</div>
+	<div class="input">
+		<label for="title" class="input">Titol</label><textarea id="title" class="input"></textarea>
+		<label for="descripcio" class="input">Descripcio</label><textarea id="description" class="input"></textarea>
+	</div>
+	<div class="input">
+		<label for="area-selector" class="input">�rea</label>
+		<select id="area-selector">
+			<option>�rea 1</option>
+		</select>
+	</div>
+	<div id="cycles" class="input">
+	</div>
+	<div class="form-buttons"><button type="button" class="form-button" onclick="addDimension()">Afegir</button></div>
 	<div id="error" class="error"></div>
 </main>
   <script src="js/scripts.js"></script>

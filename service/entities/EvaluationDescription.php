@@ -12,6 +12,8 @@ abstract class EvaluationDescription
 {
 	/** @Id @Column(type="integer") @GeneratedValue **/
 	protected $id;
+	/** @Column(type="string", length=2) **/
+	protected $mark;
 	/** @Column(type="string", length=40) **/
 	protected $description;
 	
@@ -19,10 +21,18 @@ abstract class EvaluationDescription
 		return $this->id;
 	}
 
+	public function getMark() {
+		return $this->mark;
+	}
+	
+	public function setMark($mark) {
+		$this->mark = $mark;
+	}
+	
 	public function getDescription() {
 		return $this->description;
 	}
-	
+
 	public function setDescription($description) {
 		$this->description = $description;
 	}

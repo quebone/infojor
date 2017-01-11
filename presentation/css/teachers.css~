@@ -14,7 +14,7 @@ main {
 
 .form-buttons {
 	margin-top: 20px;
-	padding: 10px;
+	padding: 20px;
 	width: 20%;
 	margin: auto;
 }

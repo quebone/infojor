@@ -1,6 +1,9 @@
 <?php
 namespace tfg;
 
+use tfg\presentation\controller\ReinforcingsController;
+use tfg\presentation\model\HeaderViewModel;
+
 session_start();
 
 require_once 'init.php';
@@ -15,16 +18,18 @@ if (isset($_SESSION[USER_ID])) {
 <!doctype html>
 <?php
 
-$controller = new \tfg\presentation\controller\ReinforcingsController();
+$controller = new ReinforcingsController();
 if (!$controller->isAdmin()) {
 	echo "Pàgina visible només pels administradors";
 	exit();
 }
 
-$header = new \tfg\presentation\model\HeaderViewModel();
+$header = new HeaderViewModel();
 $data['header'] = $header->output();
 
-// $data['teacher'] = $controller->getUserData();
+$data['reinforcings'] = $controller->listAllReinforcings();
+$data['classrooms'] = $controller->getClassrooms();
+$data['teachers'] = $controller->getTeachers();
 
 $template = new \Transphporm\Builder(TPLDIR.'reinforcings.xml', TPLDIR.'reinforcings.tss');
 

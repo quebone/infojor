@@ -31,6 +31,10 @@ final class EvaluationService extends MainService
 		return $this->entityManager->find('tfg\\service\\Entities\\GlobalEvaluationDescription', $id);
 	}
 	
+	/**
+	 * Retorna les qualificacions parcials assignades a un alumne
+	 * Si els períodes són nuls, retorna les qualificacions actuals
+	 */
 	public function getDimensionEvaluation($studentId, $dimensionId, $courseId=null, $trimestreId=null)
 	{
 		$userModel = new UserService($this->entityManager);
@@ -50,6 +54,10 @@ final class EvaluationService extends MainService
 		return $student->getDimensionEvaluation($dimension, $course, $trimestre);
 	}
 	
+	/**
+	 * Retorna les qualificacions d'àrea assignades a un alumne
+	 * Si els períodes són nuls, retorna les qualificacions actuals
+	 */
 	public function getAreaEvaluation($studentId, $areaId, $courseId=null, $trimestreId=null)
 	{
 		$userModel = new UserService($this->entityManager);
@@ -69,6 +77,10 @@ final class EvaluationService extends MainService
 		return $student->getAreaEvaluation($area, $course, $trimestre);
 	}
 	
+	/**
+	 * Retorna les qualificacions d'àmbit assignades a un alumne
+	 * Si els períodes són nuls, retorna les qualificacions actuals
+	 */
 	public function getScopeEvaluation($studentId, $scopeId, $courseId=null, $trimestreId=null)
 	{
 		$userModel = new UserService($this->entityManager);
@@ -88,10 +100,13 @@ final class EvaluationService extends MainService
 		return $student->getScopeEvaluation($scope, $course, $trimestre);
 	}
 	
+	/**
+	 * Assigna una qualificació parcial a un alumne
+	 */
 	public function setPartialEvaluation($studentId, $dimensionId, $markId)
 	{
-		$userModel = new UserService($this->entityManager);
-		$schoolModel = new SchoolService($this->entityManager);
+		$userModel = new UserService();
+		$schoolModel = new SchoolService();
 		$course = $this->getActiveCourse();
 		$trimestre = $this->getActiveTrimestre();
 		$dimension = $schoolModel->getDimension($dimensionId);
@@ -99,15 +114,15 @@ final class EvaluationService extends MainService
 		$student = $userModel->getStudent($studentId);
 		$evaluation = $student->getDimensionEvaluation($dimension, $course, $trimestre);
 		if ($evaluation == null) {
-			//create new evaluation
+			//if not exists, create new evaluation
 			$evaluation = $student->createDimensionEvaluation($dimension, $course, $trimestre, $ed);
 			$this->entityManager->persist($evaluation);
 		} else { 
 			if ($markId == 0) {
-				//delete evaluation
+				//if evaluation is null, delete evaluation
 				$this->entityManager->remove($evaluation);
 			} else {
-				//update evaluation
+				//if exists, update evaluation
 				$evaluation->setPartialEvaluationDescription($ed);
 				$this->entityManager->persist($evaluation);
 			}
@@ -115,6 +130,9 @@ final class EvaluationService extends MainService
 		$this->entityManager->flush($evaluation);
 	}
 
+	/**
+	 * Assigna una qualificació global a un alumne
+	 */
 	public function setGlobalEvaluation($studentId, $areaId, $markId)
 	{
 		$userModel = new UserService($this->entityManager);
@@ -126,15 +144,15 @@ final class EvaluationService extends MainService
 		$student = $userModel->getStudent($studentId);
 		$evaluation = $student->getAreaEvaluation($area, $course, $trimestre);
 		if ($evaluation == null) {
-			//create new evaluation
+			//if not exists, create new evaluation
 			$evaluation = $student->createAreaEvaluation($area, $course, $trimestre, $ed);
 			$this->entityManager->persist($evaluation);
 		} else {
 			if ($markId == 0) {
-				//delete evaluation
+				//if evaluation is null, delete evaluation
 				$this->entityManager->remove($evaluation);
 			} else {
-				//update evaluation
+				//if exists, update evaluation
 				$evaluation->setGlobalEvaluationDescription($ed);
 				$this->entityManager->persist($evaluation);
 			}
@@ -142,6 +160,9 @@ final class EvaluationService extends MainService
 		$this->entityManager->flush($evaluation);
 	}
 	
+	/**
+	 * Assigna una observació general o de reforç a un alumne
+	 */
 	public function setObservation($studentId, $text, $reinforceId = null)
 	{
 		$userModel = new UserService($this->entityManager);

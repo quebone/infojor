@@ -1,0 +1,10 @@
+<table class="dimensions">
+	<tr class="theader"><td>Titol</td><td>Descripcio</td><td>Cicles</td></tr>
+	<tr class="tdata">
+		<td><textarea class="titol" onchange="updateDimension()" /></textarea></td>
+		<td><textarea class="descripcio" onchange="updateDimension()"/></textarea></td>
+		<td class="cycles"></td>
+		<td class="isActive"><input type="checkbox" onchange="updateDimension()">Activa</td>
+		<td class="delete"><a onclick="deleteDimension()">eliminar</td>
+	</tr>
+</table>

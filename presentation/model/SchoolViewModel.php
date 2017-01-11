@@ -2,8 +2,9 @@
 namespace tfg\presentation\model;
 
 use tfg\service\Entities\Cycle;
+use tfg\presentation\view\TplEngine;
 
-final class SchoolViewModel extends MainViewModel implements ISchoolViewModel {
+final class SchoolViewModel extends MainViewModel {
 	
 	public function __construct() {
 		parent::__construct();
@@ -22,6 +23,9 @@ final class SchoolViewModel extends MainViewModel implements ISchoolViewModel {
 		return $this->data;
 	}
 	
+	/**
+	 * Retorna els alumnes actuals d'una classe i activa el primer alumne de la llista
+	 */
 	public function getCurrentClassroomStudents($classroomId):array {
 		$this->data->students = array();
 		$students = $this->model->getCurrentClassroomStudents($classroomId);
@@ -66,6 +70,28 @@ final class SchoolViewModel extends MainViewModel implements ISchoolViewModel {
 		return $data;
 	}
 	
+	public function getAreas():array
+	{
+		$data = array();
+		$areas = $this->model->getAreas();
+		foreach ($areas as $area) {
+			array_push($data, $this->getArea($area->getId()));
+		}
+		return $data;
+	}
+	
+	public function getDegreeAreas($degreeId):array
+	{
+		$data = array();
+		$areas = array();
+		foreach ($this->model->getDegreeAreas($degreeId) as $area) {
+			$data['id'] = $area->getId();
+			$data['name'] = $area->getName();
+			array_push($areas, $data);
+		}
+		return $areas;
+	}
+	
 	public function getReinforceClassroom($reinforceId):array
 	{
 		$data = array();
@@ -77,10 +103,71 @@ final class SchoolViewModel extends MainViewModel implements ISchoolViewModel {
 		return $data;
 	}
 	
-	public function getScopes($classromId):array
+	public function getReinforceClassrooms():array
 	{
 		$data = array();
-		$scopes = $this->model->getClassroomScopes($classromId);
+		$classrooms = $this->model->getReinforceClassrooms();
+		foreach ($classrooms as $classroom) {
+			array_push($data, $this->getReinforceClassroom($classroom->getId()));
+		}
+		return $data;
+	}
+	
+	public function getDegree($degreeId):array
+	{
+		$data = array();
+		$degree = $this->model->getDegree($degreeId);
+		if ($degree != null) {
+			$data['id'] = $degree->getId();
+			$data['name'] = $degree->getName();
+		}
+		return $data;
+	}
+	
+	public function getDegrees():array
+	{
+		$data = array();
+		$degrees = $this->model->getDegrees();
+		foreach ($degrees as $degree) {
+			array_push($data, $this->getDegree($degree->getId()));
+		}
+		return $data;
+	}
+	
+	private function getCycle(Cycle $cycle):array
+	{
+		$data = array();
+		$data['id'] = $cycle->getId();
+		$data['name'] = $cycle->getName();
+		return $data;
+	}
+	
+	public function getCycles($degreeId):array
+	{
+		$data = array();
+		$degree = $this->model->getDegree($degreeId);
+		$cycles = $degree->getCycles();
+		foreach ($cycles as $cycle) {
+			array_push($data, $this->getCycle($cycle));
+		}
+		return $data;
+	}
+	
+	private function getDimensionCycles($dimensionId)
+	{
+		$data = array();
+		$dimension = $this->model->getDimension($dimensionId);
+		$cycles = $dimension->getCycles();
+		foreach ($cycles as $cycle) {
+			array_push($data, $this->getCycle($cycle));
+		}
+		return $data;
+	}
+	
+	public function getScopes($degreeId):array
+	{
+		$data = array();
+		$scopes = $this->model->getDegreeScopes($degreeId);
 		foreach ($scopes as $scope) {
 			$id = $scope->getId();
 			$data[$id]['id'] = $id;
@@ -90,6 +177,9 @@ final class SchoolViewModel extends MainViewModel implements ISchoolViewModel {
 		return $data;
 	}
 	
+	/**
+	 * Retorna les àrees assignades a un àmbit
+	 */
 	public function getScopeAreas($scopeId, $areaId = null):array
 	{
 		$data = array();
@@ -116,16 +206,20 @@ final class SchoolViewModel extends MainViewModel implements ISchoolViewModel {
 		return $data;
 	}
 	
-	public function getAreaDimensions($areaId, Cycle $cycle = null):array
+	/**
+	 * Retorna les dimensions associades a una àrea i un cicle
+	 */
+	public function getAreaDimensions($areaId, Cycle $cycle = null, $onlyActive = true):array
 	{
 		$data = array();
-		$dimensions = $this->model->getAreaDimensions($areaId, $cycle);
+		$dimensions = $this->model->getAreaDimensions($areaId, $cycle, $onlyActive);
 		if (count($dimensions) > 0) {
 			foreach ($dimensions as $dimension) {
 				$id = $dimension->getId();
 				$data[$id]['id'] = $dimension->getId();
 				$data[$id]['name'] = $dimension->getName();
 				$data[$id]['description'] = $dimension->getDescription();
+				$data[$id]['active'] = $dimension->isActive();
 			}
 		}
 		return $data;
@@ -147,16 +241,78 @@ final class SchoolViewModel extends MainViewModel implements ISchoolViewModel {
 	
 	public function listAllTutorings()
 	{
-		//TODO
+		$data = array();
+		$tutorings = $this->model->getCurrentTutorings();
+		foreach ($tutorings as $tutoring) {
+			foreach ($tutoring['tutors'] as $tutor) {
+				array_push($data, array(
+					'classroomId' => $tutoring['classroom']->getId(),
+					'classroom' => $tutoring['classroom']->getName(),
+					'id' => $tutor->getTeacher()->getId(),
+					'name' => $tutor->getTeacher()->getName(),
+					'surnames' => $tutor->getTeacher()->getSurnames()
+				));
+			}
+		}
+		return $data;
 	}
 
 	public function listAllSpecialities()
 	{
-		//TODO
+		$data = array();
+		$specialities = $this->model->getCurrentSpecialities();
+		foreach ($specialities as $speciality) {
+			foreach ($speciality['specialists'] as $specialist) {
+				array_push($data, array(
+						'areaId' => $speciality['area']->getId(),
+						'area' => $speciality['area']->getName(),
+						'id' => $specialist->getTeacher()->getId(),
+						'name' => $specialist->getTeacher()->getName(),
+						'surnames' => $specialist->getTeacher()->getSurnames()
+				));
+			}
+		}
+		return $data;
 	}
 
 	public function listAllReinforcings()
 	{
-		//TODO
+		$data = array();
+		$reinforcings = $this->model->getCurrentReinforcings();
+		foreach ($reinforcings as $reinforcing) {
+			foreach ($reinforcing['reinforcers'] as $reinforcer) {
+				array_push($data, array(
+						'classroomId' => $reinforcing['classroom']->getId(),
+						'classroom' => $reinforcing['classroom']->getName(),
+						'id' => $reinforcer->getTeacher()->getId(),
+						'name' => $reinforcer->getTeacher()->getName(),
+						'surnames' => $reinforcer->getTeacher()->getSurnames()
+				));
+			}
+		}
+		return $data;
+	}
+	
+	public function listAllDimensions($cycleId)
+	{
+		$cycle = $this->model->getCycle($cycleId);
+		$degree = $cycle->getDegree();
+		$scopes = $this->getScopes($degree->getId());
+		foreach ($scopes as $scope) {
+			$areas = $this->getScopeAreas($scope['id']);
+			foreach ($areas as $area) {
+				$dimensions = $this->getAreaDimensions($area['id'], $cycle, false);
+				foreach ($dimensions as $dimension) {
+					$allCycles = $this->getCycles($degree->getId());
+					$cycles = $this->getDimensionCycles($dimension['id']);
+					$engine = new TplEngine();
+					$dimensions[$dimension['id']]['cycles'] = $engine->arrayToCheckbox($allCycles, $cycles, 
+							"onchange='updateDimension(" . $dimension['id'] . ")'");
+				}
+				$areas[$area['id']]['dimensions'] = $dimensions;
+			}
+			$scopes[$scope['id']]['areas'] = $areas;
+		}
+		return $scopes;
 	}
 }

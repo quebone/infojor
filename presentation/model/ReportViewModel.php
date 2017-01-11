@@ -3,7 +3,7 @@ namespace tfg\presentation\model;
 
 require_once BASEDIR.'vendor/fpdf/fpdf.php';
 
-final class ReportViewModel extends MainViewModel implements IReportViewModel {
+final class ReportViewModel extends MainViewModel {
 	private $student;
 	private $classroom;
 	private $userModel;
@@ -28,6 +28,9 @@ final class ReportViewModel extends MainViewModel implements IReportViewModel {
 		return $data;
 	}
 	
+	/**
+	 * Retorna les dades dels informes corresponents a tota una classe
+	 */
 	private function getClassroomReport($classroomId)
 	{
 		$students = $this->schoolModel->getCurrentClassroomStudents($classroomId);
@@ -38,6 +41,9 @@ final class ReportViewModel extends MainViewModel implements IReportViewModel {
 		return $data;
 	}
 	
+	/**
+	 * Retorna les dades dels informes corresponents a un alumne
+	 */
 	private function getStudentReport($studentId)
 	{
 		$data = array();
@@ -52,7 +58,9 @@ final class ReportViewModel extends MainViewModel implements IReportViewModel {
 		$trimestre = $this->schoolModel->getActiveTrimestre();
 		$classroom = $student->getClassroom($course, $trimestre);
 		$tutorings = $classroom->getTutors($course, $trimestre);
-		$degree = $classroom->getLevel()->getCycle()->getDegree();
+		$cycle = $classroom->getLevel()->getCycle();
+		$degree = $cycle->getDegree();
+		
 		$data['title'] = "Informe d'avaluació ";
 		$data['degree']['id'] = $degree->getId();
 		$data['degree']['name'] = "d'" . $degree->getName();
@@ -67,41 +75,19 @@ final class ReportViewModel extends MainViewModel implements IReportViewModel {
 		}
 		
 		//main (evaluations)
-		$scopes = $degree->getScopes();
-		foreach ($scopes as $scope) {
-			$scopeId = $scope->getId();
-			$data['scopes'][$scopeId]['name'] = $scope->getName();
-			$data['scopes'][$scopeId]['areas'] = array();
-			foreach ($scope->getAreas() as $area) {
-				$areaId = $area->getId();
-				$data['scopes'][$scope->getId()]['areas'][$areaId]['name'] = $area->getName();
-				$data['scopes'][$scopeId]['areas'][$areaId]['dimensions'] = array();
-				foreach ($area->getDimensions() as $dimension) {
-					$dimensionId = $dimension->getId();
-					$data['scopes'][$scopeId]['areas'][$areaId]['dimensions'][$dimensionId]['name'] = $dimension->getName();
-					$data['scopes'][$scopeId]['areas'][$areaId]['dimensions'][$dimensionId]['description'] = $dimension->getDescription();
-					$data['scopes'][$scopeId]['areas'][$areaId]['dimensions'][$dimensionId]['mark'] = '';
-					$pe = $dimension->getPartialEvaluation($student, $course, $trimestre);
-					if ($pe != null ) {
-						$mark = $pe->getPartialEvaluationDescription()->getMark();
-						$data['scopes'][$scopeId]['areas'][$areaId]['dimensions'][$dimensionId]['mark'] = $mark;
-					}
-				}
-				$ge = $area->getGlobalEvaluation($student, $course, $trimestre);
-				$data['scopes'][$scope->getId()]['areas'][$areaId]['mark'] = '';
-				if ($ge != null) {
-					$mark = $ge->getGlobalEvaluationDescription()->getMark();
-					$data['scopes'][$scope->getId()]['areas'][$areaId]['mark'] = $mark;
-				}
-			}
-		}
+		
+		//scopes
+		$evaluationViewModel = new EvaluationViewModel();
+		$data['scopes'] = $evaluationViewModel->getScopesData($studentId, $classroom, null);
+		//eliminem els elements sense valoració
+		$data['scopes'] = $this->removeEmptyFields($data['scopes']);
 		
 		//observations
-		
 		$data['observation']['title'] = 'Observacions';
 		$data['observation']['text'] = '';
-		if ($student->getCourseObservation($course, $trimestre) != null) {
-			$observationText = $student->getCourseObservation($course, $trimestre)->getText();
+		$observation = $student->getCourseObservation($course, $trimestre);
+		if ( $observation != null) {
+			$observationText = $observation->getText();
 			$observationText = trim(stripcslashes($observationText),'"');
 			$data['observation']['text'] = $observationText;
 		}
@@ -116,12 +102,9 @@ final class ReportViewModel extends MainViewModel implements IReportViewModel {
 			$observation = $student->getCourseObservation($course, $trimestre, $reinforceClassroom);
 			$data['reinforce']['text'] .= strlen($data['reinforce']['text']) > 0 ? "\n" : '';
 			if ($observation != null) {
-				$data['reinforce']['text'] .= stripslashes($observation->getText());
+				$data['reinforce']['text'] .= stripcslashes($observation->getText());
 			}
 		}
-		
-		//eliminem els elements sense valoració
-		$data['scopes'] = $this->removeEmptyFields($data['scopes']);
 		
 		//footer. A educació infantil no hi incloem les valoracions globals
 		$data['footer']['caption'] = "<B>Qualificacions</B>. Parcial: <B>A</B> (Alt), <B>MA</B> (Mitjà Alt), <B>M</B> (Mitjà), <B>MB</B> (Mitjà Baix), <B>B</B> (Baix).";
@@ -133,6 +116,9 @@ final class ReportViewModel extends MainViewModel implements IReportViewModel {
 		return $data;
 	}
 	
+	/**
+	 * Els camps sense valors no han de sortir als informes
+	 */
 	private function removeEmptyFields($data):array
 	{
 		$cleanedData = array();

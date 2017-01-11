@@ -3,6 +3,9 @@ namespace tfg\utils;
 
 class Utils
 {
+	/**
+	 * Entitat que utilitza Doctrine per accedir a la base de dades
+	 */
 	private static $em;
 	
 	public static function setEm(\Doctrine\ORM\EntityManager $entityManager)
@@ -15,12 +18,18 @@ class Utils
 		return self::$em;
 	}
 	
+	/**
+	 * Converteix els caràcters UTF8 a CP1252
+	 */
 	public static function decode($inputText)
 	{
 		setlocale(LC_ALL, 'es_CA');
 		return $str = iconv('UTF-8', 'cp1252', $inputText);
 	}
 	
+	/**
+	 * Formata els salts de línia a un únic tipus
+	 */
 	public static function parse($text) {
 		// Damn pesky carriage returns...
 		$text = str_replace("\r\n", "\n", $text);

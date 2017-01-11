@@ -2,3 +2,12 @@
 
 title {content: 'Informes - dimensions'}
 header {content: template('header.xml')}
+
+#degree-selector option {repeat: data(degrees); }
+#degree-selector option:attr(value) {content: iteration(id); }
+#degree-selector option {content: iteration(name); }
+
+#area-selector option {repeat: data(areas); }
+#area-selector option:attr(value) {content: iteration(id); }
+#area-selector option {content: iteration(name); }
+

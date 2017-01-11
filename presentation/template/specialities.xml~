@@ -12,19 +12,14 @@
 <header></header>
 </div>
 <main>
-	<table id="tutorings">
-		<tr>
-			<td>Area 1</td><td>Teacher 1</td><td class="delete"><a href="#">eliminar</a></td>
-		</tr>
-		<tr>
-			<td></td><td>Teacher 2</td><td class="delete"><a href="#">eliminar</a></td>
-		</tr>
-		<tr>
-			<td>Area 2</td><td>Teacher 3</td><td class="delete"><a href="#">eliminar</a></td>
+	<table id="specialities">
+		<tr class="theader"><th>Àrea</th><th>Mestre</th><th></th></tr>
+		<tr class="tdata">
+			<td class="area">Area 1</td><td class="teacher">Teacher 1</td><td class="delete"><a>eliminar</a></td>
 		</tr>
 	</table>
 	<div class="wrapper">
-		<select id="classroom">
+		<select id="area">
 			<option>Area 1</option>
 		</select>
 		<select id="teacher">

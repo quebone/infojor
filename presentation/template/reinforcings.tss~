@@ -2,3 +2,16 @@
 
 title {content: 'Informes - tutories'}
 header {content: template('header.xml')}
+
+table#tutorings tr.tdata {repeat: data(tutorings); }
+table#tutorings td.classroom {content: iteration(classroom); }
+table#tutorings td.teacher {content: iteration(surnames), ", ", iteration(name); }
+table#tutorings td.delete a:attr(onclick) {content: "del(", iteration(classroomId), ",", iteration(id), ")"; }
+
+select#classroom option {repeat: data(classrooms); }
+select#classroom option:attr(value) {content: iteration(id); }
+select#classroom option {content: iteration(name); }
+
+select#teacher option {repeat: data(teachers); }
+select#teacher option:attr(value) {content: iteration(id); }
+select#teacher option {content: iteration(surnames), ", ", iteration(name); }

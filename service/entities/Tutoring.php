@@ -29,6 +29,14 @@ class Tutoring
 	 */
 	private $trimestre;
 	
+	public function __construct(Teacher $teacher, Classroom $classroom, Course $course, Trimestre $trimestre)
+	{
+		$this->teacher = $teacher;
+		$this->classroom = $classroom;
+		$this->course = $course;
+		$this->trimestre = $trimestre;
+	}
+	
 	public function getTeacher()
 	{
 		return $this->teacher;

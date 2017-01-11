@@ -13,24 +13,19 @@
 </div>
 <main>
 	<table id="tutorings">
-		<tr>
-			<td>1rA</td><td>Teacher 1</td><td class="delete"><a href="#">eliminar</a></td>
-		</tr>
-		<tr>
-			<td></td><td>Teacher 2</td><td class="delete"><a href="#">eliminar</a></td>
-		</tr>
-		<tr>
-			<td>2nA</td><td>Teacher 3</td><td class="delete"><a href="#">eliminar</a></td>
+		<tr class="theader"><th>Classe</th><th>Mestre</th><th></th></tr>
+		<tr class="tdata">
+			<td class="classroom">Classroom 1</td><td class="teacher">Teacher 1</td><td class="delete"><a>eliminar</a></td>
 		</tr>
 	</table>
 	<div class="wrapper">
-		<select id="classroom">
+		<select class="classroom">
 			<option>Classroom 1</option>
 		</select>
-		<select id="teacher">
+		<select class="teacher">
 			<option>Teacher 1</option>
 		</select>
-		<span class="add"><a href="#">afegir</a></span>
+		<span class="add"><a onclick="add()">afegir</a></span>
 	<div id="error" class="error"></div>
 </main>
   <script src="js/scripts.js"></script>
