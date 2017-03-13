@@ -1,0 +1,18 @@
+<div id="logo"><a href="main.php">
+	<p class="title">Escola Josep Orriols Roca</p>
+	<p class="subtitle">informes trimestrals</p>
+</a></div>
+<div id="header_center">
+</div>
+<div id="header_right">
+</div>
+<nav class="compact">
+	<div class="menu-selector">
+		<ul>
+			<li onclick="main()">Tornar a l'inici</li>
+			<li onclick="logout()">Sortir</li>
+			<li onclick="printClassroom()">Imprimir classe</li>
+			<li onclick="printStudent()">Imprimir alumne</li>
+		</ul>
+	</div>
+</nav>

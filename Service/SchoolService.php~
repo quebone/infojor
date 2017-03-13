@@ -1,0 +1,35 @@
+<?php
+namespace Infojor\Service;
+
+final class SchoolService extends MainService
+{
+	public function __construct($entityManager) {
+		parent::__construct($entityManager);
+	}
+	
+	public function getSchool()
+	{
+		$school = $this->entityManager->find('Infojor\\Service\\Entities\\School', 1);
+		return $school;
+	}
+
+	public function getPerson($id)
+	{
+		$person = $this->entityManager->find('Infojor\\Service\\Entities\\Person', $id);
+		return $person;
+	}
+	
+	public function getClassroom($id)
+	{
+		return $this->entityManager->find('Infojor\\Service\\Entities\\Classroom', $id);
+	}
+	
+	public function getCurrentClassroomStudents($classroomId) {
+		return $this->getSchool()->getClassroomStudents(
+			$this->entityManager,
+			$this->getClassroom($classroomId),
+			$this->getActiveCourse(),
+			$this->getActiveTrimestre()
+		);
+	}
+}

@@ -1,16 +1,17 @@
 <?php
-namespace tfg\service;
+namespace infojor\service;
 
-use tfg\service\Entities\Cycle;
-use tfg\service\Entities\Course;
-use tfg\utils\Utils;
-use tfg\service\Entities\Classroom;
-use tfg\service\Entities\Teacher;
-use tfg\service\Entities\Trimestre;
-use tfg\service\Entities\Area;
-use tfg\service\Entities\ReinforceClassroom;
-use tfg\service\Entities\Dimension;
-use tfg\service\Entities\Degree;
+use infojor\service\Entities\Cycle;
+use infojor\service\Entities\Course;
+use infojor\utils\Utils;
+use infojor\service\Entities\Classroom;
+use infojor\service\Entities\Teacher;
+use infojor\service\Entities\Trimestre;
+use infojor\service\Entities\Area;
+use infojor\service\Entities\ReinforceClassroom;
+use infojor\service\Entities\Dimension;
+use infojor\service\Entities\Degree;
+use infojor\service\DAO;
 
 final class SchoolService extends MainService
 {
@@ -18,128 +19,51 @@ final class SchoolService extends MainService
 		parent::__construct();
 	}
 	
-	public function getClassroom($id)
-	{
-		return $this->entityManager->find('tfg\\service\\Entities\\Classroom', $id);
-	}
-	
-	public function getClassrooms()
-	{
-		return $this->entityManager->getRepository('tfg\\service\\Entities\\Classroom')->findAll();
-	}
-	
-	public function getScope($id)
-	{
-		return $this->entityManager->find('tfg\\service\\Entities\\Scope', $id);
-	}
-	
-	public function getArea($id)
-	{
-		return $this->entityManager->find('tfg\\service\\Entities\\Area', $id);
-	}
-	
-	public function getAreas()
-	{
-		return $this->entityManager->getRepository('tfg\\service\\Entities\\Area')->findAll();
-	}
-	
-	public function getReinforceClassroom($id)
-	{
-		return $this->entityManager->find('tfg\\service\\Entities\\ReinforceClassroom', $id);
-	}
-	
-	public function getReinforceClassrooms()
-	{
-		return $this->entityManager->getRepository('tfg\\service\\Entities\\ReinforceClassroom')->findAll();
-	}
-	
-	public function getDimension($id)
-	{
-		return $this->entityManager->find('tfg\\service\\Entities\\Dimension', $id);
-	}
-	
-	public function getDegrees()
-	{
-		return $this->entityManager->getRepository('tfg\\service\\Entities\\Degree')->findAll();
-	}
-	
-	public function getDegree($id):Degree
-	{
-		return $this->entityManager->find('tfg\\service\\Entities\\Degree', $id);
-	}
-	
-	public function getCycles()
-	{
-		return $this->entityManager->getRepository('tfg\\service\\Entities\\Cycle')->findAll();
-	}
-	
-	public function getCycle($id):Cycle
-	{
-		return $this->entityManager->find('tfg\\service\\Entities\\Cycle', $id);
-	}
-	
 	public function getClassroomScopes($classroomId)
 	{
-		return $this->getClassroom($classroomId)->getScopes();
+		return $this->dao->getById("Classroom", $classroomId)->getScopes();
 	}
 	
 	public function getDegreeScopes($degreeId)
 	{
-		return $this->getDegree($degreeId)->getScopes();
+		return $this->dao->getById("Degree", $degreeId)->getScopes();
 	}
 	
 	public function getScopeAreas($scopeId)
 	{
-		return $this->getScope($scopeId)->getAreas();
+		return $this->dao->getById("Scope", $scopeId)->getAreas();
 	}
 	
 	public function getAreaDimensions($areaId, Cycle $cycle = null, $onlyActive = true)
 	{
-		return $this->getArea($areaId)->getDimensions($cycle, $onlyActive);
+		return $this->dao->getById("Area", $areaId)->getDimensions($cycle, $onlyActive);
 	}
 	
-	public function getCourses()
+	public function getPreviousTrimestres():array
 	{
-		return $this->entityManager->getRepository('tfg\\service\\Entities\\Course')->findBy([], ['year' => 'ASC']);
-	}
-	
-	public function getTrimestres()
-	{
-		return $this->entityManager->getRepository('tfg\\service\\Entities\\Trimestre')->findBy([], ['number' => 'ASC']);
-	}
-	
-	public function getTutoring(Classroom $classroom, Teacher $teacher, Course $course, Trimestre $trimestre)
-	{
-		$criteria = array('classroom'=>$classroom, 'teacher'=>$teacher, 'course'=>$course, 'trimestre'=>$trimestre);
-		return $this->entityManager->getRepository('tfg\\service\\Entities\\Tutoring')->findOneBy($criteria);
-	}
-
-	public function getSpeciality(Area $area, Teacher $teacher, Course $course, Trimestre $trimestre)
-	{
-		$criteria = array('area'=>$area, 'teacher'=>$teacher, 'course'=>$course, 'trimestre'=>$trimestre);
-		return $this->entityManager->getRepository('tfg\\service\\Entities\\Speciality')->findOneBy($criteria);
-	}
-	
-	public function getReinforcing(ReinforceClassroom $rei, Teacher $teacher, Course $course, Trimestre $trimestre)
-	{
-		$criteria = array('reinforceClassroom'=>$rei, 'teacher'=>$teacher, 'course'=>$course, 'trimestre'=>$trimestre);
-		return $this->entityManager->getRepository('tfg\\service\\Entities\\Reinforcing')->findOneBy($criteria);
+		$allTrimestres = $this->dao->getByFilter("Trimestre", [], ['number'=>'ASC']);
+		$at = $this->dao->getActiveTrimestre();
+		$trimestres = array();
+		foreach ($allTrimestres as $trimestre) {
+			if ($trimestre->getNumber() < $at->getNumber()) array_push($trimestres, $trimestre);
+		}
+		return $trimestres;
 	}
 	
 	/**
 	 * Retorna els alumnes actuals d'una classe
 	 */
 	public function getCurrentClassroomStudents($classroomId) {
-		return $this->getSchool()->getClassroomStudents(
-			$this->getClassroom($classroomId),
-			$this->getActiveCourse(),
-			$this->getActiveTrimestre()
+		return $this->dao->getSchool()->getClassroomStudents(
+			$this->dao->getById("Classroom", $classroomId),
+			$this->dao->getActiveCourse(),
+			$this->dao->getActiveTrimestre()
 		);
 	}
 	
 	public function getDegreeAreas($degreeId):array {
 		$areas = array();
-		$degree = $this->getDegree($degreeId);
+		$degree = $this->dao->getById("Degree", $degreeId);
 		$scopes = $degree->getScopes();
 		foreach ($scopes as $scope) {
 			foreach ($scope->getAreas() as $area) {
@@ -154,9 +78,9 @@ final class SchoolService extends MainService
 	 */
 	public function createCourse($year) {
 		$course = new Course($year);
-		$this->entityManager->persist($course);
+		$this->dao->persist($course);
 		try {
-			$this->entityManager->flush();
+			$this->dao->flush();
 		} catch (\Exception $e) {
 			return $e->getMessage();
 		}
@@ -167,11 +91,11 @@ final class SchoolService extends MainService
 	 * Actualitza les dades d'un curs i l'activa o el desactiva
 	 */
 	public function updateCourse($courseId, $year, $isActive) {
-		$course = $this->getCourse($courseId);
-		$school = $this->getSchool();
+		$course = $this->dao->getById("Course", $courseId);
+		$school = $this->dao->getSchool();
 		$course->setYear($year);
 		if ($isActive) $school->setActiveCourse($course);
-		$this->entityManager->flush();
+		$this->dao->flush();
 		return true;
 	}
 	
@@ -179,15 +103,15 @@ final class SchoolService extends MainService
 	 * Elimina un curs després de comprovar que no té cap qualificació assignada
 	 */
 	public function deleteCourse($courseId) {
-		$course = $this->getCourse($courseId);
+		$course = $this->dao->getById("Course", $courseId);
 		// entities associated to a course
 		$entities = array("Tutoring", "Speciality", "Reinforcing", "PartialEvaluation", "GlobalEvaluation", "Enrollment");
 		foreach ($entities as $entity) {
-			if ($this->entityManager->getRepository('tfg\\service\\Entities\\' . $entity)->findBy(['course' => $course]) != null)
+			if ($this->dao->getByFilter($entity, ['course' => $course]) != null)
 				return false;
 		}
-		$this->entityManager->remove($course);
-		$this->entityManager->flush();
+		$this->dao->remove($course);
+		$this->dao->flush();
 		return true;
 	}
 	
@@ -196,10 +120,10 @@ final class SchoolService extends MainService
 	 */
 	public function setActiveTrimestre($trimestreId)
 	{
-		$trimestre = $this->getTrimestre($trimestreId);
-		$school = $this->getSchool();
+		$trimestre = $this->dao->getById("Trimestre", $trimestreId);
+		$school = $this->dao->getSchool();
 		$school->setActiveTrimestre($trimestre);
-		$this->entityManager->flush();
+		$this->dao->flush();
 	}
 	
 	/**
@@ -208,8 +132,8 @@ final class SchoolService extends MainService
 	public function sendMessage($userId, $message)
 	{
 		$userModel = new UserService();
-		$user = $userModel->getTeacher($userId);
-		$teachers = $userModel->getAllTeachers();
+		$user = $this->dao->getById("Teacher", $userId);
+		$teachers = $this->dao->getByFilter("Teacher");
 		
 		require_once BASEDIR.'/vendor/PHPMailer/PHPMailerAutoload.php';
 		$mail = new \PHPMailer();
@@ -246,10 +170,10 @@ final class SchoolService extends MainService
 	public function getCurrentTutorings():array
 	{
 		$data = array();
-		$classrooms = $this->getClassrooms();
+		$classrooms = $this->dao->getByFilter("Classroom");
 		foreach ($classrooms as $classroom) {
 			array_push($data, array('classroom' => $classroom,
-					'tutors' => $classroom->getTutors($this->getActiveCourse(), $this->getActiveTrimestre())->toArray()
+					'tutors' => $classroom->getTutors($this->dao->getActiveCourse(), $this->dao->getActiveTrimestre())->toArray()
 				));
 		}
 		return $data;
@@ -261,10 +185,10 @@ final class SchoolService extends MainService
 	public function getCurrentSpecialities()
 	{
 		$data = array();
-		$areas = $this->getAreas();
+		$areas = $this->dao->getByFilter("Area");
 		foreach ($areas as $area) {
 			array_push($data, array('area' => $area,
-				'specialists' => $area->getSpecialists($this->getActiveCourse(), $this->getActiveTrimestre())->toArray()
+				'specialists' => $area->getSpecialists($this->dao->getActiveCourse(), $this->dao->getActiveTrimestre())->toArray()
 			));
 		}
 		return $data;
@@ -276,10 +200,10 @@ final class SchoolService extends MainService
 	public function getCurrentReinforcings()
 	{
 		$data = array();
-		$reinforcings = $this->getReinforceClassrooms();
+		$reinforcings = $this->dao->getByFilter("ReinforceClassroom");
 		foreach ($reinforcings as $reinforcing) {
 			array_push($data, array('classroom' => $reinforcing,
-					'reinforcers' => $reinforcing->getReinforcers($this->getActiveCourse(), $this->getActiveTrimestre())->toArray()
+					'reinforcers' => $reinforcing->getReinforcers($this->dao->getActiveCourse(), $this->dao->getActiveTrimestre())->toArray()
 			));
 		}
 		return $data;
@@ -290,10 +214,10 @@ final class SchoolService extends MainService
 	 */
 	public function deleteDimension($dimId)
 	{
-		$dimension = $this->getDimension($dimId);
+		$dimension = $this->dao->getById("Dimension", $dimId);
 		if ($dimension->getPartialEvaluations()->count() == 0) {
-			$this->entityManager->remove($dimension);
-			$this->entityManager->flush();
+			$this->dao->remove($dimension);
+			$this->dao->flush();
 			return true;
 		}
 		return false;
@@ -304,17 +228,17 @@ final class SchoolService extends MainService
 	 */
 	public function updateDimension($dimId, $name, $description, $cycleIds, $active)
 	{
-		$dimension = $this->getDimension($dimId);
+		$dimension = $this->dao->getById("Dimension", $dimId);
 		$dimension->setName($name);
 		$dimension->setDescription($description);
 		foreach ($cycleIds as $cycleId)
-			if (!$dimension->getCycles()->contains($this->getCycle($cycleId)))
-				$dimension->addCycle($this->getCycle($cycleId));
+			if (!$dimension->getCycles()->contains($this->dao->getById("Cycle", $cycleId)))
+				$dimension->addCycle($this->dao->getById("Cycle", $cycleId));
 		foreach ($dimension->getCycles() as $cycle)
 			if (!in_array($cycle->getId(), $cycleIds))
 				$dimension->removeCycle($cycle);
 		$dimension->setActive($active);
-		$this->entityManager->flush();
+		$this->dao->flush();
 		return true;
 	}
 	
@@ -324,11 +248,11 @@ final class SchoolService extends MainService
 	public function addDimension($name, $description, $areaId, $cycleIds)
 	{
 		$dimension = new Dimension($name, $description);
-		$area = $this->getArea($areaId);
+		$area = $this->dao->getById("Area", $areaId);
 		$dimension->setArea($area);
-		foreach ($cycleIds as $cycleId) $dimension->addCycle($this->getCycle($cycleId));
-		$this->entityManager->persist($dimension);
-		$this->entityManager->flush();
+		foreach ($cycleIds as $cycleId) $dimension->addCycle($this->dao->getById("Cycle", $cycleId));
+		$this->dao->persist($dimension);
+		$this->dao->flush();
 		return true;
 	}
 }

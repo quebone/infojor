@@ -49,3 +49,17 @@ function findClassroom(classroomId) {
 	var name = html.substr(pos, len);
 	return name;
 }
+
+function importReinforcingsFromLastTrimestre() {
+	var dataToSend = "function=importReinforcingsFromLastTrimestre";
+	send(dataToSend, AJAXCONTROLLER, imported);
+}
+
+function imported(msg) {
+	if (msg != false) {
+		alert("S'han importat " + msg + " classes de reforç");
+		location.reload();
+	} else {
+		showError("Error a l'importar les classes de reforç del trimestre anterior");
+	}
+}

@@ -1,26 +1,37 @@
 <?php
-namespace tfg\presentation\model;
+namespace infojor\presentation\model;
 
-use tfg\service\Entities\Cycle;
-use tfg\presentation\view\TplEngine;
+use infojor\service\Entities\Cycle;
+use infojor\presentation\view\TplEngine;
+use infojor\service\SchoolService;
 
 final class SchoolViewModel extends MainViewModel {
 	
 	public function __construct() {
 		parent::__construct();
-		$this->model = new \tfg\service\SchoolService();
 	}
 	
 	public function getActiveCourse()
 	{
-		$this->data->course = $this->model->getActiveCourse()->getYear(); 
+		$this->data->course = $this->dao->getActiveCourse()->getYear(); 
 		return $this->data;
 	}
 	
 	public function getActiveTrimestre()
 	{
-		$this->data->trimestre = $this->model->getActiveTrimestre()->getNumber(); 
+		$this->data->trimestre = $this->dao->getActiveTrimestre()->getNumber(); 
 		return $this->data;
+	}
+	
+	public function getPreviousTrimestres():array
+	{
+		$model = new SchoolService();
+		$trimestres = $model->getPreviousTrimestres();
+		$data = array();
+		foreach ($trimestres as $trimestre) {
+			array_push($data, array('number'=>$trimestre->getNumber()));
+		}
+		return $data;
 	}
 	
 	/**
@@ -28,7 +39,8 @@ final class SchoolViewModel extends MainViewModel {
 	 */
 	public function getCurrentClassroomStudents($classroomId):array {
 		$this->data->students = array();
-		$students = $this->model->getCurrentClassroomStudents($classroomId);
+		$model = new SchoolService();
+		$students = $model->getCurrentClassroomStudents($classroomId);
 		foreach ($students as $student) {
 			$id = $student->getId();
 			$this->data->students[$id] = new \stdClass;
@@ -43,7 +55,7 @@ final class SchoolViewModel extends MainViewModel {
 	
 	public function getClassroom($classroomId):array
 	{
-		$classroom = $this->model->getClassroom($classroomId);
+		$classroom = $this->dao->getById("Classroom", $classroomId);
 		$data['id'] = $classroom->getId();
 		$data['name'] = $classroom->getName();
 		return $data;
@@ -52,7 +64,7 @@ final class SchoolViewModel extends MainViewModel {
 	public function getClassrooms():array
 	{
 		$data = array();
-		$classrooms = $this->model->getClassrooms();
+		$classrooms = $this->dao->getByFilter("Classroom");
 		foreach ($classrooms as $classroom) {
 			array_push($data, $this->getClassroom($classroom->getId()));
 		}
@@ -62,7 +74,7 @@ final class SchoolViewModel extends MainViewModel {
 	public function getArea($areaId):array
 	{
 		$data = array();
-		$area = $this->model->getArea($areaId);
+		$area = $this->dao->getById("Area", $areaId);
 		if ($area != null) {
 			$data['id'] = $area->getId();
 			$data['name'] = $area->getName();
@@ -73,7 +85,7 @@ final class SchoolViewModel extends MainViewModel {
 	public function getAreas():array
 	{
 		$data = array();
-		$areas = $this->model->getAreas();
+		$areas = $this->dao->getByFilter("Area");
 		foreach ($areas as $area) {
 			array_push($data, $this->getArea($area->getId()));
 		}
@@ -84,7 +96,8 @@ final class SchoolViewModel extends MainViewModel {
 	{
 		$data = array();
 		$areas = array();
-		foreach ($this->model->getDegreeAreas($degreeId) as $area) {
+		$model = new SchoolService();
+		foreach ($model->getDegreeAreas($degreeId) as $area) {
 			$data['id'] = $area->getId();
 			$data['name'] = $area->getName();
 			array_push($areas, $data);
@@ -95,7 +108,7 @@ final class SchoolViewModel extends MainViewModel {
 	public function getReinforceClassroom($reinforceId):array
 	{
 		$data = array();
-		$reinforceClassroom = $this->model->getReinforceClassroom($reinforceId);
+		$reinforceClassroom = $this->dao->getById("ReinforceClassroom", $reinforceId);
 		if ($reinforceClassroom != null) {
 			$data['id'] = $reinforceClassroom->getId();
 			$data['name'] = $reinforceClassroom->getName();
@@ -106,7 +119,7 @@ final class SchoolViewModel extends MainViewModel {
 	public function getReinforceClassrooms():array
 	{
 		$data = array();
-		$classrooms = $this->model->getReinforceClassrooms();
+		$classrooms = $this->dao->getByFilter("ReinforceClassroom");
 		foreach ($classrooms as $classroom) {
 			array_push($data, $this->getReinforceClassroom($classroom->getId()));
 		}
@@ -116,7 +129,7 @@ final class SchoolViewModel extends MainViewModel {
 	public function getDegree($degreeId):array
 	{
 		$data = array();
-		$degree = $this->model->getDegree($degreeId);
+		$degree = $this->dao->getById("Degree", $degreeId);
 		if ($degree != null) {
 			$data['id'] = $degree->getId();
 			$data['name'] = $degree->getName();
@@ -127,7 +140,7 @@ final class SchoolViewModel extends MainViewModel {
 	public function getDegrees():array
 	{
 		$data = array();
-		$degrees = $this->model->getDegrees();
+		$degrees = $this->dao->getByFilter("Degree");
 		foreach ($degrees as $degree) {
 			array_push($data, $this->getDegree($degree->getId()));
 		}
@@ -145,7 +158,7 @@ final class SchoolViewModel extends MainViewModel {
 	public function getCycles($degreeId):array
 	{
 		$data = array();
-		$degree = $this->model->getDegree($degreeId);
+		$degree = $this->dao->getById("Degree", $degreeId);
 		$cycles = $degree->getCycles();
 		foreach ($cycles as $cycle) {
 			array_push($data, $this->getCycle($cycle));
@@ -156,7 +169,7 @@ final class SchoolViewModel extends MainViewModel {
 	private function getDimensionCycles($dimensionId)
 	{
 		$data = array();
-		$dimension = $this->model->getDimension($dimensionId);
+		$dimension = $this->dao->getById("Dimension", $dimensionId);
 		$cycles = $dimension->getCycles();
 		foreach ($cycles as $cycle) {
 			array_push($data, $this->getCycle($cycle));
@@ -167,7 +180,8 @@ final class SchoolViewModel extends MainViewModel {
 	public function getScopes($degreeId):array
 	{
 		$data = array();
-		$scopes = $this->model->getDegreeScopes($degreeId);
+		$model = new SchoolService();
+		$scopes = $model->getDegreeScopes($degreeId);
 		foreach ($scopes as $scope) {
 			$id = $scope->getId();
 			$data[$id]['id'] = $id;
@@ -183,7 +197,8 @@ final class SchoolViewModel extends MainViewModel {
 	public function getScopeAreas($scopeId, $areaId = null):array
 	{
 		$data = array();
-		$areas = $this->model->getScopeAreas($scopeId);
+		$model = new SchoolService();
+		$areas = $model->getScopeAreas($scopeId);
 		if (count($areas) != null) {
 			if ($areaId == null) {
 				foreach ($areas as $area) {
@@ -212,7 +227,8 @@ final class SchoolViewModel extends MainViewModel {
 	public function getAreaDimensions($areaId, Cycle $cycle = null, $onlyActive = true):array
 	{
 		$data = array();
-		$dimensions = $this->model->getAreaDimensions($areaId, $cycle, $onlyActive);
+		$model = new SchoolService();
+		$dimensions = $model->getAreaDimensions($areaId, $cycle, $onlyActive);
 		if (count($dimensions) > 0) {
 			foreach ($dimensions as $dimension) {
 				$id = $dimension->getId();
@@ -228,8 +244,8 @@ final class SchoolViewModel extends MainViewModel {
 	public function listAllCourses()
 	{
 		$coursesData = array();
-		$courses = $this->model->getCourses();
-		$ac = $this->model->getActiveCourse();
+		$courses = $this->dao->getByFilter("Course");
+		$ac = $this->dao->getActiveCourse();
 		foreach ($courses as $course) {
 			array_push($coursesData, array(
 					"id" => $course->getId(),
@@ -242,7 +258,8 @@ final class SchoolViewModel extends MainViewModel {
 	public function listAllTutorings()
 	{
 		$data = array();
-		$tutorings = $this->model->getCurrentTutorings();
+		$model = new SchoolService();
+		$tutorings = $model->getCurrentTutorings();
 		foreach ($tutorings as $tutoring) {
 			foreach ($tutoring['tutors'] as $tutor) {
 				array_push($data, array(
@@ -260,7 +277,8 @@ final class SchoolViewModel extends MainViewModel {
 	public function listAllSpecialities()
 	{
 		$data = array();
-		$specialities = $this->model->getCurrentSpecialities();
+		$model = new SchoolService();
+		$specialities = $model->getCurrentSpecialities();
 		foreach ($specialities as $speciality) {
 			foreach ($speciality['specialists'] as $specialist) {
 				array_push($data, array(
@@ -278,7 +296,8 @@ final class SchoolViewModel extends MainViewModel {
 	public function listAllReinforcings()
 	{
 		$data = array();
-		$reinforcings = $this->model->getCurrentReinforcings();
+		$model = new SchoolService();
+		$reinforcings = $model->getCurrentReinforcings();
 		foreach ($reinforcings as $reinforcing) {
 			foreach ($reinforcing['reinforcers'] as $reinforcer) {
 				array_push($data, array(
@@ -295,13 +314,13 @@ final class SchoolViewModel extends MainViewModel {
 	
 	public function listAllDimensions($cycleId)
 	{
-		$cycle = $this->model->getCycle($cycleId);
+		$cycle = $this->dao->getById("Cycle", $cycleId);
 		$degree = $cycle->getDegree();
 		$scopes = $this->getScopes($degree->getId());
 		foreach ($scopes as $scope) {
 			$areas = $this->getScopeAreas($scope['id']);
 			foreach ($areas as $area) {
-				$dimensions = $this->getAreaDimensions($area['id'], $cycle, false);
+				$dimensions = $this->getAreaDimensions($area['id'], null, false);
 				foreach ($dimensions as $dimension) {
 					$allCycles = $this->getCycles($degree->getId());
 					$cycles = $this->getDimensionCycles($dimension['id']);

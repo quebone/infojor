@@ -49,3 +49,17 @@ function findArea(areaId) {
 	var name = html.substr(pos, len);
 	return name;
 }
+
+function importSpecialitiesFromLastTrimestre() {
+	var dataToSend = "function=importSpecialitiesFromLastTrimestre";
+	send(dataToSend, AJAXCONTROLLER, imported);
+}
+
+function imported(msg) {
+	if (msg != false) {
+		alert("S'han importat " + msg + " especialitats");
+		location.reload();
+	} else {
+		showError("Error a l'importar les especialitats del trimestre anterior");
+	}
+}

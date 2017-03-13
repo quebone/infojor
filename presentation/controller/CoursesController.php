@@ -1,8 +1,8 @@
 <?php
-namespace tfg\presentation\controller;
+namespace infojor\presentation\controller;
 
-use tfg\presentation\model\SchoolViewModel;
-use tfg\service\SchoolService;
+use infojor\presentation\model\SchoolViewModel;
+use infojor\service\SchoolService;
 
 class CoursesController extends Controller
 {
@@ -37,8 +37,7 @@ class CoursesController extends Controller
 	
 	public function getActiveTrimestre()
 	{
-		$model = new SchoolService();
-		return $model->getSchool()->getActiveTrimestre()->getNumber();
+		return $this->dao->getSchool()->getActiveTrimestre()->getNumber();
 	}
 	
 	public function setActiveTrimestre()

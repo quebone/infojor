@@ -1,3 +1,4 @@
+// envia les dades al controlador perquè actualitzi un usuari
 function sendUserData() {
 	var userId = document.getElementById("userId").value;
 	var name = encodeURI(document.getElementById("name").value);
@@ -7,7 +8,7 @@ function sendUserData() {
 	var username = encodeURI(document.getElementById("username").value);
 	var password = encodeURI(document.getElementById("password").value);
 	var password_repeat = encodeURI(document.getElementById("password-repeat").value);
-	if (name.length == 0 || surnames.length == 0 || email.length == 0 || username.length == 0 || password.length == 0) {
+	if (name.length == 0 || surnames.length == 0 || email.length == 0 || username.length == 0) {
 		showError("Alguns camps no són correctes");
 	} else if (password != password_repeat) {
 		showError("Les 2 contrasenyes són diferents");
@@ -18,10 +19,12 @@ function sendUserData() {
 	}
 }
 
+// en cas de cancel·lar, carreguem la pàgina principal
 function cancel() {
 	window.location.replace('main.php');
 }
 
+// retorn d'usuari actualitzat
 function userUpdated(input) {
 	window.location.replace('main.php');
 }

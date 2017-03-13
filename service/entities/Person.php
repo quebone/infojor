@@ -1,5 +1,5 @@
 <?php
-namespace tfg\service\Entities;
+namespace infojor\service\Entities;
 
 /**
  * @Entity @Table(name="persons")
@@ -24,10 +24,11 @@ abstract class Person
 	 */
 	protected $school;
 	
-	public function __construct($name, $surnames, $thumbnail = null)
+	public function __construct($name, $surnames, School $school, $thumbnail = null)
 	{
 		$this->name = $name;
 		$this->surnames = $surnames;
+		$this->school = $school;
 		if ($thumbnail == null) $thumbnail = strtolower(str_replace(" ", "-", $surnames) . "-" . str_replace(" ", "-", $name));
 		$this->thumbnail = $thumbnail;
 	}

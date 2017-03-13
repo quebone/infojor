@@ -10,7 +10,6 @@ function add() {
 	var classroomId = document.getElementById("classroom").value;
 	var teacherId = document.getElementById("teacher").value;
 	var dataToSend = "classroomId=" + classroomId + "&teacherId=" + teacherId + "&function=addReinforcing";
-	console.log(dataToSend);
 	send(dataToSend, AJAXCONTROLLER, added);
 }
 

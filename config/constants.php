@@ -1,5 +1,5 @@
 <?php
-namespace tfg\config;
+namespace infojor\config;
 
 if (!defined('BASEDIR')) define('BASEDIR', '');
 define('VIEWDIR', BASEDIR.'presentation/');
@@ -13,11 +13,12 @@ define('IMAGEDIR', BASEDIR.'images/');
 define('THUMBNAILDIR', IMAGEDIR.'thumbnails/');
 
 define('DEFAULTCLASSROOMID', 7);
+define('MAXLEVEL', 9);
 define('AVATAR', 'avatar.jpg');
 
 define('DEFAULTPASSWORD', '1234');
 
-//variables de sessió
+//variables de sessió i post
 define('USER_ID', 'userId');
 define('USERNAME', 'username');
 define('PASSWORD', 'password');
@@ -43,3 +44,4 @@ define('DEGREE_ID', 'degreeId');
 define('CYCLE_ID', 'cycleId');
 define('CYCLES', 'cycles');
 define('DESCRIPTION', 'description');
+define('FILENAME', 'file');

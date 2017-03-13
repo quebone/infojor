@@ -25,6 +25,7 @@ function changeStudent(student)
 	var reinforceId = document.getElementById('reinforceId').value;
 	var studentId = student.getAttribute('id').replace('student-','');
 	var dataToSend = 'studentId=' + studentId + '&classroomId=' + classroomId + '&areaId=' + areaId + '&reinforceId=' + reinforceId + '&function=getEvaluations';
+	console.log(dataToSend);
 	send(dataToSend, AJAXCONTROLLER, showEvaluation);
 	unselectStudents();
 	selectStudent(student);

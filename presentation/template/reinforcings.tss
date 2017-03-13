@@ -1,6 +1,6 @@
 @import 'header.tss';
 
-title {content: 'Informes - tutories'}
+title {content: 'Informes - reforç'}
 header {content: template('header.xml')}
 
 table#reinforcings tr.tdata {repeat: data(reinforcings); }

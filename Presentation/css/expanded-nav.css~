@@ -1,0 +1,48 @@
+nav {
+	position: absolute;
+	width: 1024px;
+}
+
+nav > ul {
+	position: relative;
+	float: right;
+	font-size: 100%;
+	color: white;
+}
+
+nav, nav ul {
+	padding: 0;
+}
+
+nav ul, nav li {
+	background-color: slategray;
+	display: inline-block;
+	margin: 0;
+}
+
+nav li {
+	cursor: pointer;
+	padding: 5px;
+}
+
+nav li a {
+	color: white;
+}
+
+nav li a:hover {
+	color: white;
+}
+
+nav li.highlighted {
+	background-color: darkslategray;
+}
+
+nav ul li ul {
+	position: absolute;
+	display: none;
+}
+
+nav ul li ul li {
+	display: block;
+	min-width: 120px;
+}

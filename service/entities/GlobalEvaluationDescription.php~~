@@ -1,0 +1,21 @@
+<?php
+namespace tfg\service\Entities;
+
+/**
+ * @Entity @Table(name="globalevaluationdescriptions")
+ **/
+class GlobalEvaluationDescription extends EvaluationDescription
+{
+	/**
+	 * @OneToMany(targetEntity="GlobalEvaluation", mappedBy="id")
+	 */
+	private $globalEvaluations;
+	
+	public function __construct() {
+		$this->globalEvaluations = new \Doctrine\Common\Collections\ArrayCollection();
+	}
+	
+	public function getEvaluations() {
+		return $this->globalEvaluations;
+	}
+}

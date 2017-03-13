@@ -1,5 +1,7 @@
 <?php
-namespace tfg\presentation\model;
+namespace infojor\presentation\model;
+
+use infojor\service\UserService;
 
 final class HeaderViewModel extends MainViewModel {
 	
@@ -59,7 +61,7 @@ final class HeaderViewModel extends MainViewModel {
 		$arrMenus = array();
 		if ($this->logged) {
 			$teacherId = $this->getSessionVar(USER_ID);
-			$model = new \tfg\service\UserService();
+			$model = new UserService();
 			$menus = $model->getMenuItems($teacherId);
 			foreach ($menus as $name=>$function) {
 				array_push($arrMenus, array("name"=>$name, "function"=>$function));

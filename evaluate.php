@@ -1,6 +1,9 @@
 <?php
 namespace tfg;
 
+use infojor\presentation\model\HeaderViewModel;
+use infojor\presentation\controller\EvaluateController;
+
 session_start();
 
 require_once 'init.php';
@@ -22,10 +25,10 @@ if ($classroomId == null) $classroomId = DEFAULTCLASSROOMID;
 <!doctype html>
 <?php
 
-$header = new \tfg\presentation\model\HeaderViewModel();
+$header = new HeaderViewModel();
 $data['header'] = $header->output();
 
-$controller = new \tfg\presentation\controller\EvaluateController();
+$controller = new EvaluateController();
 $data['students'] = $controller->getClassroomStudents($classroomId);
 $data['classroom'] = $controller->getClassroomName($classroomId);
 $data['areaId'] = $areaId;

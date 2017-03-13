@@ -1,5 +1,5 @@
 <?php
-namespace tfg\service\Entities;
+namespace infojor\service\Entities;
 
 /**
  * @Entity @Table(name="areas")
@@ -85,10 +85,10 @@ class Area {
 		return null;
 	}
 
-	public function getSpecialists(Course $course, Trimestre $trimestre) {
+	public function getSpecialists(Course $course, Trimestre $trimestre=null) {
 		$teachers = new \Doctrine\Common\Collections\ArrayCollection();
 		foreach ($this->specialists as $specialist) {
-			if ($specialist->getCourse() == $course && $specialist->getTrimestre() == $trimestre) {
+			if ($specialist->getCourse() == $course) {
 				$teachers->add($specialist);
 			}
 		}

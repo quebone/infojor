@@ -1,11 +1,15 @@
 <?php
-namespace tfg\presentation\controller;
+namespace infojor\presentation\controller;
 
-use tfg\presentation\model\MainViewModel;
-use tfg\service\UserService;
+use infojor\presentation\model\MainViewModel;
+use infojor\service\UserService;
+use infojor\service\DAO;
 
 class Controller {
-	function __construct() {
+	protected $dao;
+	
+	public function __construct() {
+		$this->dao = new DAO();
 	}
 	
 	public function setSession()

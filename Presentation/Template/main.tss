@@ -1,0 +1,5 @@
+@import 'header.tss';
+
+title {content: 'Informes - inici'}
+header {content: template('header.xml')}
+main {content: data(sections)}

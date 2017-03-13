@@ -1,8 +1,8 @@
 <?php
-namespace tfg\presentation\controller;
+namespace infojor\presentation\controller;
 
-use tfg\presentation\model\UserViewModel;
-use tfg\service\UserService;
+use infojor\presentation\model\UserViewModel;
+use infojor\service\UserService;
 
 class TeachersController extends Controller
 {
@@ -30,6 +30,7 @@ class TeachersController extends Controller
 	
 	public function addUser()
 	{
+		$this->setSession();
 		return "teacherdetails.php";
 	}
 }

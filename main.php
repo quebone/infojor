@@ -1,9 +1,9 @@
 <?php
 namespace tfg;
 
-use tfg\presentation\model\HeaderViewModel;
-use tfg\presentation\controller\MainController;
-use tfg\presentation\view\TplEngine;
+use infojor\presentation\model\HeaderViewModel;
+use infojor\presentation\controller\MainController;
+use infojor\presentation\view\TplEngine;
 
 session_start();
 

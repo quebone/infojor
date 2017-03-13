@@ -1,7 +1,8 @@
 <?php
-namespace tfg\service\Entities;
+namespace infojor\service\Entities;
 
-use tfg\utils\Utils;
+use infojor\utils\Utils;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity @Table(name="teachers")
@@ -18,6 +19,14 @@ class Teacher extends Person
 	private $password;
 	/** @Column(type="boolean") options={"default": true} **/
 	private $active;
+	/**
+	 * @OneToMany(targetEntity="GlobalEvaluation", mappedBy="teacher")
+	 */
+	private $globalEvaluations;
+	/**
+	 * @OneToMany(targetEntity="PartialEvaluation", mappedBy="teacher")
+	 */
+	private $partialEvaluations;
 	/**
 	 * @OneToMany(targetEntity="Tutoring", mappedBy="teacher")
 	 */
@@ -41,11 +50,13 @@ class Teacher extends Person
 		parent::__construct($name, $surnames, $thumbnail);
 		$this->email = "";
 		$this->phone = "";
-		$this->password = DEFAULTPASSWORD;
-		$this->roles = new \Doctrine\Common\Collections\ArrayCollection();
-		$this->tutorings = new \Doctrine\Common\Collections\ArrayCollection();
-		$this->specialities = new \Doctrine\Common\Collections\ArrayCollection();
-		$this->reinforcings = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->password = sha1(DEFAULTPASSWORD);
+		$this->roles = new ArrayCollection();
+		$this->globalEvaluations = new ArrayCollection();
+		$this->partialEvaluations = new ArrayCollection();
+		$this->tutorings = new ArrayCollection();
+		$this->specialities = new ArrayCollection();
+		$this->reinforcings = new ArrayCollection();
 	}
 
 	public function getEmail()
@@ -137,7 +148,7 @@ class Teacher extends Person
 	public function isAdmin():bool
 	{
 		$em = Utils::getEm();
-		$adminRole = $em->find('tfg\\service\\Entities\\Role', Role::ADMIN);
+		$adminRole = $em->find('infojor\\service\\Entities\\Role', Role::ADMIN);
 		return $this->roles->contains($adminRole);
 	}
 	
@@ -145,7 +156,7 @@ class Teacher extends Person
 	{
 		if ($this->isAdmin() != $value) {
 			$em = Utils::getEm();
-			$adminRole = $em->find('tfg\\service\\Entities\\Role', Role::ADMIN);
+			$adminRole = $em->find('infojor\\service\\Entities\\Role', Role::ADMIN);
 			if ($value) {
 				$this->roles->add($adminRole);
 			} else {

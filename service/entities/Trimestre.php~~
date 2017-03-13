@@ -1,0 +1,34 @@
+<?php
+namespace tfg\service\Entities;
+
+/**
+ * @Entity @Table(name="trimestres")
+ **/
+class Trimestre
+{
+	/** @Id @Column(type="integer") **/
+	private $number;
+	/**
+	 * @OneToMany(targetEntity="GlobalEvaluation", mappedBy="id")
+	 */
+	private $globalEvaluations;
+	/**
+	 * @OneToMany(targetEntity="PartialEvaluation", mappedBy="id")
+	 */
+	private $partialEvaluations;
+	
+	public function __construct() {
+		$this->globalEvaluations = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->partialEvaluations = new \Doctrine\Common\Collections\ArrayCollection();
+	}
+	
+	public function getNumber()
+	{
+		return $this->number;
+	}
+	
+	public function setNumber($number)
+	{
+		$this->number = $number;
+	}
+}

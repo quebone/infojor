@@ -1,0 +1,48 @@
+nav.expanded {
+	position: absolute;
+	width: 1024px;
+}
+
+nav.expanded > ul {
+	position: relative;
+	float: right;
+	font-size: 100%;
+	color: white;
+}
+
+nav.expanded, nav.expanded ul {
+	padding: 0;
+}
+
+nav.expanded ul, nav.expanded li {
+	background-color: slategray;
+	display: inline-block;
+	margin: 0;
+}
+
+nav.expanded li {
+	cursor: pointer;
+	padding: 5px;
+}
+
+nav.expanded li a {
+	color: white;
+}
+
+nav.expanded li a:hover {
+	color: white;
+}
+
+nav.expanded li.highlighted {
+	background-color: darkslategray;
+}
+
+nav.expanded ul li ul {
+	position: absolute;
+	display: none;
+}
+
+nav.expanded ul li ul li {
+	display: block;
+	min-width: 120px;
+}

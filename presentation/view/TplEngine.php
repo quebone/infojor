@@ -2,7 +2,7 @@
 /**
  * Custom template engine for tfg
  */
-namespace tfg\presentation\view;
+namespace infojor\presentation\view;
 
 class TplEngine
 {
@@ -61,6 +61,7 @@ class TplEngine
 	
 	private function createEvaluations($data)
 	{
+		$at = $data['trimestre'];
 		$inner = "<div id='evaluations'><ul>\n";
 		foreach ($data['scopes'] as $scope) {
 			$inner .= "\t<li class='scope' title=\"" . $scope['description'] . "\"><h3>" . $scope['name'] . "</h3>\n";
@@ -68,10 +69,17 @@ class TplEngine
 			foreach ($scope['areas'] as $area) {
 				$inner .= "\t\t<li class='area'><h4>" . $area['name'] . "</h4>";
 				$inner .= "\n\t\t<table>\n";
+				if (count($data['previousTrimestres']) > 0) {
+					$inner .= "<tr><th></th><th></th>";
+					foreach ($data['previousTrimestres'] as $trimestre) {
+						$inner .= "<th>t" . $trimestre['number'] . "</th>";
+					}
+					$inner .= "</tr>";
+				}
 				foreach ($area['dimensions'] as $dimension) {
 					$checked = false;
 					$inner .= "\t\t\t<tr><td class='dimension' title=\"" . $dimension['description'] . "\">" . $dimension['name'] . "</td><td class='input'>";
-					$pe = $dimension['mark'];
+					$pe = $dimension['pes'][$at]['mark'];
 					foreach ($data['peds'] as $ped) {
 						if (!strcmp($ped['mark'], $pe)) $checked = true;
 						$inner .= "<input type='radio' name='dim" . $dimension['id'] . "' value='" . $ped['id'] . 
@@ -80,12 +88,16 @@ class TplEngine
 					$inner .= "<input type='radio' name='dim" . $dimension['id'] . 
 						"' value='0' title='No valorat' onchange='changePE(this)' class='not_evaluated'" . 
 						($checked ? "" : " checked") . " />NV\n";
-					$inner .= "</td></tr>\n";
+					$inner .= "</td>";
+					for ($i = 1; $i < $at; $i++) {
+						$inner .= "<td class='mark'>" . $dimension['pes'][$i]['mark'] . "</td>";
+					}
+					$inner .= "</tr>\n";
 				}
 				$inner .= "\t\t</table>\n";
 				$inner .= "\t\t<div class='global_eval'>Qualificació Global<span class = 'input'>";
 				$checked = false;
-				$ge = $area['mark'];
+				$ge = $area['ges'][$at]['mark'];
 				foreach ($data['geds'] as $ged) {
 					if (!strcmp($ged['mark'], $ge)) $checked = true;
 					$inner .= "<input type='radio' name='area" . $area['id'] . "' value='" . $ged['id'] . "'" .
@@ -93,7 +105,11 @@ class TplEngine
 				}
 				$inner .= "<input type='radio' name='area" . $area['id'] . "' value='0' class='not_evaluated'" .
 					" title='No valorat' onchange='changeGE(this)'" . ($checked ? "" : " checked") . " />NV\n";
-				$inner .= "</span></div>\n";
+				$inner .= "</span>";
+				for ($i = 1; $i < $at; $i++) {
+					$inner .= "<span class='mark'>" . $area['ges'][$i]['mark'] . "</span>";
+				}
+				$inner .= "</div>\n";
 				$inner .= "\t\t</li>\n";
 			}
 			$inner .= "\t</ul>\n";

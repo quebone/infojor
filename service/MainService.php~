@@ -1,0 +1,39 @@
+<?php
+namespace infojor\service;
+
+use infojor\service\Entities\School;
+
+abstract class MainService
+{
+	protected $entityManager;
+	
+	public function __construct() {
+		$this->entityManager = \infojor\utils\Utils::getEm();
+	}
+	
+	public function getSchool():School
+	{
+		$school = $this->entityManager->find('infojor\\service\\Entities\\School', 1);
+		return $school;
+	}
+
+	public function getActiveCourse()
+	{
+		return $this->getSchool()->getActiveCourse();
+	}
+
+	public function getActiveTrimestre()
+	{
+		return $this->getSchool()->getActiveTrimestre();
+	}
+	
+	public function getCourse($courseId)
+	{
+		return $this->entityManager->find('infojor\\service\\Entities\\Course', $courseId);
+	}
+	
+	public function getTrimestre($trimestreId)
+	{
+		return $this->entityManager->find('infojor\\service\\Entities\\Trimestre', $trimestreId);
+	}
+}

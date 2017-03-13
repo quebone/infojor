@@ -1,7 +1,7 @@
 <?php
 namespace tfg;
 
-use tfg\presentation\controller\DimensionsController;
+use infojor\presentation\controller\DimensionsController;
 
 session_start();
 
@@ -23,7 +23,7 @@ if (!$controller->isAdmin()) {
 	exit();
 }
 
-$header = new \tfg\presentation\model\HeaderViewModel();
+$header = new \infojor\presentation\model\HeaderViewModel();
 $data['header'] = $header->output();
 
 $data['degrees'] = $controller->getDegrees();

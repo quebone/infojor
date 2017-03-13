@@ -1,9 +1,9 @@
 <?php
-namespace tfg\presentation\controller;
+namespace infojor\presentation\controller;
 
-use tfg\presentation\model\SchoolViewModel;
-use tfg\service\UserService;
-use tfg\presentation\model\UserViewModel;
+use infojor\presentation\model\SchoolViewModel;
+use infojor\service\UserService;
+use infojor\presentation\model\UserViewModel;
 
 class StudentsController extends Controller
 {
@@ -56,13 +56,15 @@ class StudentsController extends Controller
 	
 	public function importStudentsFromFile()
 	{
-		$model = new UserViewModel();
-		return $model->importStudentsFromFile();
+		$file = $_FILES[FILENAME]['tmp_name'];
+// 		return json_encode($file);
+		$model = new UserService();
+		return $model->importStudentsFromFile($file);
 	}
 	
-	public function importStudentsFromLastTrimestre()
+	public function importStudentsFromLastCourse()
 	{
-		$model = new UserViewModel();
-		return $model->importStudentsFromLastTrimestre();
+		$model = new UserService();
+		return $model->importStudentsFromLastCourse();
 	}
 }

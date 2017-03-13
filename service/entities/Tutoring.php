@@ -1,5 +1,5 @@
 <?php
-namespace tfg\service\Entities;
+namespace infojor\service\Entities;
 
 /**
  * @Entity @Table(name="tutorings")
@@ -29,12 +29,12 @@ class Tutoring
 	 */
 	private $trimestre;
 	
-	public function __construct(Teacher $teacher, Classroom $classroom, Course $course, Trimestre $trimestre)
+	public function __construct(Teacher $teacher, Classroom $classroom, Course $course, Trimestre $trimestre=null)
 	{
 		$this->teacher = $teacher;
 		$this->classroom = $classroom;
 		$this->course = $course;
-		$this->trimestre = $trimestre;
+// 		$this->trimestre = $trimestre;
 	}
 	
 	public function getTeacher()

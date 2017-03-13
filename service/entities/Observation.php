@@ -1,5 +1,5 @@
 <?php
-namespace tfg\service\Entities;
+namespace infojor\service\Entities;
 
 /**
  * @Entity @Table(name="observations")
@@ -29,10 +29,22 @@ class Observation {
 	 * @JoinColumn(name="student_id", referencedColumnName="id")
 	 */
 	private $student;
+	/**
+	 * @ManyToOne(targetEntity="Teacher", inversedBy="partialEvaluations")
+	 * @JoinColumn(name="teacher_id", referencedColumnName="id")
+	 */
+	private $teacher;
 	
-	public function __construct($student, $course, $trimestre, $text, $reinforceClassroom = null) {
+	public function __construct(
+			Student $student, 
+			Teacher $teacher,
+			Course $course, 
+			Trimestre $trimestre,
+			$text,
+			ReinforceClassroom $reinforceClassroom = null) {
 		$this->text = $text;
 		$this->student = $student;
+		$this->teacher = $teacher;
 		$this->course = $course;
 		$this->trimestre = $trimestre;
 		$this->reinforceClassroom = $reinforceClassroom;
@@ -68,5 +80,13 @@ class Observation {
 	
 	public function setStudent(Student $student) {
 		$this->student = $student;
+	}
+	
+	public function getTeacher() {
+		return $this->teacher;
+	}
+	
+	public function setTeacher(Teacher $teacher) {
+		$this->teacher = $teacher;
 	}
 }

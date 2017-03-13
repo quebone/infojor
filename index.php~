@@ -1,29 +1,11 @@
 <?php
-namespace Infojor;
+namespace tfg;
 
-use Infojor\Service\UserService;
-use Infojor\Presentation\Model\UserViewModel;
-use Infojor\Presentation\Controller\Controller;
+session_start();
 
-//require_once __DIR__ . '/vendor/autoload.php';
-require_once "bootstrap.php";
-require_once 'Loader.php';
-new Loader();
+if (isset($_SESSION['userid'])) {
+	header('Location: main.php');
+} else {
+	header('Location: login.php');
+}
 
-$xml = 'presentation/template/index.xml';
-$tss = 'presentation/template/index.tss';
-$template = new \Transphporm\Builder($xml, $tss);
-
-$userService = new UserService($entityManager);
-$viewmodel = new UserViewModel($userService);
-$controller = new Controller($viewmodel);
-
-//if (isset($_GET['action'])) {
-//	$controller->{$_GET['action']}();
-//}
-
-$controller->getTeacher(1);
-
-$data = $viewmodel->data;
-echo $template->output($data)->body;
-?>

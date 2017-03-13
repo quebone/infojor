@@ -1,14 +1,16 @@
 <?php
 namespace tfg;
 
+use infojor\presentation\model\HeaderViewModel;
+
 if (session_status() != PHP_SESSION_NONE) {
 	session_unset();
 	session_destroy();
 }
 session_start();
 
-set_error_handler("\\tfg\\myErrorHandler");
-register_shutdown_function("\\tfg\\fatal_handler");
+set_error_handler("\\infojor\\myErrorHandler");
+register_shutdown_function("\\infojor\\fatal_handler");
 
 function myErrorHandler($code, $message, $file, $line) {
 	echo "$code: $message ($file line $line)\n";
@@ -32,7 +34,7 @@ if (isset($_SESSION[USER_ID])) {
 	unset($_SESSION[USER_ID]);
 }
 
-$header = new \tfg\presentation\model\HeaderViewModel();
+$header = new HeaderViewModel();
 $data['header'] = $header->output();
 
 $template = new \Transphporm\Builder(TPLDIR.'login.xml', TPLDIR.'login.tss');

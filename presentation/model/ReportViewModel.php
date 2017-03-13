@@ -1,18 +1,17 @@
 <?php
-namespace tfg\presentation\model;
+namespace infojor\presentation\model;
+
+use infojor\service\SchoolService;
+use infojor\service\DAO;
 
 require_once BASEDIR.'vendor/fpdf/fpdf.php';
 
 final class ReportViewModel extends MainViewModel {
 	private $student;
 	private $classroom;
-	private $userModel;
-	private $schoolModel;
 	
 	public function __construct($student = null, $classroom = null) {
 		parent::__construct();
-		$this->userModel = new \tfg\service\UserService();
-		$this->schoolModel = new \tfg\service\SchoolService();
 		$this->student = $student;
 		$this->classroom = $classroom;
 	}
@@ -33,7 +32,8 @@ final class ReportViewModel extends MainViewModel {
 	 */
 	private function getClassroomReport($classroomId)
 	{
-		$students = $this->schoolModel->getCurrentClassroomStudents($classroomId);
+		$model = new SchoolService();
+		$students = $model->getCurrentClassroomStudents($classroomId);
 		$data = array();
 		foreach ($students as $student) {
 			$data[$student->getId()] = $this->getStudentReport($student->getId());
@@ -53,9 +53,9 @@ final class ReportViewModel extends MainViewModel {
 		$data['header']['logo_jor'] = IMAGEDIR.'logos/logo-jor.png';
 		
 		//first page header
-		$student = $this->userModel->getStudent($studentId);
-		$course = $this->schoolModel->getActiveCourse();
-		$trimestre = $this->schoolModel->getActiveTrimestre();
+		$student = $this->dao->getById("Student", $studentId);
+		$course = $this->dao->getActiveCourse();
+		$trimestre = $this->dao->getActiveTrimestre();
 		$classroom = $student->getClassroom($course, $trimestre);
 		$tutorings = $classroom->getTutors($course, $trimestre);
 		$cycle = $classroom->getLevel()->getCycle();
@@ -65,7 +65,7 @@ final class ReportViewModel extends MainViewModel {
 		$data['degree']['id'] = $degree->getId();
 		$data['degree']['name'] = "d'" . $degree->getName();
 		$data['student'] =  $student->getName() . " " . $student->getSurnames();
-		$data['trimestre'] = 'Trimestre ' . $trimestre->getNumber();
+		$data['trimestre'] = $trimestre->getNumber();
 		$data['course'] = 'Curs ' . $course->getYear();
 		$data['classroom'] = $classroom->getName();
 		$data['tutor'] = '';
@@ -95,7 +95,7 @@ final class ReportViewModel extends MainViewModel {
 		//reinforce classrooms
 		$data['reinforce']['title'] = '';
 		$data['reinforce']['text'] = '';
-		$reinforceClassrooms = $this->schoolModel->getSchool()->getReinforceClassrooms();
+		$reinforceClassrooms = $this->dao->getSchool()->getReinforceClassrooms();
 		foreach ($reinforceClassrooms as $reinforceClassroom) {
 			$data['reinforce']['title'] .= strlen($data['reinforce']['title']) > 0 ? " i " : '';
 			$data['reinforce']['title'] .= $reinforceClassroom->getName();
@@ -122,18 +122,25 @@ final class ReportViewModel extends MainViewModel {
 	private function removeEmptyFields($data):array
 	{
 		$cleanedData = array();
+		$at = $this->dao->getActiveTrimestre();
 		foreach ($data as $scopeId=>$scope) {
 			foreach ($scope['areas'] as $areaId=>$area) {
 				$dataFound = false;
 				foreach ($area['dimensions'] as $dimId=>$dimension) {
-					if ($dimension['mark'] != '') {
+					$markFound = false;
+					for ($i = 1; $i <= $at->getNumber(); $i++) {
+						if ($dimension['pes'][$i]['mark'] != '') $markFound = true;
+					}
+					if ($markFound) {
 						$cleanedData[$scopeId]['areas'][$areaId]['dimensions'][$dimId] = $dimension;
 						$dataFound = true;
 					}
 				}
-				if ($area['mark'] != '') {
-					$cleanedData[$scopeId]['areas'][$areaId]['mark'] = $area['mark'];
-					$dataFound = true;
+				for ($i = 1; $i <= $at->getNumber(); $i++) {
+					if ($area['ges'][$i]['mark'] != '') {
+						$cleanedData[$scopeId]['areas'][$areaId]['ges'][$i]['mark'] = $area['ges'][$i]['mark'];
+						$dataFound = true;
+					}
 				}
 				if ($dataFound) {
 					$cleanedData[$scopeId]['areas'][$areaId]['name'] = $area['name'];

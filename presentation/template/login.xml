@@ -21,5 +21,6 @@
 </main>
   <script src="js/scripts.js" />
   <script src="js/login.js" />
+  <script src="js/crypto.js" />
 </body>
 </html>

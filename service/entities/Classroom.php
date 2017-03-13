@@ -1,5 +1,7 @@
 <?php
-namespace tfg\service\Entities;
+namespace infojor\service\Entities;
+
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity @Table(name="classrooms")
@@ -29,10 +31,12 @@ class Classroom
 	 */
 	private $school;
 	
-	public function __construct() {
-		$this->tutors = new \Doctrine\Common\Collections\ArrayCollection();
-		$this->enrollments = new \Doctrine\Common\Collections\ArrayCollection();
-		$this->levels = new \Doctrine\Common\Collections\ArrayCollection();
+	public function __construct($name, Level $level) {
+		$this->name = $name;
+		$this->level = $level;
+		$this->tutors = new ArrayCollection();
+		$this->enrollments = new ArrayCollection();
+		$this->levels = new ArrayCollection();
 	}
 
 	public function getId() {
@@ -51,10 +55,10 @@ class Classroom
 		return $this->level;
 	}
 	
-	public function getTutors(Course $course, Trimestre $trimestre) {
-		$tutors = new \Doctrine\Common\Collections\ArrayCollection();
+	public function getTutors(Course $course, Trimestre $trimestre=null) {
+		$tutors = new ArrayCollection();
 		foreach ($this->tutors as $tutor) {
-			if ($tutor->getCourse() == $course && $tutor->getTrimestre() == $trimestre) {
+			if ($tutor->getCourse() == $course) {
 				$tutors->add($tutor);
 			}
 		}

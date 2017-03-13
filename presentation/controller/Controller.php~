@@ -1,0 +1,26 @@
+<?php
+namespace infojor\presentation\controller;
+
+use infojor\presentation\model\MainViewModel;
+use infojor\service\UserService;
+
+class Controller {
+	function __construct() {
+	}
+	
+	public function setSession()
+	{
+		$model = new MainViewModel();
+		$model->setSession();
+		return json_encode($_POST);
+	}
+	
+	public function printReport() {
+		$this->setSession();
+	}
+	
+	public function isAdmin() {
+		$model = new UserService();
+		return $model->isAdmin($_SESSION[USER_ID]);
+	}
+}

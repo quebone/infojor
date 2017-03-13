@@ -1,0 +1,53 @@
+<?php
+namespace Infojor\Presentation\Model;
+
+final class UserViewModel extends MainViewModel {
+	
+	public function __construct($model = null, $entityManager = null) {
+		if ($model == null) $model = new \Infojor\Service\UserService();
+		parent::__construct($model, $entityManager);
+	}
+	
+	public function login() {
+		$username = $_POST['user'];
+		$password = $_POST['password'];
+		$teacher = $this->model->login($username, $password);
+		if ($teacher != null) {
+			$id = $teacher->getId();
+			session_start();
+			$_SESSION['userid'] = $id;
+			return $id;
+		}
+		return false;
+	}
+	
+	public function getTeacher($id)
+	{
+		$teacher = $this->model->getTeacher($id);
+		$this->data->name = $teacher->getName();
+		$this->data->surnames = $teacher->getSurnames();
+		return $this->data;
+	}
+	
+	private function getCurrentSection($teacherid, $main, $mapped) {
+		$mainFunction = "getCurrent" . $main;
+		$mappedFunction = "get" . $mapped;
+		$items = $this->model->{$mainFunction}($teacherid);
+		$data = array();
+		foreach ($items as $item) {
+			$data[$item->{$mappedFunction}()->getName()] = new \stdClass;
+			$data[$item->{$mappedFunction}()->getName()]->name = $item->{$mappedFunction}()->getName();
+			$data[$item->{$mappedFunction}()->getName()]->link = $item->{$mappedFunction}()->getName();
+		}
+		return $data;
+	}
+	
+	public function getCurrentSections($teacherid)
+	{
+		$sections = new \stdClass;
+		$sections->tutorings = $this->getCurrentSection($teacherid, "Tutorings", 'Classroom');
+		$sections->specialities = $this->getCurrentSection($teacherid, "Specialities", 'Area');
+		$sections->reinforcings = $this->getCurrentSection($teacherid, "Reinforcings", 'ReinforceClassroom');
+		return $sections;
+	}
+}

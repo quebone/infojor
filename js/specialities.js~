@@ -10,7 +10,6 @@ function add() {
 	var areaId = document.getElementById("area").value;
 	var teacherId = document.getElementById("teacher").value;
 	var dataToSend = "areaId=" + areaId + "&teacherId=" + teacherId + "&function=addSpeciality";
-	console.log(dataToSend);
 	send(dataToSend, AJAXCONTROLLER, added);
 }
 
@@ -49,4 +48,18 @@ function findArea(areaId) {
 	var len = html.indexOf('<', pos) - pos;
 	var name = html.substr(pos, len);
 	return name;
+}
+
+function importSpecialitiesFromLastTrimestre() {
+	var dataToSend = "function=importSpecialitiesFromLastTrimestre";
+	send(dataToSend, AJAXCONTROLLER, imported);
+}
+
+function imported(msg) {
+	if (msg != false) {
+		alert("S'han importat " + msg + " tutories");
+		location.reload();
+	} else {
+		showError("Error a l'importar les tutories del trimestre anterior");
+	}
 }

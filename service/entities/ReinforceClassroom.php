@@ -1,5 +1,7 @@
 <?php
-namespace tfg\service\Entities;
+namespace infojor\service\Entities;
+
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity @Table(name="reinforceclassrooms")
@@ -24,8 +26,8 @@ class ReinforceClassroom {
 	private $school;
 	
 	public function __construct() {
-		$this->reinforcers = new \Doctrine\Common\Collections\ArrayCollection();
-		$this->observations = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->reinforcers = new ArrayCollection();
+		$this->observations = new ArrayCollection();
 	}
 
 	public function getId() {
@@ -44,10 +46,10 @@ class ReinforceClassroom {
 		return $this->observations;
 	}
 	
-	public function getReinforcers(Course $course, Trimestre $trimestre) {
-		$teachers = new \Doctrine\Common\Collections\ArrayCollection();
+	public function getReinforcers(Course $course, Trimestre $trimestre=null) {
+		$teachers = new ArrayCollection();
 		foreach ($this->reinforcers as $reinforcer) {
-			if ($reinforcer->getCourse() == $course && $reinforcer->getTrimestre() == $trimestre) {
+			if ($reinforcer->getCourse() == $course) {
 				$teachers->add($reinforcer);
 			}
 		}

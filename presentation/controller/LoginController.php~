@@ -1,0 +1,13 @@
+<?php
+namespace infojor\presentation\controller;
+
+class LoginController extends Controller
+{
+	public function login()
+	{
+		$username = $_POST[USERNAME];
+		$password = $_POST[PASSWORD];
+		$model = new \infojor\presentation\model\UserViewModel();
+		return $model->login($username, $password);
+	}
+}

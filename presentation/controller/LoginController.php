@@ -1,5 +1,7 @@
 <?php
-namespace tfg\presentation\controller;
+namespace infojor\presentation\controller;
+
+use infojor\presentation\model\UserViewModel;
 
 class LoginController extends Controller
 {
@@ -7,7 +9,7 @@ class LoginController extends Controller
 	{
 		$username = $_POST[USERNAME];
 		$password = $_POST[PASSWORD];
-		$model = new \tfg\presentation\model\UserViewModel();
+		$model = new UserViewModel();
 		return $model->login($username, $password);
 	}
 }

@@ -1,10 +1,11 @@
 window.onload = init;
 
+// a la pantalla de login no s'ha de mostrar el menú
 function init() {
 	document.getElementsByClassName("compact")[0].style.display = "none";
 }
 
-// sends form data through AJAX
+// envia les dades d'usuari al controlador perquè comprovi si són correctes
 function sendUserData() {
 	var user = encodeURI(document.getElementById('username').value);
 	var password = encodeURI(document.getElementById('password').value);
@@ -12,13 +13,14 @@ function sendUserData() {
 		showError("El nom d'usuari i la contrasenya no poden estar en blanc");
 		return;
 	}
-	var dataToSend = 'username=' + user + '&password=' + password + '&function=login';
+	var dataToSend = 'username=' + user + '&password=' + sha1(password) + '&function=login';
+//	console.log(dataToSend);
 	send(dataToSend, AJAXCONTROLLER, login);
 }
 
-// given a user id, decides what to do
+// retorn del registre
 function login(userid) {
-	console.log(userid);
+//	console.log(userid);
 	if (userid > 0) {
 		window.location.replace('main.php');
 	} else {

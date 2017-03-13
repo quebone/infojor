@@ -1,16 +1,20 @@
 <?php
-namespace tfg\presentation\model;
+namespace infojor\presentation\model;
+
+use infojor\service\DAO;
 
 class MainViewModel
 {
 	protected $model;
 	protected $data;
 	protected $entityManager;
+	protected $dao;
 
 	public function __construct($model = null)
 	{
 		$this->model = $model;
-		$this->entityManager = \tfg\utils\Utils::getEm();
+		$this->dao = new DAO();
+		$this->entityManager = \infojor\utils\Utils::getEm();
 		$this->data = new \stdClass;
 	}
 	
@@ -52,6 +56,7 @@ class MainViewModel
 	 */
 	protected function getSessionVar($sessionVar)
 	{
+		if (session_status() != PHP_SESSION_ACTIVE) session_start();
 		if (isset($_SESSION[$sessionVar])) return $_SESSION[$sessionVar];
 		return false;
 	}

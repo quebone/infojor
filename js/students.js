@@ -6,8 +6,8 @@ function init() {
 }
 
 // canvia de classe
-function changeClassroom(elem) {
-	var classroomId = elem.value;
+function changeClassroom() {
+	var classroomId = document.getElementById("classroom-selector").value;
 	getClassroomStudents(classroomId);
 	document.getElementById("classroom").value = classroomId;
 }
@@ -53,24 +53,27 @@ function updateStudent(elem) {
 
 // envia un nom d'arxiu al controlador perquè n'importi els alumnes
 function importStudentsFromFile() {
-	var file = document.getElementById("file_selector").value;
-	if (file.length == 0) {
+	var file = document.getElementById("file_selector").files[0];
+	if (file == null) {
 		alert("Has d'escollir un arxiu");
 	} else {
-		var cnf = confirm("Segur que vols substituir els alumnes de P3 del curs actual pels del fitxer " + file + "?");
+		var formData = new FormData();
+		formData.append('file', file, file.name);
+		formData.append('function', 'importStudentsFromFile');
+		var cnf = confirm("Segur que vols substituir els alumnes de P3 del curs actual pels del fitxer " + file.value + "?");
 		if (cnf) {
-			var dataToSend = "file=" + encodeURI(file) + "&function=importStudentsFromFile";
-			send(dataToSend, AJAXCONTROLLER, fileLoaded);
+			var dataToSend = "file=" + formData + "&function=importStudentsFromFile";
+			sendFile(formData, AJAXCONTROLLER, fileLoaded);
 		}
 	}
 }
 
 // demana al controlador que carregui els alumnes del trimestre anterior
-function importStudentsFromLastTrimestre() {
-	var cnf = confirm("Segur que vols substituir els alumnes de la classe pels del darrer trimestre?");
+function importStudentsFromLastCourse() {
+	var cnf = confirm("Segur que vols substituir els alumnes d'aquest curs pels del darrer?");
 	if (cnf) {
-		var dataToSend = "function=importStudentsFromLastTrimestre";
-		send(dataToSend, AJAXCONTROLLER, fileLoaded);
+		var dataToSend = "function=importStudentsFromLastCourse";
+		send(dataToSend, AJAXCONTROLLER, imported);
 	}
 }
 
@@ -87,7 +90,17 @@ function studentsReceived(students) {
 
 // retorn d'importació d'arxiu d'alumnes
 function fileLoaded(msg) {
+	if (msg != false) {
+		alert("S'han importat " + msg + " alumnes");
+		changeClassroom();
+	} else {
+		showError("Hi ha hagut un error a l'importar els alumnes");
+	}
+}
+
+function imported(msg) {
 	alert("S'han importat " + msg + " alumnes");
+	changeClassroom();
 }
 
 // retorn d'alumne afegit; torna a carregar els alumnes

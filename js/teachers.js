@@ -16,7 +16,7 @@ function del(teacherId) {
 
 // demana al controlador que creï un nou usuari
 function add() {
-	var dataToSend = "function=addUser";
+	var dataToSend = "teacherId=&function=addUser";
 	send(dataToSend, AJAXCONTROLLER, redirect)
 }
 

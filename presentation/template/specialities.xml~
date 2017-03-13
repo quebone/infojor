@@ -25,7 +25,11 @@
 		<select id="teacher">
 			<option>Teacher 1</option>
 		</select>
-		<span class="add"><a href="#">afegir</a></span>
+		<span class="add"><a onclick="add()">afegir</a></span>
+	</div>
+	<div class="form-buttons">
+		<button type="button" class="form-button" onclick="importSpecialitiesFromLastTrimestre()">Copiar les especialitats del trimestre anterior</button>
+	</div>
 	<div id="error" class="error"></div>
 </main>
   <script src="js/scripts.js"></script>

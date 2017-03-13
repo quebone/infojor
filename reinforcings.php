@@ -1,8 +1,8 @@
 <?php
 namespace tfg;
 
-use tfg\presentation\controller\ReinforcingsController;
-use tfg\presentation\model\HeaderViewModel;
+use infojor\presentation\controller\ReinforcingsController;
+use infojor\presentation\model\HeaderViewModel;
 
 session_start();
 

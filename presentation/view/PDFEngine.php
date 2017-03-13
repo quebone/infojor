@@ -1,8 +1,7 @@
 <?php
-namespace tfg\presentation\view;
+namespace infojor\presentation\view;
 
-use tfg\utils\Utils;
-use SebastianBergmann\CodeCoverage\Util;
+use infojor\utils\Utils;
 
 define('BODYTOP', 30);
 define('BODYHEIGHT', 240);
@@ -99,7 +98,7 @@ class PDFEngine extends \FPDF
 		$this->Write(0, Utils::decode($student['student']));
 		$this->SetX(LEFT + 80);
 		$this->SetFont(FONT, '', 11);
-		$this->Write(0, $student['trimestre']);
+		$this->Write(0, 'Trimestre ' . $student['trimestre']);
 		$this->SetX(LEFT + 115);
 		$this->Write(0, Utils::decode($student['classroom']));
 		$this->SetX(LEFT + 140);
@@ -170,19 +169,29 @@ class PDFEngine extends \FPDF
 							}
 						}
 						$y += 1.5;
-						$this->SetX(LEFT + $this->trHeader[$degreeId]['start'] + 1 - $this->GetStringWidth($dimension['mark']) / 2);
-						$this->SetFont(FONT, 'B', 11);
-						$this->Write(0, $dimension['mark']);
+						$x = $this->trHeader[$degreeId]['start'];
+						for ($i = 1; $i <= $student['trimestre']; $i++) {
+							$this->SetX(LEFT + $x + 1 - $this->GetStringWidth($dimension['pes'][$i]['mark']) / 2);
+							$this->SetFont(FONT, 'B', 11);
+							$this->Write(0, $dimension['pes'][$i]['mark']);
+							$x += $this->trHeader[$degreeId]['offset'];
+						}
 					}
 				}
-				if (isset($area['mark'])) {
+				if (isset($area['ges'])) {
 					$y += 8;
 					$this->SetXY(LEFT, $y);
 					$this->SetFont(FONT, '', 11);
 					$this->Write(0, Utils::decode('Qualificació global'));
-					$this->SetX(LEFT + $this->trHeader[$degreeId]['start'] + 1 - $this->GetStringWidth($area['mark']) / 2);
-					$this->SetFont(FONT, 'B', 11);
-					$this->Write(0, $area['mark']);
+					$x = $this->trHeader[$degreeId]['start'];
+					for ($i = 1; $i <= $student['trimestre']; $i++) {
+						if (isset($area['ges'][$i])) {
+							$this->SetX(LEFT + $i + $x + 1 - $this->GetStringWidth($area['ges'][$i]['mark']) / 2);
+							$this->SetFont(FONT, 'B', 11);
+							$this->Write(0, $area['ges'][$i]['mark']);
+							$x += $this->trHeader[$degreeId]['offset'];
+						}
+					}
 				}
 				$this->SetLineWidth(.1);
 				$this->SetDrawColor(0x80);

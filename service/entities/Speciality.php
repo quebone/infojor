@@ -1,5 +1,5 @@
 <?php
-namespace tfg\service\Entities;
+namespace infojor\service\Entities;
 
 /**
  * @Entity @Table(name="specialities")
@@ -33,12 +33,12 @@ class Speciality
 	 */
 	private $trimestre;
 	
-	public function __construct($teacher, $area, $course, $trimestre)
+	public function __construct($teacher, $area, $course, $trimestre=null)
 	{
 		$this->teacher = $teacher;
 		$this->area = $area;
 		$this->course = $course;
-		$this->trimestre = $trimestre;
+// 		$this->trimestre = $trimestre;
 	}
 	
 	public function getTeacher()

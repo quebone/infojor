@@ -15,13 +15,13 @@ if (isset($_SESSION[USER_ID])) {
 <!doctype html>
 <?php
 
-$controller = new \tfg\presentation\controller\StudentsController();
+$controller = new \infojor\presentation\controller\StudentsController();
 if (!$controller->isAdmin()) {
 	echo "Pàgina visible només pels administradors";
 	exit();
 }
 
-$header = new \tfg\presentation\model\HeaderViewModel();
+$header = new \infojor\presentation\model\HeaderViewModel();
 $data['header'] = $header->output();
 
 $data['classrooms'] = $controller->getClassrooms();

@@ -1,5 +1,5 @@
 <?php
-namespace tfg\service\Entities;
+namespace infojor\service\Entities;
 /**
  * @Entity @Table(name="students")
  **/
@@ -18,12 +18,12 @@ class Student extends Person
 	 */
 	private $observations;
 	/**
-	 * @OneToMany(targetEntity="Enrollment", mappedBy="student")
+	 * @OneToMany(targetEntity="Enrollment", mappedBy="student", cascade={"remove"})
 	 */
 	private $enrollments;
 	
-	public function __construct($name, $surnames, $thumbnail = null) {
-		parent::__construct($name, $surnames, $thumbnail);
+	public function __construct($name, $surnames, School $school, $thumbnail = null) {
+		parent::__construct($name, $surnames, $school, $thumbnail);
 		$this->globalEvaluations = new \Doctrine\Common\Collections\ArrayCollection();
 		$this->partialEvaluations = new \Doctrine\Common\Collections\ArrayCollection();
 		$this->observations = new \Doctrine\Common\Collections\ArrayCollection();
@@ -34,9 +34,9 @@ class Student extends Person
 		return $this->enrollments;
 	}
 	
-	public function getEnrollment(Course $course, Trimestre $trimestre) {
+	public function getEnrollment(Course $course, Trimestre $trimestre=null) {
 		foreach ($this->enrollments as $enrollment) {
-			if ($enrollment->getCourse() == $course && $enrollment->getTrimestre() == $trimestre)
+			if ($enrollment->getCourse() == $course)
 				return $enrollment;
 		}
 		return null;
@@ -46,9 +46,9 @@ class Student extends Person
 		return $this->classrooms;
 	}
 	
-	public function getClassroom(Course $course, Trimestre $trimestre) {
+	public function getClassroom(Course $course, Trimestre $trimestre=null) {
 		foreach ($this->enrollments as $enrollment) {
-			if ($enrollment->getCourse() == $course && $enrollment->getTrimestre() == $trimestre) {
+			if ($enrollment->getCourse() == $course) {
 				return $enrollment->getClassroom();
 			}
 		}
@@ -96,27 +96,31 @@ class Student extends Person
 		return null;
 	}
 	
-	public function createObservation($text,
+	public function createObservation(
+			$text,
+			Teacher $teacher,
 			Course $course,
 			Trimestre $trimestre,
 			ReinforceClassroom $reinforceClassroom = null):Observation {
-		return new Observation($this, $course, $trimestre, $text, $reinforceClassroom);
+		return new Observation($this, $teacher, $course, $trimestre, $text, $reinforceClassroom);
 	}
 	
 	public function createDimensionEvaluation(
+			Teacher $teacher,
 			Dimension $dimension,
 			Course $course,
 			Trimestre $trimestre,
 			EvaluationDescription $ed):Evaluation {
-		return new PartialEvaluation($this, $course, $trimestre, $dimension, $ed);
+		return new PartialEvaluation($this, $teacher, $course, $trimestre, $dimension, $ed);
 	}
 
 	public function createAreaEvaluation(
+			Teacher $teacher,
 			Area $area,
 			Course $course,
 			Trimestre $trimestre,
 			EvaluationDescription $ed):Evaluation {
-				return new GlobalEvaluation($this, $course, $trimestre, $area, $ed);
+		return new GlobalEvaluation($this, $teacher, $course, $trimestre, $area, $ed);
 	}
 	
 	public function addEnrollment(Enrollment $enrollment) {

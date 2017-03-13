@@ -1,5 +1,5 @@
 <?php
-namespace tfg\service\Entities;
+namespace infojor\service\Entities;
 
 /**
  * @Entity @Table(name="logs")
@@ -7,7 +7,7 @@ namespace tfg\service\Entities;
 class Log {
 	/** @Id @Column(type="integer") @GeneratedValue **/
 	private $id;
-	/** @Column(type="string", length=20) **/
+	/** @Column(type="string", length=40) **/
 	private $username;
 	/** @Column(type="datetime") **/
 	private $date;

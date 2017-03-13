@@ -2,6 +2,7 @@ function del(classroomId, teacherId) {
 	var cnf = confirm("Segur que vols eliminar la tutoria de " + findName(teacherId) + " a " + findClassroom(classroomId) + "?");
 	if (cnf) {
 		var dataToSend = "classroomId=" + classroomId + "&teacherId=" + teacherId + "&function=removeTutoring";
+		console.log(dataToSend);
 		send(dataToSend, AJAXCONTROLLER, deleted);
 	}
 }
@@ -48,4 +49,18 @@ function findClassroom(classroomId) {
 	var len = html.indexOf('<', pos) - pos;
 	var name = html.substr(pos, len);
 	return name;
+}
+
+function importTutoringsFromLastTrimestre() {
+	var dataToSend = "function=importTutoringsFromLastTrimestre";
+	send(dataToSend, AJAXCONTROLLER, imported);
+}
+
+function imported(msg) {
+	if (msg != false) {
+		alert("S'han importat " + msg + " tutories");
+		location.reload();
+	} else {
+		showError("Error a l'importar les tutories del trimestre anterior");
+	}
 }

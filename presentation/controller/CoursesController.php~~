@@ -1,0 +1,50 @@
+<?php
+namespace tfg\presentation\controller;
+
+use tfg\presentation\model\SchoolViewModel;
+use tfg\service\SchoolService;
+
+class CoursesController extends Controller
+{
+	public function getCourses()
+	{
+		$model = new SchoolViewModel();
+		return $model->listAllCourses();
+	}
+	
+	public function updateCourse()
+	{
+		$courseId = $_POST[COURSE_ID];
+		$year = $_POST[YEAR];
+		$isActive = $_POST[ISACTIVE];
+		$model = new SchoolService();
+		return $model->updateCourse($courseId, $year, $isActive);
+	}
+	
+	public function deleteCourse()
+	{
+		$courseId = $_POST[COURSE_ID];
+		$model = new SchoolService();
+		return $model->deleteCourse($courseId);
+	}
+	
+	public function createCourse()
+	{
+		$year = $_POST[YEAR];
+		$model = new SchoolService();
+		return $model->createCourse($year);
+	}
+	
+	public function getActiveTrimestre()
+	{
+		$model = new SchoolService();
+		return $model->getSchool()->getActiveTrimestre()->getNumber();
+	}
+	
+	public function setActiveTrimestre()
+	{
+		$trimestreId = $_POST[TRIMESTRE_ID];
+		$model = new SchoolService();
+		return $model->setActiveTrimestre($trimestreId);
+	}
+}

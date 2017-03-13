@@ -1,6 +1,9 @@
 <?php
 namespace tfg;
 
+use infojor\presentation\controller\TeachersController;
+use infojor\presentation\model\HeaderViewModel;
+
 session_start();
 
 require_once 'init.php';
@@ -15,13 +18,13 @@ if (isset($_SESSION[USER_ID])) {
 <!doctype html>
 <?php
 
-$controller = new \tfg\presentation\controller\TeachersController();
+$controller = new TeachersController();
 if (!$controller->isAdmin()) {
 	echo "Pàgina visible només pels administradors";
 	exit();
 }
 
-$header = new \tfg\presentation\model\HeaderViewModel();
+$header = new HeaderViewModel();
 $data['header'] = $header->output();
 
 $data['teachers'] = $controller->getTeachers();

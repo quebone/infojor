@@ -1,0 +1,78 @@
+<?php
+namespace tfg\service\Entities;
+
+/**
+ * @Entity @Table(name="cycles")
+ **/
+class Cycle {
+	/** @Id @Column(type="integer") @GeneratedValue **/
+	private $id;
+	/** @Column(type="string", length=20) **/
+	private $name;
+	/**
+	 * @OneToMany(targetEntity="Level", mappedBy="id")
+	 */
+	private $levels;
+	/**
+	 * @ManyToOne(targetEntity="Degree", inversedBy="cycles")
+	 * @JoinColumn(name="degree_id", referencedColumnName="id")
+	 */
+	private $degree;
+	/**
+	 * @ManyToMany(targetEntity="Dimension", inversedBy="cycles")
+	 * @JoinTable(name="dimensionrelatestocycles",
+			inverseJoinColumns={@JoinColumn(name="dimension_id", referencedColumnName="id")}
+	 )
+	 */
+	private $dimensions;
+	
+	public function __construct() {
+		$this->levels = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->dimensions = new \Doctrine\Common\Collections\ArrayCollection();
+	}
+
+	public function getId() {
+		return $this->id;
+	}
+
+	public function getName() {
+		return $this->name;
+	}
+
+	public function setName($name) {
+		$this->name = $name;
+	}
+	
+	public function getLevels() {
+		return $this->levels;
+	}
+	
+	public function setLevels($levels) {
+		$this->levels = $levels;
+	}
+	
+	public function getDegree():Degree {
+		return $this->degree;
+	}
+	
+	public function getScopes() {
+		return $this->degree->getScopes();
+	}
+	
+	public function getDimensions() {
+		return $this->dimensions;
+	}
+	
+	public function addDimension(Dimension $dimension) {
+		if ($this->dimensions->contains($dimension)) return;
+		$this->dimensions->add($dimension);
+		$dimension->addCycle($this);
+	}
+	
+	public function removeDimension(Dimension $dimension) {
+		if (!$this->dimensions->contains($dimension)) return;
+		$this->dimensions->removeElement($dimension);
+		$dimension->removeCycle($this);
+	}
+}
+

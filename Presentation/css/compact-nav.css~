@@ -1,0 +1,57 @@
+nav.compact {
+	position: absolute;
+	float: right;
+	top: 35px;
+	right: 15px;
+	font-size: 100%;
+	color: white;
+	background-color: transparent;
+}
+
+nav.compact .menu-selector {
+	width: 20px;
+	height: 20px;
+	background-image: url("../images/menu/menu-off.png");
+	border: 1px solid #eee;
+}
+
+nav.compact ul, nav.compact li {
+	display: block;
+}
+
+nav.compact ul {
+	position: absolute;
+/*	min-width: 200px;*/
+	right:0px;
+	top: 8px;
+	padding: 0;
+	background-color: darkslategrey;
+	display: none;
+}
+
+nav.compact li {
+	cursor: pointer;
+	padding: 5px 10px;
+	white-space: nowrap;
+}
+
+nav.compact li a {
+	color: white;
+}
+
+nav.compact li a:hover {
+	color: white;
+}
+
+nav.compact li.highlighted {
+	background-color: slategrey;
+}
+
+nav.compact ul li ul {
+	position: relative;
+	padding: 0px;
+}
+
+nav.compact ul li ul li {
+	display: block;
+}

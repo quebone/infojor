@@ -1,8 +1,8 @@
 <?php
-namespace tfg\presentation\model;
+namespace infojor\presentation\model;
 
-use tfg\service\Entities\Teacher;
-use tfg\service\UserService;
+use infojor\service\Entities\Teacher;
+use infojor\service\UserService;
 
 final class UserViewModel extends MainViewModel {
 
@@ -36,7 +36,8 @@ final class UserViewModel extends MainViewModel {
 	 * Retorna l'id d'usuari si aquest existeix, 0 en cas contrari
 	 */
 	public function login($username, $password) {
-		$teacher = $this->model->login($username, $password);
+		$model = new UserService();
+		$teacher = $model->login($username, $password);
 		if ($teacher != null && $teacher->getActive() == true) {
 			$id = $teacher->getId();
 			session_write_close();
@@ -52,8 +53,9 @@ final class UserViewModel extends MainViewModel {
 		$data = array();
 		if ($id == null) {
 			$teacher = new Teacher("", "");
+			$teacher->setActive(true);
 		} else {
-			$teacher = $this->model->getTeacher($id);
+			$teacher = $this->dao->getById("Teacher", $id);
 		}
 		$data['id'] = $id;
 		$data['name'] = $teacher->getName();
@@ -69,8 +71,7 @@ final class UserViewModel extends MainViewModel {
 	
 	public function getStudent($id)
 	{
-		$model = new \tfg\service\UserService();
-		$student = $model->getStudent($id);
+		$student = $this->dao->getById("Student", $id);
 		$this->data->name = $student->getName();
 		$this->data->surnames = $student->getSurnames();
 		return $this->data;
@@ -125,8 +126,7 @@ final class UserViewModel extends MainViewModel {
 	 */
 	public function getThumbnail($personId)
 	{
-		$model = new \tfg\service\UserService();
-		$person = $model->getPerson($personId);
+		$person = $this->dao->getById("Person", $personId);
 		$thumbnail = $person->getThumbnail();
 		$fileName = THUMBNAILDIR . $thumbnail;
 		$type = pathinfo($fileName, PATHINFO_EXTENSION);
@@ -144,8 +144,7 @@ final class UserViewModel extends MainViewModel {
 	public function listAllTeachers():array
 	{
 		$data = array();
-		$model = new UserService();
-		$teachers = $model->getAllTeachers();
+		$teachers = $this->dao->getByFilter("Teacher", array(), ['surnames'=>'ASC']);
 		foreach ($teachers as $teacher) {
 			array_push($data, $this->getTeacher($teacher->getId()));
 		}
@@ -164,17 +163,5 @@ final class UserViewModel extends MainViewModel {
 			}
 		}
 		return $teachers;
-	}
-	
-	public function importStudentsFromFile() {
-		//TODO
-	}
-
-	public function importStudentsFromLastCourse() {
-		//TODO
-	}
-
-	public function importStudentsFromLastTrimestre() {
-		//TODO
 	}
 }

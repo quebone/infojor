@@ -1,5 +1,5 @@
 <?php
-namespace tfg\service\Entities;
+namespace infojor\service\Entities;
 
 /**
  * @Entity @Table(name="school")
@@ -69,13 +69,13 @@ class School
 		$this->activeTrimestre = $activeTrimestre;
 	}
 	
-	public function getClassroomStudents(Classroom $classroom, Course $course, Trimestre $trimestre)
+	public function getClassroomStudents(Classroom $classroom, Course $course, Trimestre $trimestre=null)
 	{
 		$students = array();
 		foreach ($this->persons as $person) {
 			if ($person instanceof Student) {
 				foreach ($person->getEnrollments($course) as $enrollment) {
-					if ($enrollment->getClassroom() == $classroom && $enrollment->getCourse() == $course && $enrollment->getTrimestre() == $trimestre) {
+					if ($enrollment->getClassroom() == $classroom && $enrollment->getCourse() == $course) {
 						array_push($students, $person);
 					}
 				}

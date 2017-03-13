@@ -1,5 +1,5 @@
 <?php
-namespace tfg\service\Entities;
+namespace infojor\service\Entities;
 
 /**
  * @Entity @Table(name="globalevaluations")
@@ -11,6 +11,11 @@ class GlobalEvaluation extends Evaluation
 	 * @JoinColumn(name="student_id", referencedColumnName="id")
 	 */
 	private $student;
+	/**
+	 * @ManyToOne(targetEntity="Teacher", inversedBy="globalEvaluations")
+	 * @JoinColumn(name="teacher_id", referencedColumnName="id")
+	 */
+	private $teacher;
 	/**
 	 * @ManyToOne(targetEntity="Course", inversedBy="globalEvaluations")
 	 * @JoinColumn(name="course_id", referencedColumnName="id")
@@ -39,11 +44,13 @@ class GlobalEvaluation extends Evaluation
 	
 	public function __construct(
 			Student $student,
+			Teacher $teacher,
 			Course $course,
 			Trimestre $trimestre,
 			Area $area,
 			GlobalEvaluationDescription $ged) {
 		$this->student = $student;
+		$this->teacher = $teacher;
 		$this->course = $course;
 		$this->trimestre = $trimestre;
 		$this->area = $area;
@@ -54,15 +61,23 @@ class GlobalEvaluation extends Evaluation
 		return $this->student;
 	}
 	
-	public function setStudent($student) {
+	public function setStudent(Student $student) {
 		$this->student = $student;
+	}
+	
+	public function getTeacher() {
+		return $this->teacher;
+	}
+	
+	public function setTeacher(Teacher $teacher) {
+		$this->teacher = $teacher;
 	}
 	
 	public function getCourse() {
 		return $this->course;
 	}
 	
-	public function setCourse($course) {
+	public function setCourse(Course $course) {
 		$this->course = $course;
 	}
 	
@@ -70,7 +85,7 @@ class GlobalEvaluation extends Evaluation
 		return $this->trimestre;
 	}
 	
-	public function setTrimestre($trimestre) {
+	public function setTrimestre(Trimestre $trimestre) {
 		$this->trimestre = $trimestre;
 	}
 	
@@ -78,7 +93,7 @@ class GlobalEvaluation extends Evaluation
 		return $this->area;
 	}
 	
-	public function setArea($area) {
+	public function setArea(Area $area) {
 		$this->area = $area;
 	}
 	
@@ -86,7 +101,7 @@ class GlobalEvaluation extends Evaluation
 		return $this->scope;
 	}
 	
-	public function setScope($scope) {
+	public function setScope(Scope $scope) {
 		$this->scope = $scope;
 	}
 	
@@ -94,8 +109,8 @@ class GlobalEvaluation extends Evaluation
 		return $this->globalEvaluationDescription;
 	}
 	
-	public function setGlobalEvaluationDescription($globalevaluationdescription) {
-		$this->globalEvaluationDescription = $globalevaluationdescription;
+	public function setGlobalEvaluationDescription(GlobalEvaluationDescription $ged) {
+		$this->globalEvaluationDescription = $ged;
 	}
 	
 	public function getMark() {

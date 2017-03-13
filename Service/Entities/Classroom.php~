@@ -1,0 +1,35 @@
+<?php
+namespace Infojor\Service\Entities;
+
+/**
+ * @Entity @Table(name="classrooms")
+ **/
+class Classroom
+{
+	/** @Id @Column(type="integer") @GeneratedValue **/
+	private $id;
+	/** @Column(type="string", length=10) **/
+	private $name;
+
+	/**
+	 * @ManyToMany(targetEntity="Teacher", mappedBy="classrooms")
+	 */
+	private $teachers;
+	
+	public function __construct() {
+	  $this->teachers = new \Doctrine\Common\Collections\ArrayCollection();
+	}
+
+	public function getId() {
+		return $this->id;
+	}
+
+	public function getName() {
+		return $this->name;
+	}
+	
+	public function setName($name) {
+		$this->name = $name;
+	}
+}
+	

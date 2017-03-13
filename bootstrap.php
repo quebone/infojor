@@ -1,6 +1,6 @@
 <?php
 // bootstrap.php
-namespace tfg;
+namespace infojor;
 
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
@@ -11,12 +11,12 @@ if (!defined('ENTITIESDIR')) define('ENTITIESDIR', BASEDIR . 'service/entities/'
 require_once BASEDIR.'vendor/autoload.php';
 
 $paths = array(ENTITIESDIR);
-$isDevMode = true;
+$isDevMode = false;
 $dbParams = unserialize(file_get_contents(BASEDIR.'config/dbparams.config'));
 
 $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
 $entityManager = EntityManager::create($dbParams, $config);
 
-\tfg\utils\Utils::setEm($entityManager);
+\infojor\utils\Utils::setEm($entityManager);
 
 $config->setAutoGenerateProxyClasses(\Doctrine\Common\Proxy\AbstractProxyFactory::AUTOGENERATE_NEVER);

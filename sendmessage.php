@@ -15,10 +15,10 @@ if (isset($_SESSION[USER_ID])) {
 <!doctype html>
 <?php
 
-$header = new \tfg\presentation\model\HeaderViewModel();
+$header = new \infojor\presentation\model\HeaderViewModel();
 $data['header'] = $header->output();
 
-$controller = new \tfg\presentation\controller\SendmessageController();
+$controller = new \infojor\presentation\controller\SendmessageController();
 // $data['teacher'] = $controller->getUserData();
 
 $template = new \Transphporm\Builder(TPLDIR.'sendmessage.xml', TPLDIR.'sendmessage.tss');

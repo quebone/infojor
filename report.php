@@ -1,7 +1,7 @@
 <?php
 namespace tfg;
 
-use tfg\presentation\view\PDFEngine;
+use infojor\presentation\view\PDFEngine;
 
 session_start();
 
@@ -16,11 +16,11 @@ if (isset($_SESSION[USER_ID])) {
  	header('Location: login.php');
 }
 
-$studentId = $_SESSION['studentId'];
-$classroomId = $_SESSION['classroomId'];
+$studentId = $_SESSION[STUDENT_ID];
+$classroomId = $_SESSION[CLASSROOM_ID];
 
 $config->setAutoGenerateProxyClasses(\Doctrine\Common\Proxy\AbstractProxyFactory::AUTOGENERATE_NEVER);
-$model = new \tfg\presentation\model\ReportViewModel($studentId, $classroomId);
+$model = new \infojor\presentation\model\ReportViewModel($studentId, $classroomId);
 $data = $model->getData();
 $tplEngine = new PDFEngine($data);
 $tplEngine->Output('I');

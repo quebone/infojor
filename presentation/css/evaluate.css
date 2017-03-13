@@ -177,3 +177,19 @@ img#thumbnail {
 	background-image: url('../images/next.png');
 }
 
+table th {
+	font-size: small;
+	font-weight: normal;
+	text-align: center;
+	color: grey;
+}
+
+.mark {
+	text-align: center;
+/*	font-size: small;*/
+	font-weight: bold;
+}
+
+span.mark {
+	padding-left: 15px;
+}

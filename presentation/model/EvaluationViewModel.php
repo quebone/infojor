@@ -1,5 +1,8 @@
 <?php
-namespace tfg\presentation\model;
+namespace infojor\presentation\model;
+
+use infojor\service\DAO;
+use infojor\service\EvaluationService;
 
 final class EvaluationViewModel extends MainViewModel {
 	
@@ -9,8 +12,7 @@ final class EvaluationViewModel extends MainViewModel {
 
 	private function getPartialEvaluationDescriptions():array
 	{
-		$model = new \tfg\service\EvaluationService();
-		$peds = $model->getPartialEvaluationDescriptions();
+		$peds = $this->dao->getByFilter("PartialEvaluationDescription");
 		foreach ($peds as $ped) {
 			$id = $ped->getId();
 			$data[$id]['id'] = $ped->getId();
@@ -22,8 +24,7 @@ final class EvaluationViewModel extends MainViewModel {
 
 	private function getGlobalEvaluationDescriptions():array
 	{
-		$model = new \tfg\service\EvaluationService();
-		$geds = $model->getGlobalEvaluationDescriptions();
+		$geds = $this->dao->getByFilter("GlobalEvaluationDescription");
 		foreach ($geds as $ged) {
 			$id = $ged->getId();
 			$data[$id]['id'] = $ged->getId();
@@ -33,25 +34,25 @@ final class EvaluationViewModel extends MainViewModel {
 		return $data;
 	}
 
-	private function getDimensionEvaluation($studentId, $dimensionId)
+	private function getDimensionEvaluation($studentId, $dimensionId, $courseId=null, $trimestreId=null)
 	{
-		$model = new \tfg\service\EvaluationService();
-		$pe = $model->getDimensionEvaluation($studentId, $dimensionId);
+		$model = new EvaluationService();
+		$pe = $model->getDimensionEvaluation($studentId, $dimensionId, $courseId, $trimestreId);
 		if ($pe == null) return null;
 		return $pe->getMark();
 	}
 	
-	private function getAreaEvaluation($studentId, $areaId)
+	private function getAreaEvaluation($studentId, $areaId, $courseId=null, $trimestreId=null)
 	{
-		$model = new \tfg\service\EvaluationService();
-		$ge = $model->getAreaEvaluation($studentId, $areaId);
+		$model = new EvaluationService();
+		$ge = $model->getAreaEvaluation($studentId, $areaId, $courseId, $trimestreId);
 		if ($ge == null) return null;
 		return $ge->getMark();
 	}
 	
 	private function getScopeEvaluation($studentId, $scopeId)
 	{
-		$model = new \tfg\service\EvaluationService();
+		$model = new EvaluationService();
 		$ge = $model->getScopeEvaluation($studentId, $scopeId);
 		if ($ge == null) return null;
 		return $ge->getMark();
@@ -64,23 +65,30 @@ final class EvaluationViewModel extends MainViewModel {
 	public function getScopesData($studentId, $classroom, $areaId)
 	{
 		$cycle = $classroom->getLevel()->getCycle();
-		$schoolViewModel = new SchoolViewModel();
-		$scopes = $schoolViewModel->getScopes($cycle->getDegree()->getId());
+		$schoolModel = new SchoolViewModel();
+		$scopes = $schoolModel->getScopes($cycle->getDegree()->getId());
 		$data = $scopes;
+		$dao = new DAO();
+		$ac = $dao->getActiveCourse();
+		$at = $dao->getActiveTrimestre();
 		foreach ($scopes as $scope) {
-			$areas = $schoolViewModel->getScopeAreas($scope['id'], $areaId);
+			$areas = $schoolModel->getScopeAreas($scope['id'], $areaId);
 			$data[$scope['id']]['areas'] = $areas;
 			foreach ($areas as $area) {
-				$dimensions = $schoolViewModel->getAreaDimensions($area['id'], $cycle);
+				$dimensions = $schoolModel->getAreaDimensions($area['id'], $cycle);
 				$data[$scope['id']]['areas'][$area['id']]['dimensions'] = $dimensions;
 				if ($dimensions != null) {
 					foreach ($dimensions as $dimension) {
-						$pe = $this->getDimensionEvaluation($studentId, $dimension['id']);
-						$data[$scope['id']]['areas'][$area['id']]['dimensions'][$dimension['id']]['mark'] = $pe;
+						for ($i = 1; $i <= $at->getNumber(); $i++) {
+							$pe = $this->getDimensionEvaluation($studentId, $dimension['id'], $ac->getId(), $i);
+							$data[$scope['id']]['areas'][$area['id']]['dimensions'][$dimension['id']]['pes'][$i]['mark'] = $pe;
+						}
 					}
 				}
-				$ge = $this->getAreaEvaluation($studentId, $area['id']);
-				$data[$scope['id']]['areas'][$area['id']]['mark'] = $ge;
+				for ($i = 1; $i <= $at->getNumber(); $i++) {
+					$ge = $this->getAreaEvaluation($studentId, $area['id'], $ac->getId(), $i);
+					$data[$scope['id']]['areas'][$area['id']]['ges'][$i]['mark'] = $ge;
+				}
 			}
 			// 				$ge = $this->getScopeEvaluation($studentId, $scope['id']);
 			// 				$evaluation['scopes'][$scope['id']]['ge'] = $ge;
@@ -99,18 +107,18 @@ final class EvaluationViewModel extends MainViewModel {
 	 */
 	public function getEvaluations($studentId, $areaId, $reinforceId, $includeSpecialities):array
 	{
-		$userModel = new \tfg\service\UserService($this->entityManager);
-		$schoolModel = new \tfg\service\SchoolService($this->entityManager);
-		$schoolViewModel = new SchoolViewModel(null, $this->entityManager);
-		$course = $schoolModel->getActiveCourse();
-		$trimestre = $schoolModel->getActiveTrimestre();
-		$student = $userModel->getStudent($studentId);
+		$schoolModel = new SchoolViewModel();
+		$course = $this->dao->getActiveCourse();
+		$trimestre = $this->dao->getActiveTrimestre();
+		$student = $this->dao->getById("Student", $studentId);
 		$classroom = $student->getClassroom($course, $trimestre);
 		$degree = $classroom->getLevel()->getCycle()->getDegree();
+		$evaluation['trimestre'] = $trimestre->getNumber();
 		$evaluation['peds'] = $this->getPartialEvaluationDescriptions();
 		$evaluation['geds'] = $this->getGlobalEvaluationDescriptions();
-		$evaluation['classroom'] = $schoolViewModel->getClassroom($classroom->getId());
+		$evaluation['classroom'] = $schoolModel->getClassroom($classroom->getId());
 		$evaluation['student']['name'] = $student->getName() . " " . $student->getSurnames();
+		$evaluation['previousTrimestres'] = $schoolModel->getPreviousTrimestres(); 
 		
 		//les qualificacions de reforç no han de sortir al formulari general d'entrada
 		if ($reinforceId == null) {
@@ -121,8 +129,8 @@ final class EvaluationViewModel extends MainViewModel {
 
 		//les qualificacions de reforç surten a part de les generals
 		} else {
-			$reinforceClassroom = $schoolModel->getReinforceClassroom($reinforceId);
-			$evaluation['reinforce'] = $schoolViewModel->getReinforceClassroom($reinforceId);
+			$reinforceClassroom = $this->dao->getById("ReinforceClassroom", $reinforceId);
+			$evaluation['reinforce'] = $schoolModel->getReinforceClassroom($reinforceId);
 			$observation = $student->getCourseObservation($course, $trimestre, $reinforceClassroom);
 			if ($observation == null) {
 				$evaluation['reinforce']['observation']['id'] = null;

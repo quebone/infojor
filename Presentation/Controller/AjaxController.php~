@@ -1,0 +1,41 @@
+<?php
+namespace Infojor\Presentation\Controller;
+
+use Infojor\Presentation\Model\UserViewModel;
+use Infojor\Service\UserService;
+
+define('AJAX', true);
+
+if (!defined('REQUIRED')) {
+	require_once '../../service/MainService.php';
+	require_once '../../service/SchoolService.php';
+	require_once '../../service/UserService.php';
+	require_once '../../service/EvaluationService.php';
+	require_once '../../presentation/model/ViewModel.php';
+	require_once '../../presentation/model/SchoolViewModel.php';
+	require_once '../../presentation/model/UserViewModel.php';
+	require_once '../../presentation/model/EvaluationViewModel.php';
+}
+
+if (isset($_POST['function'])) {
+	$ac = new AjaxController();
+	$ac->loadFunction($_POST['function']);
+}
+
+class AjaxController
+{
+	private $viewModel;
+	private $model;
+		
+	function __construct() {
+		// creates the model and passes it to the viewmodel
+		require_once '../../bootstrap.php';
+		$this->model = new UserService($entityManager);
+		$this->viewModel = new UserViewModel($this->model);
+	}
+
+	// loads a function from a class
+	public function loadFunction($fName) {
+		echo $this->viewModel->{$fName}(1);
+	}
+}

@@ -1,9 +1,9 @@
 <?php
-namespace tfg\presentation\controller;
+namespace infojor\presentation\controller;
 
-use tfg\presentation\model\SchoolViewModel;
-use tfg\service\UserService;
-use tfg\presentation\model\UserViewModel;
+use infojor\presentation\model\SchoolViewModel;
+use infojor\service\UserService;
+use infojor\presentation\model\UserViewModel;
 
 class SpecialitiesController extends Controller
 {
@@ -39,5 +39,11 @@ class SpecialitiesController extends Controller
 		$teacherId = $_POST[TEACHER_ID];
 		$model = new UserService();
 		return $model->addSpeciality($teacherId, $areaId);
+	}
+
+	public function importSpecialitiesFromLastCourse()
+	{
+		$model = new UserService();
+		return $model->importSpecialitiesFromLastCourse();
 	}
 }

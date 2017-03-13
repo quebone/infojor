@@ -1,11 +1,11 @@
 <?php
-namespace tfg\presentation\controller;
+namespace infojor\presentation\controller;
 
-use tfg\presentation\model\SchoolViewModel;
-use tfg\presentation\model\UserViewModel;
-use tfg\presentation\model\EvaluationViewModel;
-use tfg\service\EvaluationService;
-use tfg\presentation\view\TplEngine;
+use infojor\presentation\model\SchoolViewModel;
+use infojor\presentation\model\UserViewModel;
+use infojor\presentation\model\EvaluationViewModel;
+use infojor\service\EvaluationService;
+use infojor\presentation\view\TplEngine;
 
 class EvaluateController extends Controller
 {
@@ -55,28 +55,34 @@ class EvaluateController extends Controller
 	
 	public function setPartialEvaluation()
 	{
+		if (session_status() != PHP_SESSION_ACTIVE) session_start();
+		$teacherId = $_SESSION[USER_ID];
 		$studentId = $_POST[STUDENT_ID];
 		$dimensionId = $_POST[DIMENSION_ID];
 		$markId = $_POST[MARK_ID];
 		$model = new EvaluationService();
-		return $model->setPartialEvaluation($studentId, $dimensionId, $markId);
+		return $model->setPartialEvaluation($teacherId, $studentId, $dimensionId, $markId);
 	}
 	
 	public function setGlobalEvaluation()
 	{
+		if (session_status() != PHP_SESSION_ACTIVE) session_start();
+		$teacherId = $_SESSION[USER_ID];
 		$studentId = $_POST[STUDENT_ID];
 		$areaId = $_POST[AREA_ID];
 		$markId = $_POST[MARK_ID];
 		$model = new EvaluationService();
-		return $model->setGlobalEvaluation($studentId, $areaId, $markId);
+		return $model->setGlobalEvaluation($teacherId, $studentId, $areaId, $markId);
 	}
 	
 	public function setObservation()
 	{
+		if (session_status() != PHP_SESSION_ACTIVE) session_start();
+		$teacherId = $_SESSION[USER_ID];
 		$studentId = $_POST[STUDENT_ID];
 		$text = $_POST[OBSERVATION];
 		$reinforceId = $_POST[REINFORCE_ID];
 		$model = new EvaluationService();
-		return $model->setObservation($studentId, $text, $reinforceId);
+		return $model->setObservation($teacherId, $studentId, $text, $reinforceId);
 	}
 }

@@ -1,38 +1,22 @@
 <?php
-namespace tfg\service;
+namespace infojor\service;
 
-use tfg\service\Entities\Teacher;
-use tfg\service\Entities\Student;
-use tfg\service\Entities\Log;
-use tfg\service\Entities\Enrollment;
-use tfg\service\Entities\Tutoring;
-use tfg\service\Entities\Speciality;
-use tfg\service\Entities\Reinforcing;
+use infojor\service\Entities\Teacher;
+use infojor\service\Entities\Student;
+use infojor\service\Entities\Log;
+use infojor\service\Entities\Enrollment;
+use infojor\service\Entities\Tutoring;
+use infojor\service\Entities\Speciality;
+use infojor\service\Entities\Reinforcing;
+use infojor\service\DAO;
+use infojor\service\Entities\Course;
+use infojor\service\Entities\Trimestre;
+use infojor\service\Entities\Classroom;
 
 final class UserService extends MainService
 {
 	public function __construct() {
 		parent::__construct();
-	}
-	
-	public function getPerson($id)
-	{
-		return $this->entityManager->find('tfg\\service\\Entities\\Person', $id);
-	}
-	
-	public function getTeacher($id):Teacher
-	{
-		return $this->entityManager->find('tfg\\service\\Entities\\Teacher', $id);
-	}
-	
-	public function getAllTeachers():array
-	{
-		return $this->entityManager->getRepository('tfg\\service\\Entities\\Teacher')->findBy([], ['surnames' => 'ASC']);
-	}
-	
-	public function getStudent($id):Student
-	{
-		return $this->entityManager->find('tfg\\service\\Entities\\Student', $id);
 	}
 	
 	/**
@@ -41,22 +25,22 @@ final class UserService extends MainService
 	 */
 	public function login($username, $password)
 	{
-		$teacher = $this->entityManager->getRepository('tfg\\service\\Entities\\Teacher')->findOneBy(array(
-			'username'=>$username,
-			'password'=>sha1($password),
-			));
+		$teachers = $this->dao->getByFilter("Teacher");
+		foreach ($teachers as $teacher) {
+			$found = !strcmp($username, $teacher->getUsername()) && !strcmp($password, $teacher->getPassword());
+			if ($found) break;
+		}
 		//creates a new log
 		$date = new \DateTime();
-		$logged = $teacher != null;
-		$log = new Log($username, $date, $logged);
-		$this->entityManager->persist($log);
-		$this->entityManager->flush($log);
-		return $teacher;
+		$log = new Log($username, $date, $found);
+		$this->dao->persist($log);
+		$this->dao->flush();
+		return $found ? $teacher : null;
 	}
 	
 	public function isAdmin($id):bool
 	{
-		$teacher = $this->getTeacher($id);
+		$teacher = $this->dao->getById("Teacher", $id);
 		return $teacher->isAdmin();
 	}
 	
@@ -65,8 +49,8 @@ final class UserService extends MainService
 	 */
 	public function getCurrentTutorings($teacherId):array
 	{
-		$teacher = $this->getTeacher($teacherId);
-		return $teacher->getCurrentTutorings($this->getActiveCourse(), $this->getActiveTrimestre());
+		$teacher = $this->dao->getById("Teacher", $teacherId);
+		return $teacher->getCurrentTutorings($this->dao->getActiveCourse(), $this->dao->getActiveTrimestre());
 	}
 
 	/**
@@ -74,8 +58,8 @@ final class UserService extends MainService
 	 */
 	public function getCurrentSpecialities($teacherId):array
 	{
-		$teacher = $this->getTeacher($teacherId);
-		return $teacher->getCurrentSpecialities($this->getActiveCourse(), $this->getActiveTrimestre());
+		$teacher = $this->dao->getById("Teacher", $teacherId);
+		return $teacher->getCurrentSpecialities($this->dao->getActiveCourse(), $this->dao->getActiveTrimestre());
 	}
 
 	/**
@@ -83,8 +67,8 @@ final class UserService extends MainService
 	 */
 	public function getCurrentReinforcings($teacherId):array
 	{
-		$teacher = $this->getTeacher($teacherId);
-		return $teacher->getCurrentReinforcings($this->getActiveCourse(), $this->getActiveTrimestre());
+		$teacher = $this->dao->getById("Teacher", $teacherId);
+		return $teacher->getCurrentReinforcings($this->dao->getActiveCourse(), $this->dao->getActiveTrimestre());
 	}
 	
 	/**
@@ -92,7 +76,7 @@ final class UserService extends MainService
 	 */
 	public function getMenuItems($teacherId):array
 	{
-		$teacher = $this->getTeacher($teacherId);
+		$teacher = $this->dao->getById("Teacher", $teacherId);
 		return $teacher->getMenuItems();
 	}
 	
@@ -101,9 +85,9 @@ final class UserService extends MainService
 	 */
 	public function restorePassword($teacherId)
 	{
-		$teacher = $this->getTeacher($teacherId);
+		$teacher = $this->dao->getById("Teacher", $teacherId);
 		$teacher->setPassword(sha1(DEFAULTPASSWORD));
-		$this->entityManager->flush($teacher);
+		$this->dao->flush($teacher);
 		return DEFAULTPASSWORD;
 	}
 	
@@ -115,7 +99,7 @@ final class UserService extends MainService
 		if ($teacherId == null) {
 			$teacher = new Teacher($name, $surnames);
 		} else {
-			$teacher = $this->getTeacher($teacherId);
+			$teacher = $this->dao->getById("Teacher", $teacherId);
 		}
 		
 		$teacher->setName($name);
@@ -125,8 +109,8 @@ final class UserService extends MainService
 		$teacher->setUsername($username);
 		$teacher->setAdmin($isAdmin);
 		$teacher->setActive($isActive);
-		if ($teacherId == null) $this->entityManager->persist($teacher);
-		$this->entityManager->flush($teacher);
+		if ($teacherId == null) $this->dao->persist($teacher);
+		$this->dao->flush();
 	}
 	
 	/**
@@ -134,7 +118,7 @@ final class UserService extends MainService
 	 */
 	public function deleteTeacher($teacherId)
 	{
-		$teacher = $this->getTeacher($teacherId);
+		$teacher = $this->dao->getById("Teacher", $teacherId);
 		//comprovem que no hagi entrat cap valoració
 		$tutorings = $teacher->getTutorings();
 		foreach ($tutorings as $tutoring) {
@@ -150,8 +134,8 @@ final class UserService extends MainService
 				}
 			}
 		}
-		$this->entityManager->remove($teacher);
-		$this->entityManager->flush($teacher);
+		$this->dao->remove($teacher);
+		$this->dao->flush();
 		return true;
 	}
 
@@ -160,14 +144,14 @@ final class UserService extends MainService
 	 */
 	public function updatePersonalData($teacherId, $name, $surnames, $email, $phone, $username, $password)
 	{
-		$teacher = $this->getTeacher($teacherId);
+		$teacher = $this->dao->getById("Teacher", $teacherId);
 		$teacher->setName($name);
 		$teacher->setSurnames($surnames);
 		$teacher->setEmail($email);
 		$teacher->setPhone($phone);
 		$teacher->setUsername($username);
-		$teacher->setPassword(sha1($password));
-		$this->entityManager->flush($teacher);
+		if (strlen($password) > 0) $teacher->setPassword($password);
+		$this->dao->flush($teacher);
 	}
 	
 	/**
@@ -175,15 +159,14 @@ final class UserService extends MainService
 	 */
 	public function updateStudent($studentId, $name, $surnames, $classroomId)
 	{
-		$student = $this->getStudent($studentId);
+		$student = $this->dao->getById("Student", $studentId);
 		$student->setName($name);
 		$student->setSurnames($surnames);
 		//update enrollment
-		$schoolModel = new SchoolService();
-		$enrollment = $student->getEnrollment($schoolModel->getActiveCourse(), $schoolModel->getActiveTrimestre());
-		$classroom = $schoolModel->getClassroom($classroomId);
+		$enrollment = $student->getEnrollment($this->dao->getActiveCourse(), $this->dao->getActiveTrimestre());
+		$classroom = $this->dao->getById("Classroom", $classroomId);
 		$enrollment->setClassroom($classroom);
-		$this->entityManager->flush();
+		$this->dao->flush();
 	}
 
 	/**
@@ -191,17 +174,16 @@ final class UserService extends MainService
 	 */
 	public function addStudent($name, $surnames, $classroomId)
 	{
-		$schoolModel = new SchoolService();
 		$student = new Student($name, $surnames);
-		$school = $schoolModel->getSchool();
-		$classroom = $schoolModel->getClassroom($classroomId);
-		$enrollment = new Enrollment($student, $classroom, $schoolModel->getActiveCourse(), $schoolModel->getActiveTrimestre());
+		$school = $this->dao->getSchool();
+		$classroom = $this->dao->getById("Classroom", $classroomId);
+		$enrollment = new Enrollment($student, $classroom, $this->dao->getActiveCourse(), $this->dao->getActiveTrimestre());
 		$student->addEnrollment($enrollment);
 		$student->setSchool($school);
 		$school->addStudent($student);
-		$this->entityManager->persist($enrollment);
-		$this->entityManager->persist($student);
-		$this->entityManager->flush();
+		$this->dao->persist($enrollment);
+		$this->dao->persist($student);
+		$this->dao->flush();
 	}
 
 	/**
@@ -209,23 +191,22 @@ final class UserService extends MainService
 	 */
 	public function deleteStudent($studentId)
 	{
-		$schoolModel = new SchoolService();
-		$ac = $schoolModel->getActiveCourse();
-		$at = $schoolModel->getActiveTrimestre();
-		$school = $schoolModel->getSchool();
-		$student = $this->getStudent($studentId);
+		$ac = $this->dao->getActiveCourse();
+		$at = $this->dao->getActiveTrimestre();
+		$school = $this->dao->getSchool();
+		$student = $this->dao->getById("Student", $studentId);
 		if ($student->getNumEvaluations($ac, $at) > 0) {
 			return false;
 		}
 		if ($student->getNumEvaluations() == 0) {
 			//eliminar estudiant de la base de dades
-			$this->entityManager->remove($student);
+			$this->dao->remove($student);
 		} else {
 			//eliminar estudiant del trimestre
 			$enrollment = $student->getEnrollment($ac, $at);
-			$this->entityManager->remove($enrollment);
+			$this->dao->remove($enrollment);
 		}
-		$this->entityManager->flush();
+		$this->dao->flush();
 		return true;
 	}
 	
@@ -234,16 +215,15 @@ final class UserService extends MainService
 	 */
 	public function addTutoring($teacherId, $classroomId, $courseId=null, $trimestreId=null):bool
 	{
-		$schoolModel = new SchoolService();
-		$teacher = $this->getTeacher($teacherId);
-		$classroom = $schoolModel->getClassroom($classroomId);
-		$course = $courseId ? $schoolModel->getCourse($courseId) : $schoolModel->getActiveCourse();
-		$trimestre = $trimestreId ? $schoolModel->getTrimestre($trimestreId) : $schoolModel->getActiveTrimestre();
-		if (!$schoolModel->getTutoring($classroom, $teacher, $course, $trimestre))
-		{
+		$teacher = $this->dao->getById("Teacher", $teacherId);
+		$classroom = $this->dao->getById("Classroom", $classroomId);
+		$course = $this->getCourse($courseId);
+		$trimestre = $this->getTrimestre($trimestreId);
+		$filter = ['classroom'=>$classroom, 'teacher'=>$teacher, 'course'=>$course, 'trimestre'=>$trimestre];
+		if (!$this->dao->getByFilter("Tutoring", $filter)) {
 			$tutoring = new Tutoring($teacher, $classroom, $course, $trimestre);
-			$this->entityManager->persist($tutoring);
-			$this->entityManager->flush();
+			$this->dao->persist($tutoring);
+			$this->dao->flush();
 			return true;
 		}
 		return false;
@@ -254,18 +234,18 @@ final class UserService extends MainService
 	 */
 	public function removeTutoring($teacherId, $classroomId, $courseId=null, $trimestreId=null):bool
 	{
-		$schoolModel = new SchoolService();
-		$teacher = $this->getTeacher($teacherId);
-		$classroom = $schoolModel->getClassroom($classroomId);
-		$course = $courseId ? $schoolModel->getCourse($courseId) : $schoolModel->getActiveCourse();
-		$trimestre = $trimestreId ? $schoolModel->getTrimestre($trimestreId) : $schoolModel->getActiveTrimestre();
+		$teacher = $this->dao->getById("Teacher", $teacherId);
+		$classroom = $this->dao->getById("Classroom", $classroomId);
+		$course = $this->getCourse($courseId);
+		$trimestre = $this->getTrimestre($trimestreId);
 		$students = $classroom->getStudents($course, $trimestre);
 		foreach ($students as $student) {
 			if ($student->getNumEvaluations($course, $trimestre) > 0) return false;
 		}
-		$tutoring = $schoolModel->getTutoring($classroom, $teacher, $course, $trimestre);
-		$this->entityManager->remove($tutoring);
-		$this->entityManager->flush();
+		$filter = ['classroom'=>$classroom, 'teacher'=>$teacher, 'course'=>$course, 'trimestre'=>$trimestre];
+		$tutoring = $this->dao->getByFilter("Tutoring", $filter)[0];
+		$this->dao->remove($tutoring);
+		$this->dao->flush();
 		return true;
 	}
 
@@ -274,16 +254,15 @@ final class UserService extends MainService
 	 */
 	public function addSpeciality($teacherId, $areaId, $courseId=null, $trimestreId=null)
 	{
-		$schoolModel = new SchoolService();
-		$teacher = $this->getTeacher($teacherId);
-		$area = $schoolModel->getArea($areaId);
-		$course = $courseId ? $schoolModel->getCourse($courseId) : $schoolModel->getActiveCourse();
-		$trimestre = $trimestreId ? $schoolModel->getTrimestre($trimestreId) : $schoolModel->getActiveTrimestre();
-		if (!$schoolModel->getSpeciality($area, $teacher, $course, $trimestre))
-		{
+		$teacher = $this->dao->getById("Teacher", $teacherId);
+		$area = $this->dao->getById("Area", $areaId);
+		$course = $this->getCourse($courseId);
+		$trimestre = $this->getTrimestre($trimestreId);
+		$filter = ['area'=>$area, 'teacher'=>$teacher, 'course'=>$course, 'trimestre'=>$trimestre];
+		if (!$this->dao->getByFilter("Speciality", $filter)) {
 			$speciality = new Speciality($teacher, $area, $course, $trimestre);
-			$this->entityManager->persist($speciality);
-			$this->entityManager->flush();
+			$this->dao->persist($speciality);
+			$this->dao->flush();
 			return true;
 		}
 		return false;
@@ -294,14 +273,14 @@ final class UserService extends MainService
 	 */
 	public function removeSpeciality($teacherId, $areaId, $courseId=null, $trimestreId=null)
 	{
-		$schoolModel = new SchoolService();
-		$teacher = $this->getTeacher($teacherId);
-		$area = $schoolModel->getArea($areaId);
-		$course = $courseId ? $schoolModel->getCourse($courseId) : $schoolModel->getActiveCourse();
-		$trimestre = $trimestreId ? $schoolModel->getTrimestre($trimestreId) : $schoolModel->getActiveTrimestre();
-		$speciality = $schoolModel->getSpeciality($area, $teacher, $course, $trimestre);
-		$this->entityManager->remove($speciality);
-		$this->entityManager->flush();
+		$teacher = $this->dao->getById("Teacher", $teacherId);
+		$area = $this->dao->getById("Area", $areaId);
+		$course = $this->getCourse($courseId);
+		$trimestre = $this->getTrimestre($trimestreId);
+		$filter = ['area'=>$area, 'teacher'=>$teacher, 'course'=>$course, 'trimestre'=>$trimestre];
+		$speciality = $this->dao->getByFilter("Speciality", $filter)[0];
+		$this->dao->remove($speciality);
+		$this->dao->flush();
 		return true;
 	}
 	
@@ -310,16 +289,15 @@ final class UserService extends MainService
 	 */
 	public function addReinforcing($teacherId, $classroomId, $courseId=null, $trimestreId=null):bool
 	{
-		$schoolModel = new SchoolService();
-		$teacher = $this->getTeacher($teacherId);
-		$classroom = $schoolModel->getReinforceClassroom($classroomId);
-		$course = $courseId ? $schoolModel->getCourse($courseId) : $schoolModel->getActiveCourse();
-		$trimestre = $trimestreId ? $schoolModel->getTrimestre($trimestreId) : $schoolModel->getActiveTrimestre();
-		if (!$schoolModel->getReinforcing($classroom, $teacher, $course, $trimestre))
-		{
+		$teacher = $this->dao->getById("Teacher", $teacherId);
+		$classroom = $this->dao->getById("ReinforceClassroom", $classroomId);
+		$course = $this->getCourse($courseId);
+		$trimestre = $this->getTrimestre($trimestreId);
+		$filter = ['reinforceClassroom'=>$classroom, 'teacher'=>$teacher, 'course'=>$course, 'trimestre'=>$trimestre];
+		if (!$this->dao->getByFilter("Reinforcing", $filter)) {
 			$reinforcing = new Reinforcing($teacher, $classroom, $course, $trimestre);
-			$this->entityManager->persist($reinforcing);
-			$this->entityManager->flush();
+			$this->dao->persist($reinforcing);
+			$this->dao->flush();
 			return true;
 		}
 		return false;
@@ -330,47 +308,184 @@ final class UserService extends MainService
 	 */
 	public function removeReinforcing($teacherId, $classroomId, $courseId=null, $trimestreId=null)
 	{
-		$schoolModel = new SchoolService();
-		$teacher = $this->getTeacher($teacherId);
-		$classroom = $schoolModel->getReinforceClassroom($classroomId);
-		$course = $courseId ? $schoolModel->getCourse($courseId) : $schoolModel->getActiveCourse();
-		$trimestre = $trimestreId ? $schoolModel->getTrimestre($trimestreId) : $schoolModel->getActiveTrimestre();
-		$reinforcing = $schoolModel->getReinforcing($classroom, $teacher, $course, $trimestre);
-		$this->entityManager->remove($reinforcing);
-		$this->entityManager->flush();
+		$teacher = $this->dao->getById("Teacher", $teacherId);
+		$classroom = $this->dao->getById("ReinforceClassroom", $classroomId);
+		$course = $this->getCourse($courseId);
+		$trimestre = $this->getTrimestre($trimestreId);
+		$filter = ['reinforceClassroom'=>$classroom, 'teacher'=>$teacher, 'course'=>$course, 'trimestre'=>$trimestre];
+		$reinforcing = $this->dao->getByFilter("Reinforcing", $filter)[0];
+		$this->dao->remove($reinforcing);
+		$this->dao->flush();
 		return true;
 	}
 	
 	/**
-	 * Importa els estudiants d'un arxiu csv
+	 * Importa els estudiants d'un arxiu excel
 	 */
-	public function importStudentsFromFile($file)
+	public function importStudentsFromFile($inputFileName)
 	{
-		//TODO
+		// comprovem que no hi ha qualificacions dels alumnes de P3 al curs actual
+		$ac = $this->dao->getActiveCourse();
+		$at = $this->dao->getActiveTrimestre();
+		$classrooms = [$this->dao->getById("Classroom", 1), $this->dao->getById("Classroom", 2)];
+		$students = array();
+		foreach ($classrooms as $classroom) {
+			$enrollments = $this->dao->getByFilter("Enrollment", ['course'=>$ac, 'classroom'=>$classroom]);
+			foreach ($enrollments as $enrollment) {
+				$students[] = $enrollment->getStudent();
+			}
+		}
+		foreach ($students as $student) {
+			if ($student->getNumEvaluations($ac, $at) > 0) return null;
+		}
+		// carreguem l'arxiu de dades
+		require_once BASEDIR . 'vendor/PHPExcel/Classes/PHPExcel.php';
+		$phpExcel = new \PHPExcel();
+		$inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
+		$objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+		$objReader->setReadDataOnly(true);
+		$objPHPExcel = $objReader->load($inputFileName);
+		$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+		$nameCol = array_search("Nom", $sheetData[1]);
+		$surnamesCol = array_search("Cognoms", $sheetData[1]);
+		$groupCol = array_search("Grup", $sheetData[1]);
+		if (($nameCol & $surnamesCol & $groupCol) == false) return null;
+		unset($sheetData[1]);
+		// eliminem els alumnes actuals de P3
+		foreach ($students as $student) {
+			$this->dao->remove($student);
+		}
+		$this->dao->flush();
+		foreach ($sheetData as $row) {
+			$student = new Student($row[$nameCol], $row[$surnamesCol], $this->dao->getSchool());
+			$classroom = $this->dao->getById("Classroom", ($row[$groupCol] == 'A' ? 1 : 2));
+			$enrollment = new Enrollment($student, $classroom, $this->dao->getActiveCourse(), $this->dao->getActiveTrimestre());
+			$this->dao->persist($student);
+			$this->dao->persist($enrollment);
+		}
+		$this->dao->flush();
+		return count($sheetData);
 	}
 
 	/**
-	 * Matricula els estudiants de l'últim trimestre curs passat al primer trimestre d'aquest curs
-	 * i els assigna la classe d'un nivell superior  
+	 * Matricula els estudiants del curs passat de P3 a 5è a la classe d'un nivell superior  
 	 */
 	public function importStudentsFromLastCourse()
 	{
-		//TODO
+		// comprovem que no hi ha qualificacions al curs actual
+		$ac = $this->dao->getActiveCourse();
+		if ($this->dao->getByFilter("PartialEvaluation", ['course'=>$ac]) || $this->dao->getByFilter("GlobalEvaluation", ['course'=>$ac]))
+			return 0;
+		// comprovem que hi ha algun curs per sota de l'actual
+		$previousCourse = $this->getPreviousCourse($ac);
+		if ($previousCourse == null) return 0;
+		// eliminem les matriculacions actuals d'alumnes de nivell > P3
+		$enrollments = $this->dao->getByFilter("Enrollment", ['course'=>$ac]);
+		foreach ($enrollments as $enrollment) {
+			if ($enrollment->getClassroom()->getLevel()->getId() > 1) $this->dao->remove($enrollment);
+		}
+		$enrollments = $this->dao->getByFilter("Enrollment", ['course'=>$previousCourse]);
+		$at = $this->dao->getActiveTrimestre();
+		$numStudents = 0;
+		foreach ($enrollments as $enrollment) {
+			if ($enrollment->getClassroom()->getLevel()->getId() < MAXLEVEL) {
+				$newClassroom = $this->dao->getById("Classroom", $enrollment->getClassroom()->getId() + 2);
+				$newEnrollment = new Enrollment($enrollment->getStudent(), $newClassroom, $ac, $at);
+				$this->dao->persist($newEnrollment);
+				$numStudents++;
+			}
+		}
+		$this->dao->flush();
+		return $numStudents;
 	}
 	
 	/**
-	 * Matricula els estudiants del trimestre anterior al trimestre actual
+	 * Assigna als mestres les mateixes tutories que al trimestre anterior
 	 */
-	public function importStudentsFromLastTrimestre()
+	public function importTutoringsFromLastCourse()
 	{
-		//TODO
+		$ac = $this->dao->getActiveCourse();
+		$tutorings = $this->getSectionsFromLastCourse("Tutoring", $ac);
+ 		if ($tutorings == null) return false;
+ 		foreach ($tutorings as $tutoring) {
+ 			$newTutoring = new Tutoring($tutoring->getTeacher(), $tutoring->getClassroom(), $ac);
+ 			$this->dao->persist($newTutoring);
+ 		}
+ 		$this->dao->flush();
+ 		return count($tutorings);
+	}
+	
+	/**
+	 * Assigna als mestres les mateixes especialitats que al curs anterior
+	 */
+	public function importSpecialitiesFromLastCourse()
+	{
+		$ac = $this->dao->getActiveCourse();
+		$specialities = $this->getSectionsFromLastCourse("Speciality", $ac);
+		if ($specialities == null) return false;
+		foreach ($specialities as $speciality) {
+			$newSpeciality = new Speciality($speciality->getTeacher(), $speciality->getArea(), $ac);
+			$this->dao->persist($newSpeciality);
+		}
+		$this->dao->flush();
+		return count($specialities);
 	}
 
 	/**
-	 * Assigna als mestres les mateixes tutories, especialitats i classes de reforç que al trimestre anterior
+	 * Assigna als mestres les mateixes classes de reforç que al curs anterior
 	 */
-	public function importTeachersFromLastTrimestre()
+	public function importReinforcingsFromLastTrimestre()
 	{
-		//TODO
+		$ac = $this->dao->getActiveCourse();
+		$reinforcings = $this->getSectionsFromLastCourse("Reinforcing", $ac);
+		if ($reinforcings == null) return false;
+		foreach ($reinforcings as $reinforcing) {
+			$newReinforcing = new Reinforcing($reinforcing->getTeacher(), $reinforcing->getReinforceClassroom(), $ac);
+			$this->dao->persist($newReinforcing);
+		}
+		$this->dao->flush();
+		return count($reinforcings);
+	}
+	
+	private function getSectionsFromLastTrimestre($name, $ac, $at)
+	{
+		if ($this->dao->getByFilter($name, ['course'=>$ac, 'trimestre'=>$at])) return null;
+		$course = ($at->getNumber() == 1 ? $this->getPreviousCourse($ac) : $ac);
+		$trimestre = $this->getPreviousTrimestre($at);
+		// si estem al primer curs, primer trimestre, retorna fals
+		if ($course == null) return null;
+		return $this->dao->getByFilter($name, ['course'=>$course, 'trimestre'=>$trimestre]);
+	}
+	
+	private function getSectionsFromLastCourse($name, $ac)
+	{
+		// comprova si ja hi ha algun tutor entrat
+		if ($this->dao->getByFilter($name, ['course'=>$ac])) return null;
+		$course = $this->getPreviousCourse($ac);
+		// si estem al primer curs, retorna fals
+		if ($course == null) return null;
+		return $this->dao->getByFilter($name, ['course'=>$course]);
+	}
+	
+	private function getPreviousCourse(Course $ac)
+	{
+		$courses = $this->dao->getByFilter("Course", [], ['year'=>'ASC']);
+		for ($i = 0; $i < count($courses); $i++) {
+			if ($courses[$i] == $ac) {
+				return ($i > 0 ? $courses[$i-1] : null);
+			}
+		}
+		return null;
+	}
+	
+	private function getPreviousTrimestre(Trimestre $at)
+	{
+		$trimestres = $this->dao->getByFilter("Trimestre", [], ['number'=>'ASC']);
+		for ($i = 0; $i < count($trimestres); $i++) {
+			if ($trimestres[$i] == $at) {
+				return ($i > 0 ? $trimestres[$i-1] : $trimestres[count($trimestres)-1]);
+			}
+		}
+		return null;
 	}
 }

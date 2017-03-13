@@ -14,9 +14,8 @@
 <main>
 	<div class="wrapper">
 		<label for="classroom-selector" class="form-label">Classe:</label>
-		<select id="classroom-selector" onchange="changeClassroom(this)">
+		<select id="classroom-selector" onchange="changeClassroom()">
 			<option value="1">1rA</option>
-			<option value="2">2nA</option>
 		</select> 
 	</div>
 	<table id="students">
@@ -47,9 +46,14 @@
 		</tr>
 	</table>
 	<div class="form-buttons">
-		<button type="button" class="form-button" onclick="importStudentsFromLastTrimestre()">Importar alumnes del darrer curs/trimestre</button>
+		<button type="button" class="form-button" onclick="importStudentsFromLastCourse()">Importar alumnes del darrer curs</button>
 	</div>
-	<div class="form-buttons"><button type="button" class="form-button" onclick="importStudentsFromFile()">Importar alumnes d'un arxiu</button><input id="file_selector" type="file" name="file" accept=".xls"/></div>
+	<div class="form-buttons">
+		<form id="file-form" action="importStudentsFromFile()" method="POST">
+			<button type="button" class="form-button" onclick="importStudentsFromFile()">Importar alumnes d'un arxiu</button>
+			<input id="file_selector" type="file" name="file" accept=".xls, .xlsx, .odt"/>
+		</form>
+	</div>
   	<div id="error" class="error"></div>
 </main>
   <script src="js/scripts.js"></script>

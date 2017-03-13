@@ -1,7 +1,7 @@
 <?php
 namespace tfg;
 
-use tfg\presentation\controller\TutoringsController;
+use infojor\presentation\controller\TutoringsController;
 
 session_start();
 
@@ -23,7 +23,7 @@ if (!$controller->isAdmin()) {
 	exit();
 }
 
-$header = new \tfg\presentation\model\HeaderViewModel();
+$header = new \infojor\presentation\model\HeaderViewModel();
 $data['header'] = $header->output();
 
 $data['tutorings'] = $controller->listAllTutorings();

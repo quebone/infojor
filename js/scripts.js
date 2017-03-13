@@ -19,6 +19,20 @@ function send(dataToSend, receiver, returnFunction) {
 	xmlhttp.send(dataToSend);
 }
 
+function sendFile(formData, receiver, returnFunction) {
+	formData.append('caller', capitalizeFirstLetter(getCurrentPageName()));
+	var xhr = new XMLHttpRequest();
+	xhr.open('POST', receiver, true);
+	xhr.onload = function () {
+		if (xhr.status === 200) {
+			returnFunction(xhr.responseText);
+		} else {
+			alert('An error occurred!');
+		}
+	}
+	xhr.send(formData);
+}
+
 function capitalizeFirstLetter(string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -113,7 +127,7 @@ function printStudent() {
 	var student = document.getElementsByClassName('selected')[0].id;
 	var pos = student.lastIndexOf('-');
 	var studentId = student.substr(pos + 1);
-	if (student != null) {
+	if (student !== null) {
 		var dataToSend = 'classroomId=&studentId=' + encodeURI(studentId) + '&function=printReport';
 		send(dataToSend, AJAXCONTROLLER, openReport);
 	}

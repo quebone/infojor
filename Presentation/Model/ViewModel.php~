@@ -1,0 +1,24 @@
+<?php
+namespace Infojor\Presentation\ViewModel;
+
+class ViewModel {
+	private $userService;
+	public $data = array();
+
+	public function __construct($userService = null) {
+		$this->userService = $userService;
+		$this->data['title'] = "MVC with controller";
+		$this->data['description'] = "This is a test. Click the link!";
+		$this->data['link'] = "Click me!";
+		$this->data['name'] = "No name";
+		$this->data['surnames'] = "No surnames";
+	}
+	
+	public function getTeacher($id)
+	{
+		$teacher = $this->userService->getTeacher($id);
+		$this->data['name'] = $teacher->getName();
+		$this->data['surnames'] = $teacher->getSurnames();
+		return json_encode($this->data);
+	}		
+}
