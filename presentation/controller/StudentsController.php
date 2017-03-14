@@ -3,7 +3,6 @@ namespace infojor\presentation\controller;
 
 use infojor\presentation\model\SchoolViewModel;
 use infojor\service\UserService;
-use infojor\presentation\model\UserViewModel;
 
 class StudentsController extends Controller
 {

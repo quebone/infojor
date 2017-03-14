@@ -148,7 +148,7 @@ final class SchoolService extends MainService
 		
 		foreach ($teachers as $teacher) {
 			if ($teacher->isAdmin()) {
-// 				$mail->AddAddress($teacher->getEmail(), $teacher->getName() . " " . $teacher->getSurnames());
+				$mail->AddAddress($teacher->getEmail(), $teacher->getName() . " " . $teacher->getSurnames());
 			}
 		}
 		$mail->AddAddress("carles@simi.cat", "Carles Canellas");

@@ -20,6 +20,7 @@ function send(dataToSend, receiver, returnFunction) {
 }
 
 function sendFile(formData, receiver, returnFunction) {
+	formData.append('caller', capitalizeFirstLetter(getCurrentPageName()));
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', receiver, true);
 	xhr.onload = function () {

@@ -177,9 +177,14 @@ img#thumbnail {
 	background-image: url('../images/next.png');
 }
 
+.selector[name=summary-table] {
+	background-image: url('../images/excel.png');
+}
+
 table th {
 	font-size: small;
 	font-weight: normal;
+	text-align: center;
 	color: grey;
 }
 

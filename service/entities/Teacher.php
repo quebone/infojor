@@ -112,33 +112,33 @@ class Teacher extends Person
 		return $this->tutorings;
 	}
 	
-	public function getCurrentTutorings(Course $course, Trimestre $trimestre):array
+	public function getCurrentTutorings(Course $course, Trimestre $trimestre=null):array
 	{
 		$tutorings = array();
 		foreach ($this->tutorings as $tutoring) {
-			if ($tutoring->getCourse() == $course && $tutoring->getTrimestre() == $trimestre) {
+			if ($tutoring->getCourse() == $course) {
 				array_push($tutorings, $tutoring);
 			}
 		}
 		return $tutorings;
 	}
 	
-	public function getCurrentSpecialities(Course $course, Trimestre $trimestre):array
+	public function getCurrentSpecialities(Course $course, Trimestre $trimestre=null):array
 	{
 		$specialities = array();
 		foreach ($this->specialities as $speciality) {
-			if ($speciality->getCourse() == $course && $speciality->getTrimestre() == $trimestre) {
+			if ($speciality->getCourse() == $course) {
 				array_push($specialities, $speciality);
 			}
 		}
 		return $specialities;
 	}
 	
-	public function getCurrentReinforcings(Course $course, Trimestre $trimestre):array
+	public function getCurrentReinforcings(Course $course, Trimestre $trimestre=null):array
 	{
 		$reinforcings = array();
 		foreach ($this->reinforcings as $reinforcing) {
-			if ($reinforcing->getCourse() == $course && $reinforcing->getTrimestre() == $trimestre) {
+			if ($reinforcing->getCourse() == $course) {
 				array_push($reinforcings, $reinforcing);
 			}
 		}

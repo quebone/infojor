@@ -11,6 +11,7 @@ define('MODELDIR', BASEDIR.'service/');
 define('ENTITIESDIR', BASEDIR.MODELDIR.'entities/');
 define('IMAGEDIR', BASEDIR.'images/');
 define('THUMBNAILDIR', IMAGEDIR.'thumbnails/');
+define('FILESDIR', BASEDIR.'files/');
 
 define('DEFAULTCLASSROOMID', 7);
 define('MAXLEVEL', 9);
@@ -45,3 +46,5 @@ define('CYCLE_ID', 'cycleId');
 define('CYCLES', 'cycles');
 define('DESCRIPTION', 'description');
 define('FILENAME', 'file');
+
+define('SUMMARY_CELL_COLORS', ['AE' => 'FFAAFFAA', 'AN' => 'FF9BC2C2', 'AS' => 'FFD4D46A', 'NA' => 'FFD4886A']);

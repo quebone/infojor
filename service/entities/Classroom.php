@@ -65,10 +65,10 @@ class Classroom
 		return $tutors;
 	}
 	
-	public function getStudents(Course $course, Trimestre $trimestre) {
+	public function getStudents(Course $course, Trimestre $trimestre=null) {
 		$students = new \Doctrine\Common\Collections\ArrayCollection();
 		foreach ($this->enrollments as $enrollment) {
-			if ($enrollment->getCourse() == $course && $enrollment->getTrimestre() == $trimestre) {
+			if ($enrollment->getCourse() == $course) {
 				$students->add($enrollment->getStudent());
 			}
 		}

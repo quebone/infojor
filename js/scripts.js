@@ -105,6 +105,10 @@ function listCourses() {
 	window.location.replace('courses.php');
 }
 
+function statistics() {
+	window.location.replace('statistics.php');
+}
+
 // imprimir els informes actuals d'una classe sencera
 function printClassroom() {
 	if (getCurrentPageName() != "evaluate") {
