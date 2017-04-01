@@ -174,8 +174,8 @@ final class UserService extends MainService
 	 */
 	public function addStudent($name, $surnames, $classroomId)
 	{
-		$student = new Student($name, $surnames);
 		$school = $this->dao->getSchool();
+		$student = new Student($name, $surnames, $school);
 		$classroom = $this->dao->getById("Classroom", $classroomId);
 		$enrollment = new Enrollment($student, $classroom, $this->dao->getActiveCourse(), $this->dao->getActiveTrimestre());
 		$student->addEnrollment($enrollment);

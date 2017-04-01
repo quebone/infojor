@@ -1,6 +1,8 @@
 <?php
 namespace infojor\service\Entities;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * @Entity @Table(name="trimestres")
  **/
@@ -18,8 +20,8 @@ class Trimestre
 	private $partialEvaluations;
 	
 	public function __construct() {
-		$this->globalEvaluations = new \Doctrine\Common\Collections\ArrayCollection();
-		$this->partialEvaluations = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->globalEvaluations = new ArrayCollection();
+		$this->partialEvaluations = new ArrayCollection();
 	}
 	
 	public function getNumber()
@@ -30,5 +32,12 @@ class Trimestre
 	public function setNumber($number)
 	{
 		$this->number = $number;
+	}
+	
+	public function toArray()
+	{
+		$data = array();
+		$data['number'] = $this->number;
+		return $data;
 	}
 }

@@ -19,8 +19,7 @@ final class SchoolViewModel extends MainViewModel {
 	
 	public function getActiveTrimestre()
 	{
-		$this->data->trimestre = $this->dao->getActiveTrimestre()->getNumber(); 
-		return $this->data;
+		return $this->dao->getActiveTrimestre()->toArray();
 	}
 	
 	public function getPreviousTrimestres():array
@@ -29,7 +28,7 @@ final class SchoolViewModel extends MainViewModel {
 		$trimestres = $model->getPreviousTrimestres();
 		$data = array();
 		foreach ($trimestres as $trimestre) {
-			array_push($data, array('number'=>$trimestre->getNumber()));
+			array_push($data, $trimestre->toArray());
 		}
 		return $data;
 	}

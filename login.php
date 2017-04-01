@@ -1,5 +1,5 @@
 <?php
-namespace tfg;
+namespace infojor;
 
 use infojor\presentation\model\HeaderViewModel;
 

@@ -104,6 +104,8 @@ final class UserViewModel extends MainViewModel {
 			'name'=>strtolower($section['name']),
 			'locale'=>$section['locale'],
 			'items'=>$this->getCurrentSection($teacherId, $section['name'], $section['contents']));
+		if (!strcmp($section['name'], "tutorings"))
+			$section['excel'] = true;
 		return $section;
 	}
 	

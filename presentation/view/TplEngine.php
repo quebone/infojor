@@ -51,8 +51,12 @@ class TplEngine
 				'<p class="section_name">' . $section['locale'] . '</p>' . "\n";
 			$inner .= '<ul>' . "\n";
 			foreach ($section['items'] as $item) {
-				$inner .= '<li><a onclick="load(' . "'" . $section['name'] . '-' . $item->id . "'" . ')">' .
-						$item->name . '</a></li>';
+				$inner .= "<li>";
+				$inner .= '<a onclick="load(' . "'" . $section['name'] . '-' . $item->id . "'" . ')">' .
+						$item->name . '</a>';
+				if (isset($section['excel']))
+					$inner .= ' <img src="' . VIEWDIR . '/images/excel.png" onclick="createSummaryTable(' . $item->id . ')" />';
+				$inner .= '</li>';
 			}
 			$inner .= "</ul>\n</div>";
 		}

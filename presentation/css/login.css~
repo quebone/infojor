@@ -1,0 +1,21 @@
+main {
+	padding: 20px;
+}
+
+.form-element {
+	margin-bottom: 10px;
+}
+
+.form-label {
+	display: inline-block;
+	width: 120px;
+}
+
+.form-input {
+	display: inline-block;
+	width: 250px;
+}
+
+nav .off {
+	display: none;
+}

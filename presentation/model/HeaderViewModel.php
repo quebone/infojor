@@ -33,8 +33,7 @@ final class HeaderViewModel extends MainViewModel {
 		{
 			$data->user = $this->teacher['name'] . " " . $this->teacher['surnames'];
 			$data->school = "Curs: " . $this->course->course;
-// 			if ($this->classroom != null) $data->school .= "| Aula: " . $this->classroom->name;
-			$data->school .= " | Trimestre: " . $this->trimestre->trimestre;
+			$data->school .= " | Trimestre: " . $this->trimestre['number'];
 			$data->menus = $this->getMenuItems();
 		}
 		return $data;

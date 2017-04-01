@@ -34,6 +34,7 @@ $data['classroom'] = $controller->getClassroomName($classroomId);
 $data['areaId'] = $areaId;
 $data['reinforceId'] = $reinforceId;
 $data['section'] = $section;
+$data['trimestres'] = $controller->getTrimestres();
 
 $template = new \Transphporm\Builder(TPLDIR.'evaluate.xml', TPLDIR.'evaluate.tss');
 echo $template->output($data)->body;

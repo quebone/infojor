@@ -1,10 +1,13 @@
 <?php
 
 use infojor\presentation\model\ReportViewModel;
+use infojor\presentation\controller\EvaluateController;
+use infojor\presentation\controller\StatisticsController;
+use infojor\presentation\controller\MainController;
 
 require "init.php";
 
-test1();
+test3();
 
 function test1() {
 // 	require_once BASEDIR . 'vendor/PHPExcel/Classes/PHPExcel.php';
@@ -32,4 +35,11 @@ function test2() {
 	$objPHPExcel = $model->createSummaryTable($classrooms);
 	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 	$objWriter->save(str_replace('.php', '.xls', __FILE__));
+}
+
+function test3() {
+	$controller = new MainController();
+	$_POST[CLASSROOM_ID] = 15;
+	$controller->createSummaryTable();
+// 	var_dump($controller->getTrimestres());
 }

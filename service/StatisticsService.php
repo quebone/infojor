@@ -1,7 +1,7 @@
 <?php
 namespace infojor\service;
 
-final class ReportService extends MainService
+final class StatisticsService extends MainService
 {
 	public function __construct() {
 		parent::__construct();

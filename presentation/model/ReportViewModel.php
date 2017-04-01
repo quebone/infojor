@@ -11,9 +11,11 @@ require_once BASEDIR.'vendor/PHPExcel/Classes/PHPExcel.php';
 final class ReportViewModel extends MainViewModel {
 	private $student;
 	private $classroom;
+	private $trimestre;
 	
-	public function __construct($student = null, $classroom = null) {
+	public function __construct($trimestre, $student = null, $classroom = null) {
 		parent::__construct();
+		$this->trimestre = $trimestre;
 		$this->student = $student;
 		$this->classroom = $classroom;
 	}
@@ -22,7 +24,7 @@ final class ReportViewModel extends MainViewModel {
 	{
 		$data = null;
 		if ($this->classroom != null) {
-			$data = $this->getClassroomReport($this->classroom);
+			$data = $this->getClassroomReport();
 		} else if ($this->student != null) {
 			$data[$this->student] = $this->getStudentReport($this->student);
 		}
@@ -32,10 +34,13 @@ final class ReportViewModel extends MainViewModel {
 	/**
 	 * Retorna les dades dels informes corresponents a tota una classe
 	 */
-	private function getClassroomReport($classroomId)
+	private function getClassroomReport()
 	{
-		$model = new SchoolService();
-		$students = $model->getCurrentClassroomStudents($classroomId);
+		$dao = new DAO();
+		$classroom = $dao->getById("Classroom", $this->classroom);
+		$course = $dao->getActiveCourse();
+		$trimestre = $dao->getById("Trimestre", $this->trimestre);
+		$students = $dao->getSchool()->getClassroomStudents($classroom, $course, $trimestre);
 		$data = array();
 		foreach ($students as $student) {
 			$data[$student->getId()] = $this->getStudentReport($student->getId());
@@ -57,7 +62,7 @@ final class ReportViewModel extends MainViewModel {
 		//first page header
 		$student = $this->dao->getById("Student", $studentId);
 		$course = $this->dao->getActiveCourse();
-		$trimestre = $this->dao->getActiveTrimestre();
+		$trimestre = $this->dao->getById("Trimestre", $this->trimestre);
 		$classroom = $student->getClassroom($course, $trimestre);
 		$tutorings = $classroom->getTutors($course, $trimestre);
 		$cycle = $classroom->getLevel()->getCycle();
@@ -124,7 +129,7 @@ final class ReportViewModel extends MainViewModel {
 	private function removeEmptyFields($data):array
 	{
 		$cleanedData = array();
-		$at = $this->dao->getActiveTrimestre();
+		$at = $this->dao->getById("Trimestre", $this->trimestre);
 		foreach ($data as $scopeId=>$scope) {
 			foreach ($scope['areas'] as $areaId=>$area) {
 				$dataFound = false;
@@ -153,52 +158,5 @@ final class ReportViewModel extends MainViewModel {
 			}
 		}
 		return $cleanedData;
-	}
-	
-	/**
-	 * Crea un full excel amb la taula resum d'una classe en un trimestre i un curs donats
-	 */
-	public function createSummaryTable(array $classrooms)
-	{
-		$objPHPExcel = \PHPExcel_IOFactory::load('../template/model-taula-resum.xls');
-		// clonar el full tants cops com classes hi hagi
-		$sheet = $objPHPExcel->setActiveSheetIndex(0);
-		for ($i = 1; $i < count($classrooms); $i++) {
-			$clonedSheet = clone $sheet;
-			$clonedSheet->setTitle("full" . $i);
-			$objPHPExcel->addSheet($clonedSheet);
-		}
-		$courseId = $this->dao->getActiveCourse()->getId();
-		$trimestreId = $this->dao->getActiveTrimestre()->getNumber();
-		$model = new ReportService();
-		for ($i = 0; $i < count($classrooms); $i++) {
-			$data = $model->getSummaryTableData($classrooms[$i], $courseId, $trimestreId);
-			$sheet = $objPHPExcel->setActiveSheetIndex($i);
-			$classroom = $this->dao->getById("Classroom", $classrooms[$i]);
-			$sheet->setTitle($classroom->getName());
-			$nMark = 0;
-			$nCol = 2;
-			foreach ($data["students"] as $student) {
-				$cell = $sheet->getCell("A" . $nCol);
-				$cell->setValue($student->getSurnames() . ", " . $student->getName());
-				$nRow = 'B';
-				foreach ($data["areas"] as $area) {
-					$cell = $sheet->getCell($nRow . "1");
-					$cell->setValue($area->getName());
-					$cell = $sheet->getCell($nRow . $nCol);
-					$mark = $data["marks"][$nMark];
-					if ($mark != null) {
-						$cell->setValue($mark->getMark());
-						$sheet->getStyle($nRow . $nCol)->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID);
-						$sheet->getStyle($nRow . $nCol)->getFill()->getStartColor()->setARGB(SUMMARY_CELL_COLORS[$mark->getMark()]);
-					}
-					$nMark++;
-					$nRow++;
-				}
-				$nCol++;
-			}
-		}
-		$objPHPExcel->setActiveSheetIndex(0);
-		return $objPHPExcel;
 	}
 }

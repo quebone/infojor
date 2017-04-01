@@ -60,4 +60,26 @@ class MainViewModel
 		if (isset($_SESSION[$sessionVar])) return $_SESSION[$sessionVar];
 		return false;
 	}
+	
+	/**
+	 * Crea cookies amb els valors de l'array
+	 * @param array $data
+	 */
+	public function setCookies($data)
+	{
+// 		var_dump($data);
+		foreach ($data as $key=>$value) {
+			setcookie($key, $value);
+		}
+	}
+	
+	/**
+	 * Elimina totes les cookies
+	 */
+	public function clearCookies()
+	{
+		foreach ($_COOKIE as $key=>$value) {
+			unset($_COOKIE[$key]);
+		}
+	}
 }

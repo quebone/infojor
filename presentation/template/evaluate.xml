@@ -8,8 +8,9 @@
 	<link rel="stylesheet" href="presentation/css/evaluate.css?v=1.0" />
 </head>
 <body>
+<div id="overlay" />
 <div id='header-wrap'>
-<header></header>
+	<header></header>
 </div>
 <input id='classroomId' type='hidden' />
 <input id='areaId' type='hidden' />
@@ -37,6 +38,18 @@
 		</div>
 	</div>
 </main>
+<dialog id="ask-trimestre">
+	<p>De quin trimestre vols l'informe?</p>
+	<form>
+		<div class="center-elements">
+			<input type="radio" name="trimestre" />
+		</div>
+		<div class="separator" />
+		<div class="center-elements">
+			<button id="print-button" onclick="return printReport()">Generar</button><button onclick="return cancelReport()">Cancel·lar</button>
+		</div>
+	</form>
+</dialog>
   <script src="js/scripts.js"></script>
   <script src="js/evaluate.js"></script>
   <script src="js/compact-nav.js"></script>

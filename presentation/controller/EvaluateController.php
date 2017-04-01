@@ -33,6 +33,16 @@ class EvaluateController extends Controller
 		return $model->getStudent($studentId);
 	}
 	
+	public function getTrimestres()
+	{
+		$model = new SchoolViewModel();
+		$data = $model->getPreviousTrimestres();
+		$at = $model->getActiveTrimestre();
+		$at['selected'] = true;
+		array_push($data, $at);
+		return $data;
+	}
+	
 	/**
 	 * Llegeix les variables de POST i de sessió i les passa a EvaluationViewModel
 	 * El resultat l'envia a un generador d'HTML (tplEngine) i retorna el resultat

@@ -12,3 +12,7 @@ header {content: template("header.xml")}
 #students ul li:attr(onclick) {content: 'changeStudent(this)'; }
 #students ul li:iteration[selected=true]:attr(class) {content: 'selected'; }
 #section_header h2 {content: data(classroom.name)}
+#ask-trimestre input {repeat: data(trimestres) ;}
+#ask-trimestre input:attr(value) {content: iteration(number); }
+#ask-trimestre input {content: iteration(number); }
+#ask-trimestre input:attr(checked) :iteration[selected=true] {content: ""; }

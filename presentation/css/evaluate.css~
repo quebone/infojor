@@ -177,10 +177,6 @@ img#thumbnail {
 	background-image: url('../images/next.png');
 }
 
-.selector[name=summary-table] {
-	background-image: url('../images/excel.png');
-}
-
 table th {
 	font-size: small;
 	font-weight: normal;
@@ -196,4 +192,16 @@ table th {
 
 span.mark {
 	padding-left: 15px;
+}
+
+#ask-trimestre {
+	z-index: 1001;
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, 0);
+	padding: 1em;
+	background-color: #eee;
+	box-shadow: .5em .5em .5em grey;
+	visibility: hidden;;
 }

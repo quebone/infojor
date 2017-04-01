@@ -143,7 +143,7 @@ input {
 .observation {
 	width: 100%;
 	min-height: 100px;
-	maxlength: 4000;
+/*	maxlength: 4000;*/
 	overflow: auto;
 	resize: vertical;
 	font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
@@ -192,4 +192,16 @@ table th {
 
 span.mark {
 	padding-left: 15px;
+}
+
+#ask-trimestre {
+	z-index: 1001;
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, 0);
+	padding: 1em;
+	background-color: #eee;
+	box-shadow: .5em .5em .5em grey;
+	visibility: hidden;;
 }

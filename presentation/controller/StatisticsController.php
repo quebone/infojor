@@ -1,7 +1,7 @@
 <?php
 namespace infojor\presentation\controller;
 
-use infojor\presentation\model\ReportViewModel;
+use infojor\presentation\model\StatisticsViewModel;
 
 class StatisticsController extends Controller
 {
@@ -16,8 +16,9 @@ class StatisticsController extends Controller
 				array_push($classIds, $classroom->getId());
 			}
 		}
-		$model = new ReportViewModel();
-		$objPHPExcel = $model->createSummaryTable($classIds);
+		$model = new StatisticsViewModel();
+		$at = $this->dao->getActiveTrimestre(); 
+		$objPHPExcel = $model->createSummaryTable($classIds, [$at->getNumber()]);
 		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$objWriter->save(FILESDIR . 'taula-resum.xls');
 		return json_encode($classIds);
