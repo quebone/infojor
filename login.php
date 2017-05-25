@@ -1,8 +1,6 @@
 <?php
 namespace infojor;
 
-use infojor\presentation\model\HeaderViewModel;
-
 if (session_status() != PHP_SESSION_NONE) {
 	session_unset();
 	session_destroy();
@@ -34,9 +32,6 @@ if (isset($_SESSION[USER_ID])) {
 	unset($_SESSION[USER_ID]);
 }
 
-$header = new HeaderViewModel();
-$data['header'] = $header->output();
-
 $template = new \Transphporm\Builder(TPLDIR.'login.xml', TPLDIR.'login.tss');
 
-echo $template->output($data)->body;
+echo $template->output()->body;

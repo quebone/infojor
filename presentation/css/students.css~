@@ -31,7 +31,7 @@ table td {
 
 .form-input {
 	display: inline-block;
-	width: 250px;
+	width: 300px;
 	margin-right: 10px;
 }
 

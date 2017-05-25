@@ -1,5 +1,7 @@
 <?php
 namespace infojor\service\Entities;
+use Doctrine\Common\Cache\CouchbaseCache;
+
 /**
  * @Entity @Table(name="students")
  **/
@@ -69,6 +71,15 @@ class Student extends Person
 		return null;
 	}
 	
+	public function getFinalDimensionEvaluation(Dimension $dimension, Course $course) {
+		foreach ($this->partialEvaluations as $pe) {
+			if ($pe->getCourse() == $course && $pe->getTrimestre() == null && $pe->getDimension() == $dimension) {
+				return $pe;
+			}
+		}
+		return null;
+	}
+	
 	public function getAreaEvaluation(Area $area, Course $course, Trimestre $trimestre) {
 		foreach ($this->globalEvaluations as $ge) {
 			if ($ge->getCourse() == $course && $ge->getTrimestre() == $trimestre && $ge->getArea() == $area) {
@@ -78,6 +89,15 @@ class Student extends Person
 		return null;
 	}
 
+	public function getFinalAreaEvaluation(Area $area, Course $course) {
+		foreach ($this->globalEvaluations as $ge) {
+			if ($ge->getCourse() == $course && $ge->getTrimestre() == null && $ge->getArea() == $area) {
+				return $ge;
+			}
+		}
+		return null;
+	}
+	
 	public function getScopeEvaluation(Scope $scope, Course $course, Trimestre $trimestre) {
 		foreach ($this->globalEvaluations as $ge) {
 			if ($ge->getCourse() == $course && $ge->getTrimestre() == $trimestre && $ge->getScope() == $scope) {
@@ -109,7 +129,7 @@ class Student extends Person
 			Teacher $teacher,
 			Dimension $dimension,
 			Course $course,
-			Trimestre $trimestre,
+			$trimestre,
 			EvaluationDescription $ed):Evaluation {
 		return new PartialEvaluation($this, $teacher, $course, $trimestre, $dimension, $ed);
 	}
@@ -118,7 +138,7 @@ class Student extends Person
 			Teacher $teacher,
 			Area $area,
 			Course $course,
-			Trimestre $trimestre,
+			$trimestre,
 			EvaluationDescription $ed):Evaluation {
 		return new GlobalEvaluation($this, $teacher, $course, $trimestre, $area, $ed);
 	}

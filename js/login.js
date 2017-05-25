@@ -2,7 +2,6 @@ window.onload = init;
 
 // a la pantalla de login no s'ha de mostrar el menú
 function init() {
-	document.getElementsByClassName("compact")[0].style.display = "none";
 }
 
 // envia les dades d'usuari al controlador perquè comprovi si són correctes
@@ -15,6 +14,7 @@ function sendUserData() {
 	}
 	var dataToSend = 'username=' + user + '&password=' + sha1(password) + '&function=login';
 	send(dataToSend, AJAXCONTROLLER, login);
+	return false;
 }
 
 // retorn del registre

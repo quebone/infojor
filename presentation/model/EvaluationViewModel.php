@@ -3,6 +3,7 @@ namespace infojor\presentation\model;
 
 use infojor\service\DAO;
 use infojor\service\EvaluationService;
+use infojor\service\SchoolService;
 
 final class EvaluationViewModel extends MainViewModel {
 	
@@ -42,10 +43,26 @@ final class EvaluationViewModel extends MainViewModel {
 		return $pe->getMark();
 	}
 	
+	private function getFinalDimensionEvaluation($studentId, $dimensionId, $courseId=null)
+	{
+		$model = new EvaluationService();
+		$pe = $model->getFinalDimensionEvaluation($studentId, $dimensionId, $courseId);
+		if ($pe == null) return null;
+		return $pe->getMark();
+	}
+	
 	private function getAreaEvaluation($studentId, $areaId, $courseId=null, $trimestreId=null)
 	{
 		$model = new EvaluationService();
 		$ge = $model->getAreaEvaluation($studentId, $areaId, $courseId, $trimestreId);
+		if ($ge == null) return null;
+		return $ge->getMark();
+	}
+	
+	private function getFinalAreaEvaluation($studentId, $areaId, $courseId=null)
+	{
+		$model = new EvaluationService();
+		$ge = $model->getFinalAreaEvaluation($studentId, $areaId, $courseId);
 		if ($ge == null) return null;
 		return $ge->getMark();
 	}
@@ -66,11 +83,14 @@ final class EvaluationViewModel extends MainViewModel {
 	{
 		$cycle = $classroom->getLevel()->getCycle();
 		$schoolModel = new SchoolViewModel();
+		$schoolService = new SchoolService();
 		$scopes = $schoolModel->getScopes($cycle->getDegree()->getId());
 		$data = $scopes;
 		$dao = new DAO();
 		$ac = $dao->getActiveCourse();
 		$at = $dao->getActiveTrimestre();
+		//només hi ha d'haver notes finals l'últim trimestre de primària
+		$final = $schoolService->isLastTrimestre($at) && $cycle->getDegree()->getId() == 2;
 		foreach ($scopes as $scope) {
 			$areas = $schoolModel->getScopeAreas($scope['id'], $areaId);
 			$data[$scope['id']]['areas'] = $areas;
@@ -83,11 +103,19 @@ final class EvaluationViewModel extends MainViewModel {
 							$pe = $this->getDimensionEvaluation($studentId, $dimension['id'], $ac->getId(), $i);
 							$data[$scope['id']]['areas'][$area['id']]['dimensions'][$dimension['id']]['pes'][$i]['mark'] = $pe;
 						}
+						if ($final) {
+							$pe = $this->getFinalDimensionEvaluation($studentId, $dimension['id'], $ac->getId());
+							$data[$scope['id']]['areas'][$area['id']]['dimensions'][$dimension['id']]['pes'][$at->getNumber()+1]['mark'] = $pe;
+						}
 					}
 				}
 				for ($i = 1; $i <= $at->getNumber(); $i++) {
 					$ge = $this->getAreaEvaluation($studentId, $area['id'], $ac->getId(), $i);
 					$data[$scope['id']]['areas'][$area['id']]['ges'][$i]['mark'] = $ge;
+				}
+				if ($final) {
+					$ge = $this->getFinalAreaEvaluation($studentId, $area['id'], $ac->getId());
+					$data[$scope['id']]['areas'][$area['id']]['ges'][$at->getNumber()+1]['mark'] = $ge;
 				}
 			}
 			// 				$ge = $this->getScopeEvaluation($studentId, $scope['id']);

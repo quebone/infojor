@@ -23,7 +23,7 @@ class GlobalEvaluation extends Evaluation
 	private $course;
 	/**
 	 * @ManyToOne(targetEntity="Trimestre", inversedBy="globalEvaluations")
-	 * @JoinColumn(name="trimestre_id", referencedColumnName="number")
+	 * @JoinColumn(name="trimestre_id", referencedColumnName="number", nullable=true)
 	 */
 	private $trimestre;
 	/**
@@ -46,7 +46,7 @@ class GlobalEvaluation extends Evaluation
 			Student $student,
 			Teacher $teacher,
 			Course $course,
-			Trimestre $trimestre,
+			$trimestre,
 			Area $area,
 			GlobalEvaluationDescription $ged) {
 		$this->student = $student;

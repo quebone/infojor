@@ -1,3 +1,0 @@
-h1 {content: data(title); }
-p {content: data(description); }
-a {content: "Hi, ", data(link); }

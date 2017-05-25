@@ -1,20 +1,57 @@
 <html lang="ca">
 <head>
-	<meta charset="utf-8" />
-	<title>Titol</title>
-	<meta name="author" content="carles" />
-	<link rel="stylesheet" href="presentation/css/styles.css?v=1.0" />
-	<link rel="stylesheet" href="presentation/css/compact-nav.css?v=1.0" />
-	<link rel="stylesheet" href="presentation/css/main.css?v=1.0" />
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<meta name="description" content="">
+	<meta name="author" content="carles" >
+	<link rel="icon" href="../../favicon.ico">
+
+	<title>Informes - inici</title>
+
+	<!-- Bootstrap core CSS -->
+	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="presentation/css/styles.css" rel="stylesheet">
+	<link href="presentation/css/main.css" rel="stylesheet">
 </head>
+
 <body>
-<div id='header-wrap'>
-<header></header>
-</div>
-<main>
-</main>
+	#header#
+
+	<main>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4">
+					<i class="material-icons md-48">school</i>
+					<h3>Tutories</h3>
+					<ul>
+						#tutorings#
+					</ul>
+				</div>
+				<div class="col-md-4">
+					<i class="material-icons md-48">group</i>
+					<h3>Especialitats</h3>
+					<ul>
+						#specialities#
+					</ul>
+				</div>
+				<div class="col-md-4">
+					<i class="material-icons md-48">person</i>
+					<h3>Atenció individual</h3>
+					<ul>
+						#reinforcings#
+					</ul>
+				</div>
+			</div>
+		</div><!-- /.container -->
+	</main>
+
+	#footer#
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="bootstrap/js/bootstrap.min.js"></script>
   <script src="js/scripts.js"></script>
-  <script src="js/compact-nav.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

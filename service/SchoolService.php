@@ -50,6 +50,12 @@ final class SchoolService extends MainService
 		return $trimestres;
 	}
 	
+	public function isLastTrimestre(Trimestre $at):bool
+	{
+		$trimestres = $this->dao->getByFilter("Trimestre", [], ['number'=>'DESC']);
+		return $at->getNumber() == $trimestres[0]->getNumber();
+	}
+	
 	/**
 	 * Retorna els alumnes actuals d'una classe
 	 */

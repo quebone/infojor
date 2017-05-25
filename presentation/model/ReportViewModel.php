@@ -135,7 +135,7 @@ final class ReportViewModel extends MainViewModel {
 				$dataFound = false;
 				foreach ($area['dimensions'] as $dimId=>$dimension) {
 					$markFound = false;
-					for ($i = 1; $i <= $at->getNumber(); $i++) {
+					for ($i = 1; $i <= count($dimension['pes']); $i++) {
 						if ($dimension['pes'][$i]['mark'] != '') $markFound = true;
 					}
 					if ($markFound) {
@@ -143,7 +143,7 @@ final class ReportViewModel extends MainViewModel {
 						$dataFound = true;
 					}
 				}
-				for ($i = 1; $i <= $at->getNumber(); $i++) {
+				for ($i = 1; $i <= count($area['ges']); $i++) {
 					if ($area['ges'][$i]['mark'] != '') {
 						$cleanedData[$scopeId]['areas'][$areaId]['ges'][$i]['mark'] = $area['ges'][$i]['mark'];
 						$dataFound = true;

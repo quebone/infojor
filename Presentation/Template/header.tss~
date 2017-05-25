@@ -1,2 +1,0 @@
-#header_center {content: data(school); }
-#header_right {content: data(user); }

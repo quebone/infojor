@@ -2,6 +2,8 @@
 var minClassroom = 1;
 var maxClassroom = 18;
 
+var avatar = 'images/ic_person_black_24px.svg';
+
 window.onload = init();
 
 String.prototype.stripSlashes = function(){
@@ -9,27 +11,34 @@ String.prototype.stripSlashes = function(){
 }
 
 function init() {
-	changeStudentsHeight();
-	window.onresize = changeStudentsHeight; 
+//	changeStudentsHeight();
+//	window.onresize = changeStudentsHeight; 
 	var firstStudentId = findStudentId(0);
 	var firstStudent = document.getElementById('student-' + firstStudentId);
 	changeStudent(firstStudent);
 }
 
 // al seleccionar un alumne, envia les dades al controlador perquè recuperi les seves qualificacions actuals 
-function changeStudent(student)
-{
-	disable(document.getElementById('evaluations'));
-	var classroomId = document.getElementById('classroomId').value;
-	var areaId = document.getElementById('areaId').value;
-	var reinforceId = document.getElementById('reinforceId').value;
+function changeStudent(student) {
 	var studentId = student.getAttribute('id').replace('student-','');
-	var dataToSend = 'studentId=' + studentId + '&classroomId=' + classroomId + '&areaId=' + areaId + '&reinforceId=' + reinforceId + '&function=getEvaluations';
-	send(dataToSend, AJAXCONTROLLER, showEvaluation);
 	unselectStudents();
 	selectStudent(student);
 	getImage(student);
 	updateSectionStudent(student);
+	changeStudentFromId(studentId);
+}
+
+function changeStudentFromSelect(elem) {
+	changeStudentFromId(elem.value);
+}
+
+function changeStudentFromId(studentId) {
+	disable(document.getElementById('evaluations'));
+	var classroomId = document.getElementById('classroomId').value;
+	var areaId = document.getElementById('areaId').value;
+	var reinforceId = document.getElementById('reinforceId').value;
+	var dataToSend = 'studentId=' + studentId + '&classroomId=' + classroomId + '&areaId=' + areaId + '&reinforceId=' + reinforceId + '&function=getEvaluations';
+	send(dataToSend, AJAXCONTROLLER, showEvaluation);
 }
 
 // retorn de recuperació de les qualificacions; insereix les qualificacions al contenidor html corresponent
@@ -48,7 +57,7 @@ function showEvaluation(evaluation) {
 // actualitza la capçalera de les qualificacions amb el nom de l'estudiant
 function updateSectionStudent(student) {
 	var name = student.innerHTML;
-	var section = document.getElementById("section").getElementsByTagName("h3")[0];
+	var section = document.getElementById("section").getElementsByTagName("span")[0];
 	section.innerHTML = name;
 }
 
@@ -108,7 +117,11 @@ function getImage(student) {
 // retorn de recuperació d'imatge
 function showImage(base64) {
 	var image = document.getElementById('thumbnail');
-	image.src = base64;
+	if (base64 == "") {
+		image.src = avatar;
+	} else {
+		image.src = base64;
+	}
 }
 
 // activar o desactivar els selectors de classe anterior i posterior
@@ -120,17 +133,9 @@ function enableClassroomSelectors(enable) {
 	}
 }
 
-function nextClassroom() {
-	changeClassroom(1);
-}
-
-function prevClassroom() {
-	changeClassroom(-1);
-}
-
 // canvia la classe i la passa al controlador perquè en recuperi la llista d'alumnes
-function changeClassroom(offset) {
-	currentClassroom = parseInt(document.getElementById('classroomId').value) + offset;
+function changeClassroom(elem) {
+	currentClassroom = elem.value;
 	if (currentClassroom <= maxClassroom && currentClassroom >= minClassroom) {
 		document.getElementById('classroomId').value = currentClassroom;
 		var toPage = window.location.pathname;
@@ -147,15 +152,21 @@ function redirect(toPage) {
 
 // envia les dades al controlador perquè canviï una qualificació parcial
 function changePE(pe) {
-	var dimensionId = encodeURI(parseInt(pe.name.substr(3)));
-	var dataToSend = 'studentId=' + findActiveStudentId() + '&dimensionId=' + dimensionId + '&markId=' + pe.value + '&function=setPartialEvaluation';
+	var trimestral = pe.name.indexOf("dim") == 0;
+	var pos = (trimestral ? 3 : 5);
+	var functionName = (trimestral ? 'setPartialEvaluation' : 'setFinalPartialEvaluation');
+	var dimensionId = encodeURI(parseInt(pe.name.substr(pos)));
+	var dataToSend = 'studentId=' + findActiveStudentId() + '&dimensionId=' + dimensionId + '&markId=' + pe.value + '&function=' + functionName;
 	send(dataToSend, AJAXCONTROLLER, evaluationChanged);
 }
 
 // envia les dades al controlador perquè canviï una qualificació global
 function changeGE(ge) {
+	var trimestral = ge.name.indexOf("area") == 0;
+	var pos = (trimestral ? 4 : 5);
+	var functionName = (trimestral ? 'setGlobalEvaluation' : 'setFinalGlobalEvaluation');
 	var areaId = encodeURI(parseInt(ge.name.substr(4)));
-	var dataToSend = 'studentId=' + findActiveStudentId() + '&areaId=' + areaId + '&markId=' + ge.value + '&function=setGlobalEvaluation';
+	var dataToSend = 'studentId=' + findActiveStudentId() + '&areaId=' + areaId + '&markId=' + ge.value + '&function=' + functionName;
 	send(dataToSend, AJAXCONTROLLER, evaluationChanged);
 }
 

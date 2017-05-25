@@ -3,23 +3,24 @@
 	<meta charset="utf-8" />
 	<title>Titol</title>
 	<meta name="author" content="carles" />
+	<link href="presentation/css/bootstrap.min.css" rel="stylesheet" />
 	<link rel="stylesheet" href="presentation/css/styles.css?v=1.0" />
-	<link rel="stylesheet" href="presentation/css/compact-nav.css?v=1.0" />
 	<link rel="stylesheet" href="presentation/css/login.css?v=1.0" />
 </head>
 <body>
-<div id='header-wrap'>
-<header></header>
-</div>
-<main>
-	<form id="login-form" method="POST">
-		<div class="form-element"><span class="form-label">Nom d'usuari</span><input id="username" type="text" class="form-input"/></div>
-		<div class="form-element"><span class="form-label">Contrasenya</span><input id="password" type="password" class="form-input"/></div>
-		<div class="form-buttons"><button type="button" class="form-button" onclick="sendUserData()">Acceptar</button></div>
-	</form>
-	<div id="error" class="error"></div>
-</main>
+  <div class="container">
+    <form class="form-signin">
+      <h2 class="form-signin-heading">Introduïu les vostres dades</h2>
+      <label for="inputEmail" class="sr-only">Nom d'usuari</label>
+      <input type="email" id="username" class="form-control" placeholder="Nom d'usuari" required autofocus>
+      <label for="inputPassword" class="sr-only">Contrasenya</label>
+      <input type="password" id="password" class="form-control" placeholder="Contrasenya" required>
+      <button class="btn btn-lg btn-primary btn-block" type="submit" onclick="return sendUserData()">Entrar</button>
+			<div id="error" class="error text-center gap"></div>
+    </form>
+  </div> <!-- /container -->
   <script src="js/scripts.js" />
   <script src="js/login.js" />
+  <script src="js/crypto.js" />
 </body>
 </html>

@@ -55,17 +55,16 @@ final class SchoolViewModel extends MainViewModel {
 	public function getClassroom($classroomId):array
 	{
 		$classroom = $this->dao->getById("Classroom", $classroomId);
-		$data['id'] = $classroom->getId();
-		$data['name'] = $classroom->getName();
-		return $data;
+		return $classroom->toArray();
 	}
 	
-	public function getClassrooms():array
+	public function getClassrooms($degrees = null):array
 	{
 		$data = array();
 		$classrooms = $this->dao->getByFilter("Classroom");
 		foreach ($classrooms as $classroom) {
-			array_push($data, $this->getClassroom($classroom->getId()));
+			if ($degrees == null || in_array($classroom->getLevel()->getCycle()->getDegree()->getId(), $degrees))
+				array_push($data, $classroom->toArray());
 		}
 		return $data;
 	}

@@ -27,6 +27,25 @@ class EvaluateController extends Controller
 		return $model->getClassroom($classroomId);
 	}
 	
+	public function getClassrooms($section, $classroomId):array
+	{
+		$data = array();
+		$model = new SchoolViewModel();
+		// si és tutoria només retorna la classe activa, sinó totes les classes del grau
+		if (!strcmp($section, "tutorings")) {
+			array_push($data, $model->getClassroom($classroomId));
+		} else {
+			$data = $model->getClassrooms([2]);
+			foreach ($data as $key => $classroom) {
+				if ($classroom['id'] == $classroomId) {
+					$classroom['selected'] = true;
+					$data[$key] = $classroom;
+				}
+			}
+		}
+		return $data;
+	}
+	
 	public function getStudentName($studentId)
 	{
 		$model = new UserViewModel();
@@ -74,6 +93,17 @@ class EvaluateController extends Controller
 		return $model->setPartialEvaluation($teacherId, $studentId, $dimensionId, $markId);
 	}
 	
+	public function setFinalPartialEvaluation()
+	{
+		if (session_status() != PHP_SESSION_ACTIVE) session_start();
+		$teacherId = $_SESSION[USER_ID];
+		$studentId = $_POST[STUDENT_ID];
+		$dimensionId = $_POST[DIMENSION_ID];
+		$markId = $_POST[MARK_ID];
+		$model = new EvaluationService();
+		return $model->setFinalPartialEvaluation($teacherId, $studentId, $dimensionId, $markId);
+	}
+	
 	public function setGlobalEvaluation()
 	{
 		if (session_status() != PHP_SESSION_ACTIVE) session_start();
@@ -83,6 +113,17 @@ class EvaluateController extends Controller
 		$markId = $_POST[MARK_ID];
 		$model = new EvaluationService();
 		return $model->setGlobalEvaluation($teacherId, $studentId, $areaId, $markId);
+	}
+	
+	public function setFinalGlobalEvaluation()
+	{
+		if (session_status() != PHP_SESSION_ACTIVE) session_start();
+		$teacherId = $_SESSION[USER_ID];
+		$studentId = $_POST[STUDENT_ID];
+		$areaId = $_POST[AREA_ID];
+		$markId = $_POST[MARK_ID];
+		$model = new EvaluationService();
+		return $model->setFinalGlobalEvaluation($teacherId, $studentId, $areaId, $markId);
 	}
 	
 	public function setObservation()

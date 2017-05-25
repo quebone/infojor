@@ -35,7 +35,6 @@ select {
 
 .form-buttons {
 	margin-top: 20px;
-	padding: 10px;
 }
 
 .form-button {

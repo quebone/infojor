@@ -35,7 +35,7 @@ tr:nth-child(even) {background: #f7f7f7}
 
 .delete, .edit {
 	font-size: small;
-	cursor: pointer; cursor: hand;
+	cursor: pointer;
 	padding-right: 10px;
 }
 

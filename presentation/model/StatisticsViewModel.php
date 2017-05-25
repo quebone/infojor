@@ -3,6 +3,7 @@ namespace infojor\presentation\model;
 
 use infojor\service\DAO;
 use infojor\service\StatisticsService;
+use infojor\service\SchoolService;
 
 require_once BASEDIR.'vendor/fpdf/fpdf.php';
 require_once BASEDIR.'vendor/PHPExcel/Classes/PHPExcel.php';
@@ -18,6 +19,8 @@ final class StatisticsViewModel extends MainViewModel {
 	 */
 	public function createSummaryTable(array $classrooms, array $trimestres=null)
 	{
+		$schoolService = new SchoolService();
+		$final = $schoolService->isLastTrimestre($this->dao->getActiveTrimestre());
 		$objPHPExcel = \PHPExcel_IOFactory::load('../template/model-taula-resum.xls');
 // 		$objPHPExcel = \PHPExcel_IOFactory::load('presentation/template/model-taula-resum.xls');
 		// clonar el full tants cops com classes i trimestres hi hagi
@@ -27,8 +30,8 @@ final class StatisticsViewModel extends MainViewModel {
 			$number = $this->dao->getActiveTrimestre()->getNumber();
 			for ($i = 1; $i <= $this->dao->getActiveTrimestre()->getNumber(); $i++) {
 				array_push($trimestres, $i);
-				
 			}
+			if ($final) array_push($trimestres, $this->dao->getActiveTrimestre()->getNumber() + 1);
 		}
 		for ($i = 0; $i < (count($classrooms) * count($trimestres)) - 1; $i++) {
 			$clonedSheet = clone $sheet;
@@ -43,7 +46,7 @@ final class StatisticsViewModel extends MainViewModel {
 				$data = $model->getSummaryTableData($classrooms[$i], $courseId, $trimestres[$j]);
 				$sheet = $objPHPExcel->setActiveSheetIndex($i+$j);
 				$classroom = $this->dao->getById("Classroom", $classrooms[$i]);
-				$sheet->setTitle($classroom->getName() . "-t" . $trimestres[$j]);
+				$sheet->setTitle($classroom->getName() . "-" . ($trimestres[$j] <= $this->dao->getActiveTrimestre()->getNumber() ? "t" . $trimestres[$j] : "final"));
 				$nMark = 0;
 				$nCol = 2;
 				foreach ($data["students"] as $student) {

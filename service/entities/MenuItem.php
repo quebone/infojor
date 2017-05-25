@@ -54,4 +54,13 @@ class MenuItem
 	{
 		$this->function = $function;
 	}
+	
+	public function toArray():array {
+		$data = array();
+		$data['id'] = $this->id;
+		$data['order'] = $this->order;
+		$data['name'] = $this->name;
+		$data['function'] = $this->function;
+		return $data;
+	}
 }

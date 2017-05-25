@@ -26,7 +26,11 @@ final class StatisticsService extends MainService
 		$marks = array();
 		foreach ($students as $student) {
 			foreach ($areas as $area) {
-				array_push($marks, $student->getAreaEvaluation($area, $course, $trimestre));
+				if ($trimestre != null) {
+					array_push($marks, $student->getAreaEvaluation($area, $course, $trimestre));
+				} else {
+					array_push($marks, $student->getFinalAreaEvaluation($area, $course));
+				}
 			}
 		}
 		return array("students" => $students, "areas" => $areas, "marks" =>$marks);

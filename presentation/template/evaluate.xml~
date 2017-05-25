@@ -1,57 +1,79 @@
 <html lang="ca">
 <head>
-	<meta charset="utf-8" />
-	<title>Titol</title>
-	<meta name="author" content="carles" />
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<meta name="description" content="">
+	<meta name="author" content="carles" >
+	<link rel="icon" href="../../favicon.ico">
+
+	<title>Informes - qualificacions</title>
+
+	<!-- Bootstrap core CSS -->
+	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" href="presentation/css/styles.css?v=1.0" />
-	<link rel="stylesheet" href="presentation/css/compact-nav.css?v=1.0" />
 	<link rel="stylesheet" href="presentation/css/evaluate.css?v=1.0" />
 </head>
+
 <body>
-<div id="overlay" />
-<div id='header-wrap'>
-	<header></header>
-</div>
-<input id='classroomId' type='hidden' />
-<input id='areaId' type='hidden' />
-<input id='reinforceId' type='hidden' />
-<input id='section_name' type='hidden' />
-<main>
-	<div id="students-wrapper">
-	<div id="students">
-		<ul>
-			<li>Alumne</li>
-		</ul>	
-	</div>
-	<img id="thumbnail" src="" alt=""></img>
-	</div>
-	<div id="right_column">
-		<div id="section">
-			<div id="section_header">
-				<div class="selector" name="left" onclick="prevClassroom()"></div>
-				<h2>Classroom</h2>
-				<div class="selector" name="right" onclick="nextClassroom()"></div>
-				<h3>Alumne</h3>
+	<div id="overlay" />
+		#header#
+	
+	<input id='classroomId' type='hidden' />
+	<input id='areaId' type='hidden' />
+	<input id='reinforceId' type='hidden' />
+	<input id='section_name' type='hidden' />
+	
+	<main>
+	
+		<div class="container-fluid">
+	
+			<div id="students" class="col-sm-3 col-md-2 sidebar">
+				<img id="thumbnail" class="img-circle" src="images/ic_person_black_24px.svg" alt="Generic placeholder image" width="140" height="140" />
+	      <ul class="nav nav-sidebar">
+	        <li>Alumne</li>
+	      </ul>
 			</div>
-		</div>
-		<div id="evaluations">
-		</div>
+	
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+	
+	      <div id="section" class="page-header">
+	      	<select class="students">
+	      		<option>Alumne</option>
+	      	</select>
+	      	<select class="classrooms">
+	      		<option>Classe</option>
+	      	</select>
+	      	<span class="student">Alumne</span>
+	      </div>
+	
+				<div id="evaluations" class="evaluations">
+				</div>
+	
+			</div>
+		</div> <!--"container-fluid"-->
+	</main>
+	
+	<div id="ask-trimestre">
+		<p>De quin trimestre vols l'informe?</p>
+		<form>
+			<div class="center-elements">
+				<input type="radio" name="trimestre" />
+			</div>
+			<div class="separator" />
+			<div class="center-elements">
+				<button id="print-button" onclick="return printReport()">Generar</button><button onclick="return cancelReport()">Cancel·lar</button>
+			</div>
+		</form>
 	</div>
-</main>
-<dialog id="ask-trimestre">
-	<p>Quin trimestre vols imprimir?</p>
-	<form>
-		<div class="center-elements">
-			<input type="radio" name="trimestre" />
-		</div>
-		<div class="separator" />
-		<div class="center-elements">
-			<button id="print-button" onclick="return printReport()">Imprimir</button><button onclick="return cancelReport()">Cancel·lar</button>
-		</div>
-	</form>
-</dialog>
+
+	#footer#
+	
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="bootstrap/js/bootstrap.min.js"></script>
   <script src="js/scripts.js"></script>
   <script src="js/evaluate.js"></script>
-  <script src="js/compact-nav.js"></script>
 </body>
 </html>

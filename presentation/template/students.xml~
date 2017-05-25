@@ -1,16 +1,25 @@
 <html lang="ca">
 <head>
-	<meta charset="utf-8" />
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<meta name="description" content="">
+	<meta name="author" content="carles" >
+	<link rel="icon" href="../../favicon.ico">
+
 	<title>Titol</title>
-	<meta name="author" content="carles" />
-	<link rel="stylesheet" href="presentation/css/styles.css?v=1.0" />
-	<link rel="stylesheet" href="presentation/css/compact-nav.css?v=1.0" />
-	<link rel="stylesheet" href="presentation/css/students.css?v=1.0" />
+
+	<!-- Bootstrap core CSS -->
+	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="presentation/css/styles.css" rel="stylesheet">
+	<link rel="stylesheet" href="presentation/css/students.css?v=1.0">
 </head>
+
 <body>
-<div id='header-wrap'>
-<header></header>
-</div>
+	#header#
+
 <main>
 	<div class="wrapper">
 		<label for="classroom-selector" class="form-label">Classe:</label>
@@ -49,7 +58,7 @@
 		<button type="button" class="form-button" onclick="importStudentsFromLastCourse()">Importar alumnes del darrer curs</button>
 	</div>
 	<div class="form-buttons">
-		<form id="file-form" action="importStudentsFromFile()" method="POST">
+		<form id="file-form" method="POST">
 			<button type="button" class="form-button" onclick="importStudentsFromFile()">Importar alumnes d'un arxiu</button>
 			<input id="file_selector" type="file" name="file" accept=".xls, .xlsx, .odt"/>
 		</form>

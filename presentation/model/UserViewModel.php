@@ -52,7 +52,8 @@ final class UserViewModel extends MainViewModel {
 	{
 		$data = array();
 		if ($id == null) {
-			$teacher = new Teacher("", "");
+			$school = $this->dao->getSchool();
+			$teacher = new Teacher("", "", $school);
 			$teacher->setActive(true);
 		} else {
 			$teacher = $this->dao->getById("Teacher", $id);
@@ -87,10 +88,10 @@ final class UserViewModel extends MainViewModel {
 		$items = $this->model->{$mainFunction}($teacherId);
 		$data = array();
 		foreach ($items as $item) {
-			$data[$item->{$mappedFunction}()->getId()] = new \stdClass;
-			$data[$item->{$mappedFunction}()->getId()]->name = $item->{$mappedFunction}()->getName();
-			$data[$item->{$mappedFunction}()->getId()]->id = $item->{$mappedFunction}()->getId();
-			$data[$item->{$mappedFunction}()->getId()]->link = $item->{$mappedFunction}()->getId();
+			$data[$item->{$mappedFunction}()->getId()] = array();
+			$data[$item->{$mappedFunction}()->getId()]['name'] = $item->{$mappedFunction}()->getName();
+			$data[$item->{$mappedFunction}()->getId()]['id'] = $item->{$mappedFunction}()->getId();
+			$data[$item->{$mappedFunction}()->getId()]['link'] = $item->{$mappedFunction}()->getId();
 		}
 		return $data;
 	}
@@ -132,12 +133,14 @@ final class UserViewModel extends MainViewModel {
 		$thumbnail = $person->getThumbnail();
 		$fileName = THUMBNAILDIR . $thumbnail;
 		$type = pathinfo($fileName, PATHINFO_EXTENSION);
-		if (!file_exists($fileName)) {
+		if (file_exists($fileName)) {
 			$fileName = THUMBNAILDIR . AVATAR;
+			$data = file_get_contents($fileName);
+			$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+			return $base64;
+		} else {
+			return null;
 		}
-		$data = file_get_contents($fileName);
-		$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-		return $base64;
 	}
 	
 	/**

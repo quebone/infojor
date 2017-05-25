@@ -1,39 +1,51 @@
 <html lang="ca">
 <head>
-	<meta charset="utf-8" />
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<meta name="description" content="">
+	<meta name="author" content="carles" >
+	<link rel="icon" href="../../favicon.ico">
+
 	<title>Titol</title>
-	<meta name="author" content="carles" />
-	<link rel="stylesheet" href="presentation/css/styles.css?v=1.0" />
-	<link rel="stylesheet" href="presentation/css/compact-nav.css?v=1.0" />
-	<link rel="stylesheet" href="presentation/css/specialities.css?v=1.0" />
+
+	<!-- Bootstrap core CSS -->
+	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="presentation/css/styles.css" rel="stylesheet">
+	<link rel="stylesheet" href="presentation/css/specialities.css?v=1.0">
 </head>
+
 <body>
-<div id='header-wrap'>
-<header></header>
-</div>
-<main>
-	<table id="specialities">
-		<tr class="theader"><th>Àrea</th><th>Mestre</th><th></th></tr>
-		<tr class="tdata">
-			<td class="area">Area 1</td><td class="teacher">Teacher 1</td><td class="delete"><a>eliminar</a></td>
-		</tr>
-	</table>
-	<div class="wrapper">
-		<select id="area">
-			<option>Area 1</option>
-		</select>
-		<select id="teacher">
-			<option>Teacher 1</option>
-		</select>
-		<span class="add"><a onclick="add()">afegir</a></span>
-	</div>
-	<div class="form-buttons">
-		<button type="button" class="form-button" onclick="importSpecialitiesFromLastCourse()">Copiar les especialitats del curs anterior</button>
-	</div>
-	<div id="error" class="error"></div>
-</main>
-  <script src="js/scripts.js"></script>
-  <script src="js/specialities.js"></script>
-  <script src="js/compact-nav.js"></script>
+	#header#
+
+	<main>
+		<table id="specialities">
+			<tr class="theader"><th>Àrea</th><th>Mestre</th><th></th></tr>
+			<tr class="tdata">
+				<td class="area">Area 1</td><td class="teacher">Teacher 1</td><td class="delete"><a>eliminar</a></td>
+			</tr>
+		</table>
+		<div class="wrapper">
+			<select id="area">
+				<option>Area 1</option>
+			</select>
+			<select id="teacher">
+				<option>Teacher 1</option>
+			</select>
+			<span class="add"><a onclick="add()">afegir</a></span>
+		</div>
+		<div class="form-buttons">
+			<button type="button" class="form-button" onclick="importSpecialitiesFromLastCourse()">Copiar les especialitats del curs anterior</button>
+		</div>
+		<div id="error" class="error"></div>
+	</main>
+
+	#footer#
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="bootstrap/js/bootstrap.min.js"></script>
+  <script src="js/scripts.js" />
+  <script src="js/specialities.js" />
 </body>
 </html>

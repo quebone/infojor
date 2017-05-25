@@ -2,8 +2,16 @@ main {
 	padding: 20px;
 }
 
+form {
+	margin-top: 40px;
+}
+
 .form-element {
 	margin-bottom: 10px;
+}
+
+.form-input {
+	width: 100%;
 }
 
 .form-label {
@@ -11,16 +19,22 @@ main {
 	width: 150px;
 }
 
-.form-input {
-	display: inline-block;
-	width: 250px;
+.form-buttons {
+	margin-top: 1em;
+/*	margin-left: 1em;*/
 }
 
-.form-buttons {
-	display: inline;
-	margin-top: 20px;
-	margin-left: 150px;
-	width: 5%;
+@media (min-width: 470px) {
+	.form-buttons {
+		margin-left: 150px;
+	}
+	.text-center {
+		text-align: left;
+	}
+	.form-input {
+		display: inline-block;
+		width: 250px;
+	}
 }
 
 .form-button {

@@ -7,7 +7,7 @@ use infojor\presentation\controller\MainController;
 
 require "init.php";
 
-test3();
+test5();
 
 function test1() {
 // 	require_once BASEDIR . 'vendor/PHPExcel/Classes/PHPExcel.php';
@@ -42,4 +42,17 @@ function test3() {
 	$_POST[CLASSROOM_ID] = 15;
 	$controller->createSummaryTable();
 // 	var_dump($controller->getTrimestres());
+}
+
+function test4() {
+	if (session_status() != PHP_SESSION_ACTIVE) session_start();
+	$controller = new EvaluateController();
+	$_POST[STUDENT_ID] = 54;
+	$_SESSION[SECTION] = "tutorings";
+	$controller->getEvaluations();
+}
+
+function test5() {
+	$controller = new StatisticsController();
+	$controller->createAllSummaryTables();
 }

@@ -134,7 +134,7 @@ function showPrintDialog() {
 	var printDialog = document.getElementById("ask-trimestre");
 	disableAll();
 	printDialog.style.visibility = "visible";
-	document.getElementById("print-report").focus();
+	document.getElementById("print-button").focus();
 }
 
 function printReport() {

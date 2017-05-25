@@ -97,7 +97,7 @@ final class UserService extends MainService
 	public function updateTeacher($teacherId, $name, $surnames, $email, $phone, $username, $isAdmin, $isActive)
 	{
 		if ($teacherId == null) {
-			$teacher = new Teacher($name, $surnames);
+			$teacher = new Teacher($name, $surnames, $this->dao->getSchool());
 		} else {
 			$teacher = $this->dao->getById("Teacher", $teacherId);
 		}

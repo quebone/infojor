@@ -28,7 +28,7 @@
 		</div>
 	</div>
 	<div class="input">
-		<label for="title" class="input">Titol</label><textarea id="title" class="input" required></textarea>
+		<label for="title" class="input">Titol</label><textarea id="title" class="input"></textarea>
 		<label for="descripcio" class="input">Descripcio</label><textarea id="description" class="input"></textarea>
 	</div>
 	<div class="input">

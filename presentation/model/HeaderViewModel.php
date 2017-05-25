@@ -12,30 +12,40 @@ final class HeaderViewModel extends MainViewModel {
 	private $classroom;
 	private $user;
 	private $school;
+	private $availableMenus;
 	
-	public function __construct()
+	public function __construct($availableMenus = null)
 	{
 		parent::__construct();
 		$this->logged = false;
 		$this->teacher = null;
 		$this->trimestre = null;
 		$this->classroom = null;
+		$this->availableMenus = $availableMenus;
 		$this->initHeader();
 	}
 	
 	/**
 	 * Assigna les dades corresponents a la capçalera
 	 */
-	public function output()
+	public function output():array
 	{
-		$data = new \stdClass;
+		$data = array();
 		if ($this->logged)
 		{
-			$data->user = $this->teacher['name'] . " " . $this->teacher['surnames'];
-			$data->school = "Curs: " . $this->course->course;
-			$data->school .= " | Trimestre: " . $this->trimestre['number'];
-			$data->menus = $this->getMenuItems();
-		}
+			$data['user'] = $this->teacher['name'] . " " . $this->teacher['surnames'];
+			$data['school'] = "Curs: " . $this->course->course;
+			$data['school'] .= " | Trimestre: " . $this->trimestre['number'];
+			$data['menus'] = $this->getMenus();
+			if ($this->availableMenus != null) {
+				foreach ($data['menus'] as $key => $value) {
+					if (!in_array($key, $this->availableMenus)) unset($data['menus'][$key]);
+				}
+			}
+			usort($data['menus'], function ($a, $b) {
+				return ($a['order'] == $b['order']) ? 0 : (($a['order'] < $b['order']) ? -1 : 1);
+			});
+			}
 		return $data;
 	}
 	
@@ -62,10 +72,23 @@ final class HeaderViewModel extends MainViewModel {
 			$teacherId = $this->getSessionVar(USER_ID);
 			$model = new UserService();
 			$menus = $model->getMenuItems($teacherId);
-			foreach ($menus as $name=>$function) {
-				array_push($arrMenus, array("name"=>$name, "function"=>$function));
+			foreach ($menus as $menu) {
+				array_push($arrMenus, $menu->toArray());
 			}
 		}
 		return $arrMenus;
+	}
+	
+	private function getMenus():array
+	{
+		$menus = array();
+		if ($this->logged) {
+			$teacherId = $this->getSessionVar(USER_ID);
+			$teacher = $this->dao->getById("Teacher", $teacherId);
+			foreach ($teacher->getMenus() as $menu) {
+				$menus[$menu->getId()] = $menu->toArray();
+			}
+		}
+		return $menus;
 	}
 }

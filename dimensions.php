@@ -1,7 +1,9 @@
 <?php
-namespace tfg;
+namespace infojor;
 
 use infojor\presentation\controller\DimensionsController;
+use infojor\presentation\model\HeaderViewModel;
+use infojor\presentation\view\HeaderEngine;
 
 session_start();
 
@@ -23,11 +25,20 @@ if (!$controller->isAdmin()) {
 	exit();
 }
 
-$header = new \infojor\presentation\model\HeaderViewModel();
+$header = new HeaderViewModel([1, 2, 3]);
 $data['header'] = $header->output();
+$engine = new HeaderEngine();
+$headerFile = file_get_contents(TPLDIR . "header.xml");
+$headerFile = str_replace("#menus#", $engine->header($data['header']), $headerFile);
+$footerFile = file_get_contents(TPLDIR . "footer.xml");
+$footerFile = str_replace("#footer#", $engine->footer($data['header']), $footerFile);
 
 $data['degrees'] = $controller->getDegrees();
 
 $template = new \Transphporm\Builder(TPLDIR.'dimensions.xml', TPLDIR.'dimensions.tss');
+$template = $template->output($data)->body;
 
-echo $template->output($data)->body;
+$template = str_replace("#header#", $headerFile, $template);
+$template = str_replace("#footer#", $footerFile, $template);
+
+echo $template;

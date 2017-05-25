@@ -82,5 +82,12 @@ class Classroom
 	public function getEnrollments() {
 		return $this->enrollments;
 	}
+	
+	public function toArray():array {
+		$data = array();
+		$data['id'] = $this->id;
+		$data['name'] = $this->name;
+		return $data;
+	}
 }
 	

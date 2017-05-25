@@ -170,7 +170,7 @@ class PDFEngine extends \FPDF
 						}
 						$y += 1.5;
 						$x = $this->trHeader[$degreeId]['start'];
-						for ($i = 1; $i <= $student['trimestre']; $i++) {
+						for ($i = 1; $i <= count($dimension['pes']); $i++) {
 							$this->SetX(LEFT + $x + 1 - $this->GetStringWidth($dimension['pes'][$i]['mark']) / 2);
 							$this->SetFont(FONT, 'B', 11);
 							$this->Write(0, $dimension['pes'][$i]['mark']);
@@ -184,12 +184,12 @@ class PDFEngine extends \FPDF
 					$this->SetFont(FONT, '', 11);
 					$this->Write(0, Utils::decode('Qualificació global'));
 					$x = $this->trHeader[$degreeId]['start'];
-					for ($i = 1; $i <= $student['trimestre']; $i++) {
+					for ($i = 1; $i <= count($area['ges']); $i++) {
 						if (isset($area['ges'][$i])) {
-							$this->SetX(LEFT + $i + $x + 1 - $this->GetStringWidth($area['ges'][$i]['mark']) / 2);
+							$this->SetX(LEFT + $i + $x - $this->GetStringWidth($area['ges'][$i]['mark']) / 2);
 							$this->SetFont(FONT, 'B', 11);
 							$this->Write(0, $area['ges'][$i]['mark']);
-							$x += $this->trHeader[$degreeId]['offset'];
+							$x += $this->trHeader[$degreeId]['offset'] - 1;
 						}
 					}
 				}

@@ -1,34 +1,46 @@
 <html lang="ca">
 <head>
-	<meta charset="utf-8" />
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<meta name="description" content="">
+	<meta name="author" content="carles" >
+	<link rel="icon" href="../../favicon.ico">
+
 	<title>Titol</title>
-	<meta name="author" content="carles" />
-	<link rel="stylesheet" href="presentation/css/styles.css?v=1.0" />
-	<link rel="stylesheet" href="presentation/css/compact-nav.css?v=1.0" />
-	<link rel="stylesheet" href="presentation/css/courses.css?v=1.0" />
+
+	<!-- Bootstrap core CSS -->
+	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="presentation/css/styles.css" rel="stylesheet">
+	<link rel="stylesheet" href="presentation/css/courses.css?v=1.0">
 </head>
+
 <body>
-<div id='header-wrap'>
-<header></header>
-</div>
-<main>
-	<form method="POST">
-	<table>
-		<tr><th>Curs</th><th>Actiu</th><th>Eliminar</th></tr>
-		<tr class="courses"><td><input type="text" class="form-input" value="2016-2017"/></td><td><input class="active-course" type="radio" name="active"></td><td><a class="delete">x</a></td></tr>
-	</table>
-	<div class="form-element"><input id="new-course" type="text" class="form-input"/><button type="button" class="form-button" onclick="createCourse()">Crear curs</button></div>
-	<div><span class="form-label">Selecciona el trimestre actiu: </span>
-		<select id="active-trimestre" onchange="changeTrimestre(this)">
-			<option value="1">1</option>
-			<option value="2">2</option>
-			<option value="3">3</option>
-		</select>
-	</div>
-	<div id="error" class="error"></div>
-</main>
-  <script src="js/scripts.js"></script>
-  <script src="js/courses.js"></script>
-  <script src="js/compact-nav.js"></script>
+	#header#
+
+	<main>
+		<form method="POST">
+		<table>
+			<tr><th>Curs</th><th>Actiu</th><th>Eliminar</th></tr>
+			<tr class="courses"><td><input type="text" class="form-input" value="2016-2017"/></td><td><input class="active-course" type="radio" name="active"></td><td><a class="delete">x</a></td></tr>
+		</table>
+		<div class="form-element"><input id="new-course" type="text" class="form-input"/><button type="button" class="form-button" onclick="createCourse()">Crear curs</button></div>
+		<div><span class="form-label">Selecciona el trimestre actiu: </span>
+			<select id="active-trimestre" onchange="changeTrimestre(this)">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+			</select>
+		</div>
+		<div id="error" class="error"></div>
+	</main>
+
+	#footer#
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="bootstrap/js/bootstrap.min.js"></script>
+  <script src="js/scripts.js" />
+  <script src="js/courses.js" />
 </body>
 </html>

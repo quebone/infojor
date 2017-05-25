@@ -1,63 +1,75 @@
 <html lang="ca">
 <head>
-	<meta charset="utf-8" />
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<meta name="description" content="">
+	<meta name="author" content="carles" >
+	<link rel="icon" href="../../favicon.ico">
+
 	<title>Titol</title>
-	<meta name="author" content="carles" />
-	<link rel="stylesheet" href="presentation/css/styles.css?v=1.0" />
-	<link rel="stylesheet" href="presentation/css/compact-nav.css?v=1.0" />
-	<link rel="stylesheet" href="presentation/css/students.css?v=1.0" />
+
+	<!-- Bootstrap core CSS -->
+	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="presentation/css/styles.css" rel="stylesheet">
+	<link rel="stylesheet" href="presentation/css/students.css?v=1.0">
 </head>
+
 <body>
-<div id='header-wrap'>
-<header></header>
-</div>
-<main>
-	<div class="wrapper">
-		<label for="classroom-selector" class="form-label">Classe:</label>
-		<select id="classroom-selector" onchange="changeClassroom()">
-			<option value="1">1rA</option>
-		</select> 
-	</div>
-	<table id="students">
-		<tr class="theader"><th>Cognoms</th><th>Nom</th><th>Classe</th></tr>
-		<tr id="tdata">
-			<td><input type="text" class="form-input" id="surnames-1" onchange="updateStudent(this)" value="Cognoms 1"/></td>
-			<td><input type="text" class="form-input" id="name-1" onchange="updateStudent(this)" value="Nom 1"/></td>
-			<td>
-				<select id="classroom-1" onchange="updateStudent(this)">
-					<option value="1">1rA</option>
-					<option value="2">2nA</option>
-				</select>
-			</td>
-			<td class="delete"><a onclick="deleteStudent(1)">eliminar</td>
-		</tr>
-	</table>
-	<table>
-		<tr>
-			<td>Cognoms</td><td><input id="surnames" type="text" class="form-input" value="Cognoms"/></td>
-			<td>Nom</td><td><input id="name" type="text" class="form-input" value="Nom"/></td>
-			<td>
-				<select id="classroom">
-					<option value="1">1rA</option>
-					<option value="2">2nA</option>
-				</select>
-			</td>
-			<td class="add"><a onclick="addStudent()">afegir</td>
-		</tr>
-	</table>
-	<div class="form-buttons">
-		<button type="button" class="form-button" onclick="importStudentsFromLastCourse()">Importar alumnes del darrer curs</button>
-	</div>
-	<div class="form-buttons">
-		<form id="file-form" method="POST">
-			<button type="button" class="form-button" onclick="importStudentsFromFile()">Importar alumnes d'un arxiu</button>
-			<input id="file_selector" type="file" name="file" accept=".xls, .xlsx, .odt"/>
-		</form>
-	</div>
-  	<div id="error" class="error"></div>
-</main>
-  <script src="js/scripts.js"></script>
-  <script src="js/students.js"></script>
-  <script src="js/compact-nav.js"></script>
+	#header#
+
+	<main>
+		<div class="wrapper">
+			<label for="classroom-selector" class="form-label">Classe:</label>
+			<select id="classroom-selector" onchange="changeClassroom()">
+				<option value="1">1rA</option>
+			</select> 
+		</div>
+		<table id="students">
+			<tr class="theader"><th>Cognoms</th><th>Nom</th><th>Classe</th></tr>
+			<tr id="tdata">
+				<td><input type="text" class="form-input" id="surnames-1" onchange="updateStudent(this)" value="Cognoms 1"/></td>
+				<td><input type="text" class="form-input" id="name-1" onchange="updateStudent(this)" value="Nom 1"/></td>
+				<td>
+					<select id="classroom-1" onchange="updateStudent(this)">
+						<option value="1">1rA</option>
+						<option value="2">2nA</option>
+					</select>
+				</td>
+				<td class="delete"><a onclick="deleteStudent(1)">eliminar</td>
+			</tr>
+		</table>
+		<table>
+			<tr>
+				<td>Cognoms</td><td><input id="surnames" type="text" class="form-input" value="Cognoms"/></td>
+				<td>Nom</td><td><input id="name" type="text" class="form-input" value="Nom"/></td>
+				<td>
+					<select id="classroom">
+						<option value="1">1rA</option>
+						<option value="2">2nA</option>
+					</select>
+				</td>
+				<td class="add"><a onclick="addStudent()">afegir</td>
+			</tr>
+		</table>
+		<div class="form-buttons">
+			<button type="button" class="form-button" onclick="importStudentsFromLastCourse()">Importar alumnes del darrer curs</button>
+		</div>
+		<div class="form-buttons">
+			<form id="file-form" method="POST">
+				<button type="button" class="form-button" onclick="importStudentsFromFile()">Importar alumnes d'un arxiu</button>
+				<input id="file_selector" type="file" name="file" accept=".xls, .xlsx, .odt"/>
+			</form>
+		</div>
+	  	<div id="error" class="error"></div>
+	</main>
+
+	#footer#
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="bootstrap/js/bootstrap.min.js"></script>
+  <script src="js/scripts.js" />
+  <script src="js/students.js" />
 </body>
 </html>

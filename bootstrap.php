@@ -11,7 +11,7 @@ if (!defined('ENTITIESDIR')) define('ENTITIESDIR', BASEDIR . 'service/entities/'
 require_once BASEDIR.'vendor/autoload.php';
 
 $paths = array(ENTITIESDIR);
-$isDevMode = true;
+$isDevMode = false;
 $dbParams = unserialize(file_get_contents(BASEDIR.'config/dbparams.config'));
 
 $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);

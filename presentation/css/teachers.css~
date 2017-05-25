@@ -1,9 +1,14 @@
 main {
+	margin-top: 40px;
 	padding: 20px;
 }
 
 .teacher {
 	padding-right: 30px;
+}
+
+.inactive {
+	color: grey;
 }
 
 .delete, .edit {

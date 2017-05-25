@@ -28,7 +28,7 @@
 		<span class="add"><a onclick="add()">afegir</a></span>
 	</div>
 	<div class="form-buttons">
-		<button type="button" class="form-button" onclick="importTutoringsFromLastTrimestre()">Copiar les tutories del curs anterior</button>
+		<button type="button" class="form-button" onclick="importTutoringsFromLastCourse()">Copiar les tutories del curs anterior</button>
 	</div>
 	<div id="error" class="error"></div>
 </main>

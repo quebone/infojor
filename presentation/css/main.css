@@ -1,23 +1,25 @@
-main {
-	padding: 20px;
+body {
+  padding-top: 50px;
 }
 
-div.section{
-	display: inline-block;
-	padding-right: 50px;
+.material-icons.md-48 {
+	font-size: 48px;
+	padding-left: 1em;
+	margin-top: 1em;
+	color: steelblue;
 }
 
-p.section_name {
-	font-size: 110%;
-	display: inline;
+.material-icons.md-24 {
+	font-size: 24px;
+	padding-left: .5em;
+	color: green;
+	opacity: .7;
 }
 
-ul {
-	display: inline;
+.material-icons.md-24:hover {
+	opacity: 1;
 }
 
-li {
-	list-style: none;
-	cursor: pointer;
-	padding: .5em 0px 0px 2em;
+h3 {
+	margin-top: .3em;
 }

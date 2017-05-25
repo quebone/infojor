@@ -17,14 +17,12 @@ function redirect(toPage) {
 function createSummaryTable(classroomId) {
 	var dataToSend = 'classroomId=' + classroomId + '&function=createSummaryTable';
 	send(dataToSend, AJAXCONTROLLER, done);
-	showError("Espereu mentre es crea l'arxiu");
 	document.getElementsByTagName('body')[0].style.cursor = "wait";
-	disable(document.getElementsByTagName('main')[0]);
+//	disable(document.getElementsByTagName('main')[0]);
 }
 
 function done(msg) {
 	document.getElementsByTagName('body')[0].style.cursor = "default";
-	enable(document.getElementsByTagName('main')[0]);
-	cleanError();
+//	enable(document.getElementsByTagName('main')[0]);
 	window.location.replace('files/taula-resum.xls')
 }

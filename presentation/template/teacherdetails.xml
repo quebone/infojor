@@ -1,38 +1,50 @@
 <html lang="ca">
 <head>
-	<meta charset="utf-8" />
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<meta name="description" content="">
+	<meta name="author" content="carles" >
+	<link rel="icon" href="../../favicon.ico">
+
 	<title>Titol</title>
-	<meta name="author" content="carles" />
-	<link rel="stylesheet" href="presentation/css/styles.css?v=1.0" />
-	<link rel="stylesheet" href="presentation/css/compact-nav.css?v=1.0" />
-	<link rel="stylesheet" href="presentation/css/teacherdetails.css?v=1.0" />
+
+	<!-- Bootstrap core CSS -->
+	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="presentation/css/styles.css" rel="stylesheet">
+	<link rel="stylesheet" href="presentation/css/teacherdetails.css?v=1.0">
 </head>
+
 <body>
-<div id='header-wrap'>
-<header></header>
-</div>
-<main>
-	<input id='teacherId' type='hidden' />
-	<form id="login-form" method="POST">
-		<div class="form-element"><span class="form-label">Nom</span><input id="name" type="text" class="form-input" required/></div>
-		<div class="form-element"><span class="form-label">Cognoms</span><input id="surnames" type="text" class="form-input" required/></div>
-		<div class="form-element"><span class="form-label">Correu electrònic</span><input id="email" type="email" class="form-input" required/></div>
-		<div class="form-element"><span class="form-label">Telèfon</span><input id="phone" type="text" class="form-input"/></div>
-		<div class="form-element"><span class="form-label">Nom d'usuari</span><input id="username" type="text" class="form-input" required/></div>
-		<div class="other-information">
-			<div class="form-element"><label><input id="isAdmin" type="checkbox">Administrador</label>
-				<label><input id="isActive" type="checkbox">Actiu</label></div>
-			<div class="form-element"><button id="rstpasswd" type="button" class="form-button" onclick="resetPassword()">Establir contrasenya per defecte</button></div>
-		</div>
-		<div class="form-buttons">
-			<button type="button" class="form-button" onclick="sendUserData()">Acceptar</button>
-			<button type="button" class="form-button" onclick="cancel()">Cancel·lar</button>
-		</div>
-	</form>
-	<div id="error" class="error"></div>
-</main>
+	#header#
+
+	<main>
+		<input id='teacherId' type='hidden' />
+		<form id="login-form" method="POST">
+			<div class="form-element"><span class="form-label">Nom</span><input id="name" type="text" class="form-input" required/></div>
+			<div class="form-element"><span class="form-label">Cognoms</span><input id="surnames" type="text" class="form-input" required/></div>
+			<div class="form-element"><span class="form-label">Correu electrònic</span><input id="email" type="email" class="form-input" required/></div>
+			<div class="form-element"><span class="form-label">Telèfon</span><input id="phone" type="text" class="form-input"/></div>
+			<div class="form-element"><span class="form-label">Nom d'usuari</span><input id="username" type="text" class="form-input" required/></div>
+			<div class="other-information">
+				<div class="form-element"><label><input id="isAdmin" type="checkbox">Administrador</label>
+					<label><input id="isActive" type="checkbox">Actiu</label></div>
+				<div class="form-element"><button id="rstpasswd" type="button" class="form-button" onclick="resetPassword()">Establir contrasenya per defecte</button></div>
+			</div>
+			<div class="form-buttons">
+				<button type="button" class="form-button" onclick="sendUserData()">Acceptar</button>
+				<button type="button" class="form-button" onclick="cancel()">Cancel·lar</button>
+			</div>
+		</form>
+		<div id="error" class="error"></div>
+	</main>
+
+	#footer#
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="bootstrap/js/bootstrap.min.js"></script>
   <script src="js/scripts.js" />
-  <script src="js/compact-nav.js"></script>
   <script src="js/teacherdetails.js" />
 </body>
 </html>

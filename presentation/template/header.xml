@@ -1,15 +1,25 @@
-<div id="logo"><a href="main.php">
-	<p class="title">Escola Josep Orriols Roca</p>
-	<p class="subtitle">informes trimestrals</p>
-</a></div>
-<div id="header_center">
-</div>
-<div id="header_right">
-</div>
-<nav class="compact">
-	<div class="menu-selector">
-		<ul>
-			<li onclick="main()">Tornar a l'inici</li>
-		</ul>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+	<div class="container-fluid">
+
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#">Escola Josep Orriols</a>
+		</div>
+
+		<div id="navbar" class="collapse navbar-collapse">
+			<ul class="nav navbar-nav navbar-right">
+				#menus#
+			</ul>
+		</div><!--/.nav-collapse -->
+
 	</div>
 </nav>
+
+
+
+

@@ -46,8 +46,8 @@ class Teacher extends Person
 	 */
 	private $roles;
 
-	public function __construct($name, $surnames, $thumbnail = null) {
-		parent::__construct($name, $surnames, $thumbnail);
+	public function __construct($name, $surnames, School $school, $thumbnail = null) {
+		parent::__construct($name, $surnames, $school, $thumbnail);
 		$this->email = "";
 		$this->phone = "";
 		$this->password = sha1(DEFAULTPASSWORD);
@@ -168,6 +168,18 @@ class Teacher extends Person
 	public function removeRole($role)
 	{
 		return $this->roles->removeElement($role);
+	}
+	
+	public function getMenus():array
+	{
+		$data = array();
+		foreach ($this->roles as $role) {
+			foreach ($role->getMenus() as $menu) {
+				if (!in_array($menu, $data))
+					array_push($data, $menu);
+			}
+		}
+		return $data;
 	}
 	
 	public function getMenuItems():array

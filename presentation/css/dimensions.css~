@@ -17,7 +17,7 @@ div.wrapper {
 }
 
 table {
-	padding: 10px;
+/*	padding: 10px;*/
 	border-spacing: 0px;
 	margin-bottom: 20px;
 }

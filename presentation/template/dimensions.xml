@@ -1,49 +1,61 @@
 <html lang="ca">
 <head>
-	<meta charset="utf-8" />
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<meta name="description" content="">
+	<meta name="author" content="carles" >
+	<link rel="icon" href="../../favicon.ico">
+
 	<title>Titol</title>
-	<meta name="author" content="carles" />
-	<link rel="stylesheet" href="presentation/css/styles.css?v=1.0" />
-	<link rel="stylesheet" href="presentation/css/compact-nav.css?v=1.0" />
-	<link rel="stylesheet" href="presentation/css/dimensions.css?v=1.0" />
+
+	<!-- Bootstrap core CSS -->
+	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="presentation/css/styles.css" rel="stylesheet">
+	<link rel="stylesheet" href="presentation/css/dimensions.css?v=1.0">
 </head>
+
 <body>
-<div id='header-wrap'>
-<header></header>
-</div>
-<main>
-	<div class="wrapper">
-		<label for="degree-selector" class="form-label">Etapa:</label>
-		<select id="degree-selector" onchange="changeDegree(this)">
-			<option value="1">Educació infantil</option>
-		</select>
-		<label for="cycle-selector" class="form-label">Cicle:</label>
-		<select id="cycle-selector" onchange="changeCycle(this)">
-			<option value="1">1</option>
-		</select>
-	</div>
-	<div id="dimensions">
-		<h2>Àmbit 1</h2>
-		<div "wrapper-areas">
+	#header#
+
+	<main>
+		<div class="wrapper">
+			<label for="degree-selector" class="form-label">Etapa:</label>
+			<select id="degree-selector" onchange="changeDegree(this)">
+				<option value="1">Educació infantil</option>
+			</select>
+			<label for="cycle-selector" class="form-label">Cicle:</label>
+			<select id="cycle-selector" onchange="changeCycle(this)">
+				<option value="1">1</option>
+			</select>
 		</div>
-	</div>
-	<div class="input">
-		<label for="title" class="input">Titol</label><textarea id="title" class="input"></textarea>
-		<label for="descripcio" class="input">Descripcio</label><textarea id="description" class="input"></textarea>
-	</div>
-	<div class="input">
-		<label for="area-selector" class="input">Àrea</label>
-		<select id="area-selector">
-			<option>Àrea 1</option>
-		</select>
-	</div>
-	<div id="cycles" class="input">
-	</div>
-	<div class="form-buttons"><button type="button" class="form-button" onclick="addDimension()">Afegir</button></div>
-	<div id="error" class="error"></div>
-</main>
-  <script src="js/scripts.js"></script>
-  <script src="js/dimensions.js"></script>
-  <script src="js/compact-nav.js"></script>
+		<div id="dimensions">
+			<h2>Àmbit 1</h2>
+			<div "wrapper-areas">
+			</div>
+		</div>
+		<div class="input">
+			<label for="title" class="input">Titol</label><textarea id="title" class="input"></textarea>
+			<label for="descripcio" class="input">Descripcio</label><textarea id="description" class="input"></textarea>
+		</div>
+		<div class="input">
+			<label for="area-selector" class="input">Àrea</label>
+			<select id="area-selector">
+				<option>Àrea 1</option>
+			</select>
+		</div>
+		<div id="cycles" class="input">
+		</div>
+		<div class="form-buttons"><button type="button" class="form-button" onclick="addDimension()">Afegir</button></div>
+		<div id="error" class="error"></div>
+	</main>
+
+	#footer#
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="bootstrap/js/bootstrap.min.js"></script>
+  <script src="js/scripts.js" />
+  <script src="js/dimensions.js" />
 </body>
 </html>

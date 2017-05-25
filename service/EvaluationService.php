@@ -49,6 +49,30 @@ final class EvaluationService extends MainService
 	}
 	
 	/**
+	 * Retorna les qualificacions finals parcials assignades a un alumne
+	 * Si el curs és nul, retorna les qualificacions finals actuals
+	 */
+	public function getFinalDimensionEvaluation($studentId, $dimensionId, $courseId=null)
+	{
+		$course = $this->getCourse($courseId);
+		$student = $this->dao->getById("Student", $studentId);
+		$dimension = $this->dao->getById("Dimension", $dimensionId);
+		return $student->getFinalDimensionEvaluation($dimension, $course);
+	}
+	
+	/**
+	 * Retorna les qualificacions finals d'àrea assignades a un alumne
+	 * Si el curs és nul, retorna les qualificacions finals actuals
+	 */
+	public function getFinalAreaEvaluation($studentId, $areaId, $courseId=null)
+	{
+		$course = $this->getCourse($courseId);
+		$student = $this->dao->getById("Student", $studentId);
+		$area = $this->dao->getById("Area", $areaId);
+		return $student->getFinalAreaEvaluation($area, $course);
+	}
+	
+	/**
 	 * Assigna una qualificació parcial a un alumne
 	 */
 	public function setPartialEvaluation($teacherId, $studentId, $dimensionId, $markId)
@@ -77,6 +101,32 @@ final class EvaluationService extends MainService
 		}
 		$this->dao->flush($evaluation);
 	}
+	
+	public function setFinalPartialEvaluation($teacherId, $studentId, $dimensionId, $markId)
+	{
+		$course = $this->dao->getActiveCourse();
+		$dimension = $this->dao->getById("Dimension", $dimensionId);
+		$ed = $this->dao->getById("PartialEvaluationDescription", $markId);
+		$student = $this->dao->getById("Student", $studentId);
+		$teacher = $this->dao->getById("Teacher", $teacherId);
+		$evaluation = $student->getFinalDimensionEvaluation($dimension, $course);
+		if ($evaluation == null) {
+			//if not exists, create new evaluation
+			$evaluation = $student->createDimensionEvaluation($teacher, $dimension, $course, null, $ed);
+			$this->dao->persist($evaluation);
+		} else {
+			if ($markId == 0) {
+				//if evaluation is null, delete evaluation
+				$this->dao->remove($evaluation);
+			} else {
+				//if exists, update evaluation
+				$evaluation->setPartialEvaluationDescription($ed);
+				$evaluation->setTeacher($teacher);
+				$this->dao->persist($evaluation);
+			}
+		}
+		$this->dao->flush($evaluation);
+	}
 
 	/**
 	 * Assigna una qualificació global a un alumne
@@ -93,6 +143,32 @@ final class EvaluationService extends MainService
 		if ($evaluation == null) {
 			//if not exists, create new evaluation
 			$evaluation = $student->createAreaEvaluation($teacher, $area, $course, $trimestre, $ed);
+			$this->dao->persist($evaluation);
+		} else {
+			if ($markId == 0) {
+				//if evaluation is null, delete evaluation
+				$this->dao->remove($evaluation);
+			} else {
+				//if exists, update evaluation
+				$evaluation->setGlobalEvaluationDescription($ed);
+				$evaluation->setTeacher($teacher);
+				$this->dao->persist($evaluation);
+			}
+		}
+		$this->dao->flush($evaluation);
+	}
+	
+	public function setFinalGlobalEvaluation($teacherId, $studentId, $areaId, $markId)
+	{
+		$course = $this->dao->getActiveCourse();
+		$area = $this->dao->getById("Area", $areaId);
+		$ed = $this->dao->getById("GlobalEvaluationDescription", $markId);
+		$student = $this->dao->getById("Student", $studentId);
+		$teacher = $this->dao->getById("Teacher", $teacherId);
+		$evaluation = $student->getFinalAreaEvaluation($area, $course);
+		if ($evaluation == null) {
+			//if not exists, create new evaluation
+			$evaluation = $student->createAreaEvaluation($teacher, $area, $course, null, $ed);
 			$this->dao->persist($evaluation);
 		} else {
 			if ($markId == 0) {

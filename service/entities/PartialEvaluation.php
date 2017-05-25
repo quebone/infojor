@@ -23,7 +23,7 @@ class PartialEvaluation extends Evaluation
 	private $course;
 	/**
 	 * @ManyToOne(targetEntity="Trimestre", inversedBy="partialEvaluations")
-	 * @JoinColumn(name="trimestre_id", referencedColumnName="number")
+	 * @JoinColumn(name="trimestre_id", referencedColumnName="number", nullable=true)
 	 */
 	private $trimestre;
 	/**
@@ -41,7 +41,7 @@ class PartialEvaluation extends Evaluation
 			Student $student,
 			Teacher $teacher,
 			Course $course,
-			Trimestre $trimestre,
+			$trimestre,
 			Dimension $dimension,
 			PartialEvaluationDescription $ped) {
 		$this->student = $student;
