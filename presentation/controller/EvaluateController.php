@@ -35,7 +35,9 @@ class EvaluateController extends Controller
 		if (!strcmp($section, "tutorings")) {
 			array_push($data, $model->getClassroom($classroomId));
 		} else {
-			$data = $model->getClassrooms([2]);
+			$degrees = [2];
+			if (!strcmp($section, 'reinforcings')) $degrees[] = 1;
+			$data = $model->getClassrooms($degrees);
 			foreach ($data as $key => $classroom) {
 				if ($classroom['id'] == $classroomId) {
 					$classroom['selected'] = true;
